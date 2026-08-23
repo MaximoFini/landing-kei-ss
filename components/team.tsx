@@ -2,6 +2,7 @@
 
 import { motion, useInView } from "framer-motion"
 import { useRef } from "react"
+import Image from "next/image"
 import { Linkedin } from "lucide-react"
 
 const coreMembers = [
@@ -58,10 +59,12 @@ function MemberCard({
       className="group flex flex-col gap-0"
     >
       <div className="relative aspect-square overflow-hidden rounded-sm bg-surface">
-        <img
+        <Image
           src={member.image}
           alt={`Foto de ${member.name}`}
-          className="w-full h-full object-cover object-top grayscale group-hover:grayscale-0 transition-all duration-500"
+          fill
+          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+          className="object-cover object-top grayscale group-hover:grayscale-0 transition-all duration-500"
         />
         <div className="absolute inset-0 bg-neon/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       </div>
@@ -107,12 +110,23 @@ function CollaboratorRow({
       className="flex items-center justify-between py-4 border-b border-border/30 last:border-0"
     >
       <div className="flex items-center gap-4">
-        {/* Avatar placeholder — will swap for real photo later */}
-        <div className="w-9 h-9 rounded-full bg-surface-elevated border border-border flex items-center justify-center flex-shrink-0">
-          <span className="text-xs font-bold text-muted-foreground">
-            {collab.name.charAt(0)}
-          </span>
-        </div>
+        {collab.image ? (
+          <div className="relative w-9 h-9 rounded-full overflow-hidden bg-surface-elevated border border-border flex-shrink-0">
+            <Image
+              src={collab.image}
+              alt={`Foto de ${collab.name}`}
+              fill
+              sizes="36px"
+              className="object-cover"
+            />
+          </div>
+        ) : (
+          <div className="w-9 h-9 rounded-full bg-surface-elevated border border-border flex items-center justify-center flex-shrink-0">
+            <span className="text-xs font-bold text-muted-foreground">
+              {collab.name.charAt(0)}
+            </span>
+          </div>
+        )}
         <div>
           <p className="text-sm font-semibold text-foreground leading-tight">{collab.name}</p>
           <p className="text-[11px] text-muted-foreground font-mono mt-0.5">{collab.role}</p>

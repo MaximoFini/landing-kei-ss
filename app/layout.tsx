@@ -23,8 +23,8 @@ export const metadata: Metadata = {
     canonical: "https://keisoftware.dev",
   },
   title: {
-    default: "Keii Solutions — Software a Medida",
-    template: "%s | Keii Solutions",
+    default: "Kei Software — Software a Medida",
+    template: "%s | Kei Software",
   },
   description:
     "Desarrollamos software a medida, soluciones IA y automatización con transparencia y calidad garantizada. Córdoba, Argentina.",
@@ -48,12 +48,12 @@ export const metadata: Metadata = {
     "ERP personalizado",
     "desarrollo remoto",
   ],
-  authors: [{ name: "Keii Solutions" }],
-  creator: "Keii Solutions",
-  publisher: "Keii Solutions",
+  authors: [{ name: "Kei Software" }],
+  creator: "Kei Software",
+  publisher: "Kei Software",
   category: "Technology",
   classification: "Software Development Services",
-  applicationName: "Keii Solutions",
+  applicationName: "Kei Software",
   referrer: "origin-when-cross-origin",
   formatDetection: {
     telephone: false,
@@ -73,22 +73,22 @@ export const metadata: Metadata = {
     type: "website",
     locale: "es_AR",
     url: "https://keisoftware.dev",
-    title: "Keii Solutions — Software a Medida | Desarrollo Web & IA",
+    title: "Kei Software — Software a Medida | Desarrollo Web & IA",
     description:
       "Desarrollamos software a medida, soluciones IA y automatización con transparencia total. Córdoba, Argentina.",
-    siteName: "Keii Solutions",
+    siteName: "Kei Software",
     images: [
       {
         url: "/og-image.svg",
         width: 1200,
         height: 630,
-        alt: "Keii Solutions — Software a Medida | Córdoba, Argentina",
+        alt: "Kei Software — Software a Medida | Córdoba, Argentina",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Keii Solutions — Software a Medida | Desarrollo Web & IA",
+    title: "Kei Software — Software a Medida | Desarrollo Web & IA",
     description:
       "Desarrollamos software a medida, soluciones IA y automatización con transparencia total. Córdoba, Argentina.",
     images: ["/og-image.svg"],
@@ -111,7 +111,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Keii Solutions",
+    title: "Kei Software",
   },
   manifest: "/manifest.json",
   icons: {
@@ -156,11 +156,15 @@ export default function RootLayout({
           name="apple-mobile-web-app-status-bar-style"
           content="black-translucent"
         />
+        {/* JSON-LD: rendered here in <head> (Next.js App Router allows
+            arbitrary static elements returned from the root layout's <head>
+            to be merged into the document head without hydration issues,
+            since this content is server-rendered and non-interactive). */}
+        <StructuredData />
       </head>
       <body
         className={`${geist.variable} ${geistMono.variable} font-sans antialiased bg-background text-foreground min-h-screen`}
       >
-        <StructuredData />
         {children}
         {process.env.NODE_ENV === "production" && <Analytics />}
       </body>

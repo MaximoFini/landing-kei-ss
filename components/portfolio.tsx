@@ -4,7 +4,18 @@ import { motion, useInView } from "framer-motion"
 import { useRef } from "react"
 import { ArrowUpRight } from "lucide-react"
 
-const projects = [
+type Project = {
+  num: string
+  title: string
+  category: string
+  description: string
+  year: string
+  tags: string[]
+  image?: string
+  link?: string
+}
+
+const projects: Project[] = [
   {
     num: "01",
     title: "Finova CRM",
@@ -12,6 +23,8 @@ const projects = [
     description: "CRM a medida para una fintech en crecimiento. Gestión de leads, onboarding automatizado y dashboard en tiempo real.",
     year: "2024",
     tags: ["Next.js", "PostgreSQL", "Stripe"],
+    image: undefined,
+    link: undefined,
   },
   {
     num: "02",
@@ -20,6 +33,8 @@ const projects = [
     description: "Sistema de gestión de inventario con alertas inteligentes y sincronización automática con proveedores vía API.",
     year: "2024",
     tags: ["Node.js", "REST API", "React"],
+    image: undefined,
+    link: undefined,
   },
   {
     num: "03",
@@ -28,6 +43,8 @@ const projects = [
     description: "Plataforma educativa con tutor IA personalizado. Redujo el trabajo manual del equipo pedagógico en un 70%.",
     year: "2023",
     tags: ["Python", "OpenAI", "React"],
+    image: undefined,
+    link: undefined,
   },
   {
     num: "04",
@@ -36,6 +53,8 @@ const projects = [
     description: "Panel de control para empresa de logística con seguimiento en tiempo real de flotas y reportes automatizados.",
     year: "2023",
     tags: ["Next.js", "WebSockets", "Maps"],
+    image: undefined,
+    link: undefined,
   },
 ]
 
@@ -43,20 +62,20 @@ function ProjectRow({
   project,
   index,
 }: {
-  project: (typeof projects)[0]
+  project: Project
   index: number
 }) {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: "-60px" })
+  const hasLink = Boolean(project.link)
+  const isExternal = hasLink && /^https?:\/\//.test(project.link!)
 
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 20 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5, delay: index * 0.08 }}
-      className="group grid grid-cols-1 sm:grid-cols-[auto_1fr_auto] gap-4 sm:gap-6 lg:gap-10 py-6 sm:py-8 items-start border-b border-border/40 last:border-0 hover:bg-surface/50 -mx-2 sm:-mx-4 px-2 sm:px-4 transition-colors rounded-sm cursor-default"
-    >
+  const rowClassName = hasLink
+    ? "group grid grid-cols-1 sm:grid-cols-[auto_1fr_auto] gap-4 sm:gap-6 lg:gap-10 py-6 sm:py-8 items-start border-b border-border/40 last:border-0 hover:bg-surface/50 -mx-2 sm:-mx-4 px-2 sm:px-4 transition-colors rounded-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-neon/50"
+    : "grid grid-cols-1 sm:grid-cols-[auto_1fr_auto] gap-4 sm:gap-6 lg:gap-10 py-6 sm:py-8 items-start border-b border-border/40 last:border-0 -mx-2 sm:-mx-4 px-2 sm:px-4 rounded-sm"
+
+  const content = (
+    <>
       {/* Number */}
       <span className="text-xs font-mono text-muted-foreground pt-1 w-6 hidden sm:block">
         {project.num}
@@ -65,7 +84,9 @@ function ProjectRow({
       {/* Content */}
       <div className="flex flex-col lg:flex-row lg:items-start gap-3 sm:gap-4 lg:gap-12">
         <div className="lg:w-52 flex-shrink-0">
-          <h3 className="text-base sm:text-lg font-bold text-foreground group-hover:text-neon transition-colors">
+          <h3
+            className={`text-base sm:text-lg font-bold text-foreground transition-colors ${hasLink ? "group-hover:text-neon" : ""}`}
+          >
             {project.title}
           </h3>
           <p className="text-[10px] font-mono text-muted-foreground mt-1 tracking-wide">
@@ -90,8 +111,38 @@ function ProjectRow({
             </span>
           ))}
         </div>
-        <ArrowUpRight className="w-4 h-4 text-muted-foreground group-hover:text-neon transition-colors" />
+        {hasLink && (
+          <ArrowUpRight className="w-4 h-4 text-muted-foreground group-hover:text-neon transition-colors" />
+        )}
       </div>
+    </>
+  )
+
+  if (hasLink) {
+    return (
+      <motion.a
+        ref={ref}
+        href={project.link}
+        {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+        initial={{ opacity: 0, y: 20 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.5, delay: index * 0.08 }}
+        className={rowClassName}
+      >
+        {content}
+      </motion.a>
+    )
+  }
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 20 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.5, delay: index * 0.08 }}
+      className={rowClassName}
+    >
+      {content}
     </motion.div>
   )
 }

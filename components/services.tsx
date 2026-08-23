@@ -87,6 +87,7 @@ function ServiceRow({
       initial={{ opacity: 0, x: -30 }}
       animate={inView ? { opacity: 1, x: 0 } : {}}
       transition={{ duration: 0.5, delay: index * 0.08 }}
+      whileHover={{ scale: 1.015, y: -2 }}
       className="group grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-4 sm:gap-6 lg:gap-10 py-6 sm:py-8 items-start hover:bg-surface/50 -mx-2 sm:-mx-4 px-2 sm:px-4 transition-colors rounded-sm cursor-default"
     >
       {/* Number */}

@@ -1,11 +1,11 @@
 {
-  "name": "Keii Solutions — Software a Medida",
-  "short_name": "Keii Solutions",
+  "name": "Kei Software — Software a Medida",
+  "short_name": "Kei Software",
   "description": "Desarrollamos software a medida, soluciones IA y automatización con transparencia total",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0a0a0a",
-  "theme_color": "#60a5fa",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
   "orientation": "portrait-primary",
   "lang": "es-AR",
   "dir": "ltr",
@@ -29,7 +29,7 @@
     {
       "name": "Contacto",
       "short_name": "Contacto",
-      "description": "Contactar con Keii Solutions",
+      "description": "Contactar con Kei Software",
       "url": "/#contacto",
       "icons": [{ "src": "/icon-light-32x32.png", "sizes": "32x32" }]
     },

@@ -11,13 +11,13 @@ export function Footer() {
             <a href="#" className="flex items-center gap-2 sm:gap-3">
               <Image
                 src="/logo.png"
-                alt="Keii Solutions logo"
+                alt="Kei Software logo"
                 width={32}
                 height={32}
                 className="w-7 h-7 sm:w-8 sm:h-8"
               />
               <span className="font-bold text-sm sm:text-base text-foreground tracking-tight">
-                Keii <span className="text-neon">Solutions</span>
+                Kei <span className="text-neon">Software</span>
               </span>
             </a>
             <p className="text-xs text-muted-foreground">
@@ -55,7 +55,7 @@ export function Footer() {
               href="https://www.linkedin.com/company/keii-solutions"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="LinkedIn de Keii Solutions"
+              aria-label="LinkedIn de Kei Software"
               className="w-8 h-8 rounded-sm border border-border flex items-center justify-center text-muted-foreground hover:text-neon hover:border-neon/50 transition-colors"
             >
               <Linkedin className="w-3.5 h-3.5" />
@@ -65,7 +65,7 @@ export function Footer() {
 
         <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-border/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
           <p className="text-[11px] text-muted-foreground">
-            &copy; {new Date().getFullYear()} Keii Solutions. Todos los derechos reservados.
+            &copy; {new Date().getFullYear()} Kei Software. Todos los derechos reservados.
           </p>
           <p className="text-[11px] text-muted-foreground">
             Primera consulta sin cargo

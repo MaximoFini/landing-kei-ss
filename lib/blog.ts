@@ -37,7 +37,7 @@ export const blogPosts: BlogPost[] = [
       "negocio",
     ],
     author: {
-      name: "Keii Solutions",
+      name: "Kei Software",
       role: "Equipo de Desarrollo",
     },
     content: `
@@ -121,7 +121,7 @@ La IA es una herramienta, no una solución mágica. El éxito está en identific
       "performance",
     ],
     author: {
-      name: "Keii Solutions",
+      name: "Kei Software",
       role: "Equipo de Desarrollo",
     },
     content: `
@@ -191,7 +191,7 @@ Next.js toma React y agrega superpoderes. En 2026, Next.js 16 incluye:
 
 ## Nuestra Stack
 
-En Keii Solutions usamos **Next.js 16** para la mayoría de proyectos porque:
+En Kei Software usamos **Next.js 16** para la mayoría de proyectos porque:
 - Velocidad de desarrollo
 - Performance superior
 - SEO optimizado
@@ -223,7 +223,7 @@ No hay respuesta incorrecta, pero Next.js ha evolucionado tanto que en 2026 es d
       "n8n",
     ],
     author: {
-      name: "Keii Solutions",
+      name: "Kei Software",
       role: "Equipo de Desarrollo",
     },
     content: `
@@ -303,7 +303,7 @@ La automatización no es reemplazar personas: es liberarlas para trabajo de mayo
       "CI/CD",
     ],
     author: {
-      name: "Keii Solutions",
+      name: "Kei Software",
       role: "Equipo de Desarrollo",
     },
     content: `

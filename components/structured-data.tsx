@@ -6,7 +6,7 @@ export function StructuredData() {
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "Keii Solutions",
+    name: "Kei Software",
     url: "https://keisoftware.dev",
     description:
       "Desarrollamos software a medida, soluciones IA y automatización",
@@ -23,7 +23,7 @@ export function StructuredData() {
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "Keii Solutions",
+    name: "Kei Software",
     url: "https://keisoftware.dev",
     logo: "https://keisoftware.dev/logo.png",
     description:
@@ -48,11 +48,11 @@ export function StructuredData() {
   const localBusinessSchema = {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
-    name: "Keii Solutions",
+    name: "Kei Software",
     description:
       "Desarrollo de software a medida, inteligencia artificial y automatización",
     url: "https://keisoftware.dev",
-    telephone: "+54-9-351-XXXXXXX",
+    telephone: "+54-351-361-4462",
     address: {
       "@type": "PostalAddress",
       addressLocality: "Córdoba",
@@ -79,7 +79,7 @@ export function StructuredData() {
     serviceType: "Software Development",
     provider: {
       "@type": "Organization",
-      name: "Keii Solutions",
+      name: "Kei Software",
     },
     areaServed: {
       "@type": "Country",
@@ -160,6 +160,38 @@ export function StructuredData() {
         acceptedAnswer: {
           "@type": "Answer",
           text: "Sí, desarrollamos soluciones con modelos de lenguaje (LLMs), visión artificial, y automatización inteligente. Podemos integrar IA en productos nuevos o existentes.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "¿Qué tipo de proyectos desarrolla Kei Software?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Desarrollamos software a medida, aplicaciones web y móviles, plataformas e-commerce, CRMs y ERPs personalizados, soluciones con inteligencia artificial y sistemas de automatización para empresas de distintos tamaños e industrias.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "¿Cómo puedo contactar a Kei Software?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Podés escribirnos por WhatsApp al +54 351 361-4462, completar el formulario de contacto en keisoftware.dev, o enviarnos un email. Respondemos en menos de 24 horas hábiles y la primera consulta es sin cargo.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "¿En qué se diferencian de otras consultoras de software?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Nos enfocamos en transparencia total durante el proyecto, comunicación constante con el cliente, entregas incrementales con sprints cortos, y calidad garantizada con testing desde el día uno, en lugar de entregas cerradas sin visibilidad del proceso.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "¿Dónde está ubicada Kei Software?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Tenemos nuestra base en Córdoba, Argentina, y trabajamos 100% remoto con clientes de toda Argentina y el mundo.",
         },
       },
     ],

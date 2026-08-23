@@ -112,7 +112,7 @@ export function Contact() {
                     Email
                   </p>
                   <p className="text-sm sm:text-base font-medium text-foreground group-hover:text-neon transition-colors break-all">
-                    keisolutions2@gmail.com
+                    keiisolutions2@gmail.com
                   </p>
                 </div>
               </a>
@@ -219,6 +219,8 @@ export function Contact() {
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       placeholder="Tu nombre"
+                      aria-describedby={error ? "form-error" : undefined}
+                      aria-invalid={error ? true : undefined}
                       className="px-4 py-3 rounded-sm bg-secondary border border-border text-foreground placeholder:text-muted-foreground/50 text-sm focus:outline-none focus:ring-2 focus:ring-neon/50 focus:border-neon/50 transition-all duration-300"
                     />
                   </motion.div>
@@ -243,6 +245,8 @@ export function Contact() {
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       placeholder="tu@empresa.com"
+                      aria-describedby={error ? "form-error" : undefined}
+                      aria-invalid={error ? true : undefined}
                       className="px-4 py-3 rounded-sm bg-secondary border border-border text-foreground placeholder:text-muted-foreground/50 text-sm focus:outline-none focus:ring-2 focus:ring-neon/50 focus:border-neon/50 transition-all duration-300"
                     />
                   </motion.div>
@@ -267,13 +271,20 @@ export function Contact() {
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       placeholder="Describí tu proyecto o problema..."
+                      aria-describedby={error ? "form-error" : undefined}
+                      aria-invalid={error ? true : undefined}
                       className="px-4 py-3 rounded-sm bg-secondary border border-border text-foreground placeholder:text-muted-foreground/50 text-sm focus:outline-none focus:ring-2 focus:ring-neon/50 focus:border-neon/50 transition-all duration-300 resize-none"
                     />
                   </motion.div>
                 )}
 
                 {error && (
-                  <p className="text-xs text-destructive bg-destructive/10 px-3 py-2 rounded-sm border border-destructive/30">
+                  <p
+                    id="form-error"
+                    role="alert"
+                    aria-live="assertive"
+                    className="text-xs text-destructive bg-destructive/10 px-3 py-2 rounded-sm border border-destructive/30"
+                  >
                     {error}
                   </p>
                 )}

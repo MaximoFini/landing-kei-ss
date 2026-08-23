@@ -11,11 +11,21 @@ const Process = dynamic(() => import("@/components/process").then(mod => ({ defa
 const Portfolio = dynamic(() => import("@/components/portfolio").then(mod => ({ default: mod.Portfolio })), {
   loading: () => <div className="min-h-screen" />
 })
-const Clients = dynamic(() => import("@/components/clients").then(mod => ({ default: mod.Clients })))
-const Testimonials = dynamic(() => import("@/components/testimonials").then(mod => ({ default: mod.Testimonials })))
-const Team = dynamic(() => import("@/components/team").then(mod => ({ default: mod.Team })))
-const Contact = dynamic(() => import("@/components/contact").then(mod => ({ default: mod.Contact })))
-const WhatsAppButton = dynamic(() => import("@/components/whatsapp-button").then(mod => ({ default: mod.WhatsAppButton })))
+const Clients = dynamic(() => import("@/components/clients").then(mod => ({ default: mod.Clients })), {
+  loading: () => <div className="min-h-screen animate-pulse bg-surface/30" />
+})
+const Testimonials = dynamic(() => import("@/components/testimonials").then(mod => ({ default: mod.Testimonials })), {
+  loading: () => <div className="min-h-screen animate-pulse bg-surface/30" />
+})
+const Team = dynamic(() => import("@/components/team").then(mod => ({ default: mod.Team })), {
+  loading: () => <div className="min-h-screen animate-pulse bg-surface/30" />
+})
+const Contact = dynamic(() => import("@/components/contact").then(mod => ({ default: mod.Contact })), {
+  loading: () => <div className="min-h-screen animate-pulse bg-surface/30" />
+})
+const WhatsAppButton = dynamic(() => import("@/components/whatsapp-button").then(mod => ({ default: mod.WhatsAppButton })), {
+  loading: () => <div className="fixed bottom-6 right-6 w-14 h-14 rounded-full animate-pulse bg-surface/30" />
+})
 
 export default function Page() {
   return (

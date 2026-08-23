@@ -5,7 +5,7 @@ import { motion } from "framer-motion"
 
 export function WhatsAppButton() {
   const phoneNumber = "5493513614462" // formato internacional sin +
-  const message = "Hola! Vengo desde la web de Keii Solutions y me gustaría consultar sobre sus servicios."
+  const message = "Hola! Vengo desde la web de Kei Software y me gustaría consultar sobre sus servicios."
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
 
   return (

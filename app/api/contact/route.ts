@@ -13,14 +13,14 @@ export async function POST(req: Request) {
     const resend = new Resend(process.env.RESEND_API_KEY || "")
 
     const { error } = await resend.emails.send({
-      from: "Keii Solutions <onboarding@resend.dev>",
+      from: "Kei Software <onboarding@resend.dev>",
       to: "maximofinicba@gmail.com",
       replyTo: email,
       subject: `Nuevo contacto desde la web: ${name}`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; background: #0d0f17; color: #f5f5f5; padding: 32px; border-radius: 8px; border: 1px solid #1e2235;">
           <div style="margin-bottom: 24px;">
-            <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo_principal-removebg-preview%20%281%29-65uflcVgzVsTIrqnApVUwM1VXjJKeV.png" alt="Keii Solutions" width="40" />
+            <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo_principal-removebg-preview%20%281%29-65uflcVgzVsTIrqnApVUwM1VXjJKeV.png" alt="Kei Software" width="40" />
           </div>
           <h2 style="color: #4f6dff; font-size: 20px; margin: 0 0 24px;">Nuevo mensaje de contacto</h2>
           <table style="width: 100%; border-collapse: collapse;">

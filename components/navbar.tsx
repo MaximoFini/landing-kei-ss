@@ -36,13 +36,13 @@ export function Navbar() {
         <a href="#" className="flex items-center gap-2 sm:gap-3 group">
           <Image
             src="/logo.png"
-            alt="Keii Solutions logo"
+            alt="Kei Software logo"
             width={32}
             height={32}
             className="w-8 h-8 sm:w-9 sm:h-9"
           />
           <span className="font-bold text-sm sm:text-base tracking-tight text-foreground">
-            Keii <span className="text-neon">Solutions</span>
+            Kei <span className="text-neon">Software</span>
           </span>
         </a>
 
