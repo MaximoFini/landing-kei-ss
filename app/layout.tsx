@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { StructuredData } from "@/components/structured-data";
+import { PageTransition } from "@/components/page-transition";
 import "./globals.css";
 
 const geist = Geist({
@@ -165,7 +166,7 @@ export default function RootLayout({
       <body
         className={`${geist.variable} ${geistMono.variable} font-sans antialiased bg-background text-foreground min-h-screen`}
       >
-        {children}
+        <PageTransition>{children}</PageTransition>
         {process.env.NODE_ENV === "production" && <Analytics />}
       </body>
     </html>
