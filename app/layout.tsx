@@ -18,9 +18,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://keiisolutions.com"),
+  metadataBase: new URL("https://keisoftware.dev"),
   alternates: {
-    canonical: "https://keiisolutions.com",
+    canonical: "https://keisoftware.dev",
   },
   title: {
     default: "Keii Solutions — Software a Medida",
@@ -72,7 +72,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "es_AR",
-    url: "https://keiisolutions.com",
+    url: "https://keisoftware.dev",
     title: "Keii Solutions — Software a Medida | Desarrollo Web & IA",
     description:
       "Desarrollamos software a medida, soluciones IA y automatización con transparencia total. Córdoba, Argentina.",

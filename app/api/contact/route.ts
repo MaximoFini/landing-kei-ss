@@ -41,7 +41,7 @@ export async function POST(req: Request) {
               ${message.replace(/\n/g, "<br/>")}
             </p>
           </div>
-          <p style="margin-top: 32px; font-size: 11px; color: #555f7a;">Enviado desde keii.solutions — Respondé directamente a este email para contactar al cliente.</p>
+          <p style="margin-top: 32px; font-size: 11px; color: #555f7a;">Enviado desde keisoftware.dev — Respondé directamente a este email para contactar al cliente.</p>
         </div>
       `,
     })

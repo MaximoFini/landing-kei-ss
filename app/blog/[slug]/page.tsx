@@ -34,12 +34,12 @@ export async function generateMetadata({
     description: post.excerpt,
     keywords: post.keywords,
     alternates: {
-      canonical: `https://keiisolutions.com/blog/${post.slug}`,
+      canonical: `https://keisoftware.dev/blog/${post.slug}`,
     },
     openGraph: {
       title: post.title,
       description: post.excerpt,
-      url: `https://keiisolutions.com/blog/${post.slug}`,
+      url: `https://keisoftware.dev/blog/${post.slug}`,
       type: "article",
       publishedTime: post.date,
       authors: [post.author.name],

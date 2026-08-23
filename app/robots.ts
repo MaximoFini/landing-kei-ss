@@ -18,7 +18,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/api/", "/private/"],
       },
     ],
-    sitemap: "https://keiisolutions.com/sitemap.xml",
-    host: "https://keiisolutions.com",
+    sitemap: "https://keisoftware.dev/sitemap.xml",
+    host: "https://keisoftware.dev",
   };
 }

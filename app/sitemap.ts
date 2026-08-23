@@ -6,7 +6,7 @@ import { getAllPosts } from "@/lib/blog";
  * Incluye todas las páginas estáticas y posts del blog
  */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://keiisolutions.com";
+  const baseUrl = "https://keisoftware.dev";
   const currentDate = new Date();
 
   // Get all blog posts

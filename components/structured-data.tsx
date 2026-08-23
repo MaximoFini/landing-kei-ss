@@ -7,14 +7,14 @@ export function StructuredData() {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: "Keii Solutions",
-    url: "https://keiisolutions.com",
+    url: "https://keisoftware.dev",
     description:
       "Desarrollamos software a medida, soluciones IA y automatización",
     potentialAction: {
       "@type": "SearchAction",
       target: {
         "@type": "EntryPoint",
-        urlTemplate: "https://keiisolutions.com/?s={search_term_string}",
+        urlTemplate: "https://keisoftware.dev/?s={search_term_string}",
       },
       "query-input": "required name=search_term_string",
     },
@@ -24,8 +24,8 @@ export function StructuredData() {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: "Keii Solutions",
-    url: "https://keiisolutions.com",
-    logo: "https://keiisolutions.com/logo.png",
+    url: "https://keisoftware.dev",
+    logo: "https://keisoftware.dev/logo.png",
     description:
       "Desarrollamos software a medida, soluciones IA y automatización con transparencia y calidad garantizada.",
     address: {
@@ -51,7 +51,7 @@ export function StructuredData() {
     name: "Keii Solutions",
     description:
       "Desarrollo de software a medida, inteligencia artificial y automatización",
-    url: "https://keiisolutions.com",
+    url: "https://keisoftware.dev",
     telephone: "+54-9-351-XXXXXXX",
     address: {
       "@type": "PostalAddress",

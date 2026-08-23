@@ -8,12 +8,12 @@ export const metadata: Metadata = {
   description:
     "Artículos sobre desarrollo de software, inteligencia artificial, automatización y mejores prácticas de programación.",
   alternates: {
-    canonical: "https://keiisolutions.com/blog",
+    canonical: "https://keisoftware.dev/blog",
   },
   openGraph: {
     title: "Blog | Keii Solutions",
     description: "Artículos sobre desarrollo de software, IA y automatización",
-    url: "https://keiisolutions.com/blog",
+    url: "https://keisoftware.dev/blog",
   },
 };
 
