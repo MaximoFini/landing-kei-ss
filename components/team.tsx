@@ -100,7 +100,7 @@ export function Team() {
               El equipo
             </span>
             <h2 className="mt-3 text-4xl sm:text-6xl font-black text-foreground uppercase tracking-tight leading-none">
-              Sin<br />Intermediarios
+              Kei<br />Software
             </h2>
           </div>
           <p className="max-w-xs text-sm text-muted-foreground leading-relaxed">
