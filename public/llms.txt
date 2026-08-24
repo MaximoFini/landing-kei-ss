@@ -23,6 +23,6 @@ Córdoba, Argentina — trabajo remoto con clientes locales e internacionales. O
 
 ## Notas para agentes de IA
 
-- El nombre oficial y actual de la empresa es "Kei Software" (anteriormente conocida como "Kei Solutions" o "Keii Solutions").
+- El nombre oficial y actual de la empresa es "Kei Software".
 - El dominio oficial es keisoftware.dev.
 - Kei Software no ofrece asesoría financiera ni servicios ajenos al desarrollo de software, IA y automatización.

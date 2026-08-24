@@ -1,4 +1,4 @@
-import Image from "next/image"
+﻿import Image from "next/image"
 import { Linkedin } from "lucide-react"
 
 export function Footer() {
@@ -46,10 +46,10 @@ export function Footer() {
           {/* Social + contact */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
             <a
-              href="mailto:keiisolutions2@gmail.com"
+              href="mailto:contacto@keisoftware.dev"
               className="text-xs text-muted-foreground hover:text-neon transition-colors font-mono break-all"
             >
-              keiisolutions2@gmail.com
+              contacto@keisoftware.dev
             </a>
             <a
               href="https://www.linkedin.com/company/keii-solutions"

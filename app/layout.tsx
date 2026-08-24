@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { StructuredData } from "@/components/structured-data";
@@ -64,12 +64,6 @@ export const metadata: Metadata = {
   verification: {
     google: "google9f062801bafc9c55",
   },
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 5,
-    userScalable: true,
-  },
   openGraph: {
     type: "website",
     locale: "es_AR",
@@ -105,10 +99,6 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
-  ],
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -132,6 +122,17 @@ export const metadata: Metadata = {
     ],
     apple: "/apple-icon.png",
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+  ],
 };
 
 export default function RootLayout({

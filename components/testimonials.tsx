@@ -9,7 +9,7 @@ const testimonials = [
     role: "CTO, Finova Labs",
     initials: "RM",
     comment:
-      "Keii entregó nuestro MVP en tiempo récord. La comunicación fue impecable y nunca hubo sorpresas con el presupuesto. Su transparencia es lo que más valoro.",
+      "Kei Software entregó nuestro MVP en tiempo récord. La comunicación fue impecable y nunca hubo sorpresas con el presupuesto. Su transparencia es lo que más valoro.",
   },
   {
     name: "Camila Torres",

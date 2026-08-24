@@ -1,4 +1,4 @@
-/**
+﻿/**
  * JSON-LD Structured Data for SEO
  * Helps search engines understand your business better
  */
@@ -35,7 +35,7 @@ export function StructuredData() {
     },
     contactPoint: {
       "@type": "ContactPoint",
-      email: "keiisolutions2@gmail.com",
+      email: "contacto@keisoftware.dev",
       contactType: "customer service",
       availableLanguage: ["Spanish", "English"],
     },

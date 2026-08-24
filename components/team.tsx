@@ -7,36 +7,25 @@ import { Linkedin } from "lucide-react"
 
 const coreMembers = [
   {
-    name: "Maximo Fini",
-    role: "Co-founder / Product Manager",
-    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Maximo_Fini-0HmiZcig2d8y2J5ZxZ2cC2E2ilN6RA.jpeg",
+    name: "Jerónimo Zallocco",
+    role: "Co-founder / Full Stack Developer",
+    image: "/team/jeronimo-zallocco.jpg",
+    linkedin: "https://www.linkedin.com/in/jer%C3%B3nimo-zallocco-036090417/",
+    bio: "Convierte requerimientos complejos en código simple y mantenible, sin perder de vista el rendimiento.",
+  },
+  {
+    name: "Máximo Fini",
+    role: "Co-founder / Project Manager",
+    image: "/team/maximo-fini.jpg",
     linkedin: "https://www.linkedin.com/in/maximo-fini-560742201/",
-    bio: "Interesado en la experiencia del usuario final. Entendiendo que un buen sistema se mide en ganancias, no en complejidad",
+    bio: "Ordena tiempos y prioridades para que cada proyecto llegue a producción sin sorpresas.",
   },
   {
-    name: "Juan Varengo",
-    role: "Co-founder / Analista Funcional",
-    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Juan_Varengo-7O3qDZFv9bleMumYQswWDteu5VFxds.png",
-    linkedin: "https://www.linkedin.com/in/juanignaciovarengobossi/",
-    bio: "Especializado en bajar la idea del cliente a diagramas que escalen el sistema de 0 a 100.",
-  },
-]
-
-const collaborators = [
-  {
-    name: "Juan Liendo",
-    role: "IA · Full Stack · Scrum Master",
-    image: null,
-  },
-  {
-    name: "Josefina Pasqualis",
-    role: "Legal",
-    image: null,
-  },
-  {
-    name: "Facundo Zallocco",
-    role: "Full Stack",
-    image: null,
+    name: "Ramiro Celada",
+    role: "Co-founder / Product Manager",
+    image: "/team/ramiro-celada.jpg",
+    linkedin: "https://www.linkedin.com/in/ramiro-celada/",
+    bio: "Traduce la visión del cliente en un producto con roadmap claro, con foco en el problema real a resolver.",
   },
 ]
 
@@ -91,51 +80,6 @@ function MemberCard({
   )
 }
 
-function CollaboratorRow({
-  collab,
-  index,
-}: {
-  collab: (typeof collaborators)[0]
-  index: number
-}) {
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: "-40px" })
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, x: -20 }}
-      animate={inView ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 0.45, delay: index * 0.08 }}
-      className="flex items-center justify-between py-4 border-b border-border/30 last:border-0"
-    >
-      <div className="flex items-center gap-4">
-        {collab.image ? (
-          <div className="relative w-9 h-9 rounded-full overflow-hidden bg-surface-elevated border border-border flex-shrink-0">
-            <Image
-              src={collab.image}
-              alt={`Foto de ${collab.name}`}
-              fill
-              sizes="36px"
-              className="object-cover"
-            />
-          </div>
-        ) : (
-          <div className="w-9 h-9 rounded-full bg-surface-elevated border border-border flex items-center justify-center flex-shrink-0">
-            <span className="text-xs font-bold text-muted-foreground">
-              {collab.name.charAt(0)}
-            </span>
-          </div>
-        )}
-        <div>
-          <p className="text-sm font-semibold text-foreground leading-tight">{collab.name}</p>
-          <p className="text-[11px] text-muted-foreground font-mono mt-0.5">{collab.role}</p>
-        </div>
-      </div>
-    </motion.div>
-  )
-}
-
 export function Team() {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: "-60px" })
@@ -165,25 +109,10 @@ export function Team() {
         </motion.div>
 
         {/* Core team grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {coreMembers.map((member, i) => (
             <MemberCard key={member.name} member={member} index={i} />
           ))}
-        </div>
-
-        {/* Collaborators */}
-        <div>
-          <div className="flex items-center gap-4 mb-6">
-            <span className="w-6 h-px bg-border" />
-            <span className="text-[10px] tracking-[0.3em] text-muted-foreground uppercase font-mono">
-              Colaboradores
-            </span>
-          </div>
-          <div>
-            {collaborators.map((collab, i) => (
-              <CollaboratorRow key={collab.name} collab={collab} index={i} />
-            ))}
-          </div>
         </div>
       </div>
     </section>

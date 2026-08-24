@@ -37,9 +37,9 @@ export function Navbar() {
           <Image
             src="/logo.png"
             alt="Kei Software logo"
-            width={32}
-            height={32}
-            className="w-8 h-8 sm:w-9 sm:h-9"
+            width={40}
+            height={40}
+            className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg"
           />
           <span className="font-bold text-sm sm:text-base tracking-tight text-foreground">
             Kei <span className="text-neon">Software</span>

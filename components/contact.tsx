@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { motion, useInView } from "framer-motion"
 import { useRef, useState } from "react"
@@ -101,7 +101,7 @@ export function Contact() {
 
             <div className="flex flex-col gap-5 sm:gap-6">
               <a
-                href="mailto:keiisolutions2@gmail.com"
+                href="mailto:contacto@keisoftware.dev"
                 className="flex items-center gap-4 sm:gap-5 group transition-transform hover:translate-x-1 duration-300"
               >
                 <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-sm bg-neon/10 border border-neon/20 flex items-center justify-center flex-shrink-0 group-hover:bg-neon/20 group-hover:scale-110 transition-all duration-300">
@@ -112,7 +112,7 @@ export function Contact() {
                     Email
                   </p>
                   <p className="text-sm sm:text-base font-medium text-foreground group-hover:text-neon transition-colors break-all">
-                    keiisolutions2@gmail.com
+                    contacto@keisoftware.dev
                   </p>
                 </div>
               </a>
