@@ -1,7 +1,9 @@
 "use client"
 
-import { motion, useScroll, useTransform, type Variants } from "framer-motion"
-import { useRef } from "react"
+import { motion, type Variants } from "framer-motion"
+import dynamic from "next/dynamic"
+
+const LiquidEther = dynamic(() => import("@/components/LiquidEther"), { ssr: false })
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 40 },
@@ -13,67 +15,64 @@ const fadeUp: Variants = {
 }
 
 export function Hero() {
-  const ref = useRef(null)
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"],
-  })
-
-  // Parallax sutil para los elementos de fondo
-  const y1 = useTransform(scrollYProgress, [0, 1], [0, 100])
-  const y2 = useTransform(scrollYProgress, [0, 1], [0, -50])
-  const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [1, 0.8, 0])
-
   return (
-    <section
-      ref={ref}
-      className="dark relative min-h-screen px-4 sm:px-6 pt-40 sm:pt-48 overflow-hidden bg-background"
-    >
-      {/* Video de fondo: equipo trabajando.
-          object-position sesgado hacia abajo: en pantallas angostas/altas (notebooks)
-          object-cover recorta de los costados y arriba primero, así la gente se
-          mantiene visible en vez de perderse fuera de cuadro. */}
-      <video
-        className="absolute inset-0 w-full h-full object-cover object-[center_60%]"
-        autoPlay
-        loop
-        muted
-        playsInline
-        preload="auto"
-        poster="/hero-poster.jpg"
-        src="/hero-loop.mp4"
+    <section className="dark relative min-h-screen px-4 sm:px-6 pt-40 sm:pt-48 overflow-hidden bg-background">
+      {/* Atmósfera de cielo: un degradé bien azul (nada de negro puro) detrás
+          de todo, para que el fluido y las estrellas floten sobre un cielo
+          real en vez de sobre un fondo oscuro plano. */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(120% 90% at 50% -10%, #0f2678 0%, #091c50 35%, #050f28 68%, #030816 100%)",
+        }}
       />
 
-      {/* Scrim: garantiza contraste del texto sobre zonas brillantes del video */}
-      <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none" />
-
-      {/* Subtle blue glow top-left */}
-      <motion.div
-        style={{ y: y1, opacity }}
-        className="absolute -top-40 -left-40 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] rounded-full bg-neon/8 blur-[120px] sm:blur-[160px] pointer-events-none"
-      />
-      {/* Subtle blue glow bottom-right */}
-      <motion.div
-        style={{ y: y2, opacity }}
-        className="absolute bottom-0 right-0 w-[300px] sm:w-[400px] h-[300px] sm:h-[400px] rounded-full bg-neon/6 blur-[100px] sm:blur-[120px] pointer-events-none"
-      />
+      {/* Fondo: simulación de fluido en WebGL (React Bits "Liquid Ether"), en los
+          tonos de marca. Reacciona al mouse y también se anima solo cuando nadie
+          interactúa (autoDemo).
+          resolution/iterationsPoisson bajos a propósito: son los dos parámetros
+          que más CPU/GPU consumen por frame (la resolución define cuántos
+          píxeles simula, y el solver de presión corre esa cantidad de
+          iteraciones EN CADA frame) -- bajarlos es lo que saca el delay al
+          mover el mouse. BFECC en false ahorra otro pase de textura por frame. */}
+      <div className="absolute inset-0">
+        <LiquidEther
+          colors={["#0b1a42", "#1a4fc0", "#3f7dff", "#bcdcff"]}
+          mouseForce={20}
+          cursorSize={100}
+          isViscous={false}
+          viscous={30}
+          iterationsViscous={16}
+          iterationsPoisson={16}
+          resolution={0.3}
+          BFECC={false}
+          isBounce={false}
+          autoDemo
+          autoSpeed={0.5}
+          autoIntensity={2.2}
+          takeoverDuration={0.25}
+          autoResumeDelay={50}
+          autoRampDuration={1.4}
+        />
+      </div>
 
       {/* Thin horizontal rule top */}
       <div className="absolute top-20 sm:top-24 left-4 sm:left-6 right-4 sm:right-6 h-px bg-border/40" />
 
       {/* Main content */}
-      <div className="relative z-10 max-w-7xl mx-auto w-full">
+      <div className="relative z-10 max-w-7xl mx-auto w-full pointer-events-none">
         {/* Oversized headline */}
         <motion.h1
           custom={2}
           variants={fadeUp}
           initial="hidden"
           animate="visible"
-          className="text-[clamp(2.75rem,13vw,7rem)] font-black leading-[0.9] tracking-tight text-foreground uppercase"
+          className="text-[clamp(2.75rem,13vw,7rem)] font-black leading-[0.9] tracking-tight text-foreground uppercase [filter:drop-shadow(0_2px_4px_rgba(2,6,18,0.85))_drop-shadow(0_14px_36px_rgba(2,6,18,0.6))]"
         >
           Software a medida.
           <br />
-          <span className="text-neon">Resultados reales.</span>
+          <span className="text-neon-bright">Resultados reales.</span>
         </motion.h1>
       </div>
 
@@ -83,7 +82,7 @@ export function Hero() {
         variants={fadeUp}
         initial="hidden"
         animate="visible"
-        className="absolute inset-x-0 bottom-8 sm:bottom-12 z-10 px-4 sm:px-6"
+        className="absolute inset-x-0 bottom-8 sm:bottom-12 z-10 px-4 sm:px-6 pointer-events-none"
       >
         <div className="max-w-7xl mx-auto pt-6 sm:pt-8 border-t border-border/40 flex flex-wrap justify-center gap-8 sm:gap-14 text-center">
           {[

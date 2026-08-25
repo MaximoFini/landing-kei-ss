@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
@@ -15,11 +15,34 @@ const navLinks = [
 
 export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  // Gana elevación al scrollear: navbar-12 de reactbits (no pudimos ver su
+  // código fuente, está pago -- esto replica el comportamiento descripto
+  // en su preview público) sube sombra/opacidad.
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 pt-3 sm:pt-4 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
-        <nav className="h-14 sm:h-16 px-4 sm:px-6 flex items-center justify-between rounded-2xl border border-border/50 bg-background/75 backdrop-blur-xl backdrop-saturate-150 shadow-lg shadow-black/5">
+        <motion.nav
+          animate={{
+            boxShadow: scrolled
+              ? "0 16px 40px -12px rgba(0,0,0,0.45)"
+              : "0 4px 16px -8px rgba(0,0,0,0.12)",
+          }}
+          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          className={`h-14 sm:h-16 px-4 sm:px-6 flex items-center justify-between rounded-2xl border backdrop-blur-xl backdrop-saturate-150 transition-colors duration-300 ${
+            scrolled
+              ? "border-border/70 bg-background/90"
+              : "border-border/50 bg-background/75"
+          }`}
+        >
           {/* Logo */}
           <a href="#" className="flex items-center gap-2 sm:gap-3 group">
             <Image
@@ -66,7 +89,7 @@ export function Navbar() {
           >
             {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
-        </nav>
+        </motion.nav>
 
         {/* Mobile menu */}
         <AnimatePresence>
