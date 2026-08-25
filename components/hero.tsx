@@ -1,7 +1,6 @@
 "use client"
 
 import { motion, useScroll, useTransform, type Variants } from "framer-motion"
-import { ArrowRight } from "lucide-react"
 import { useRef } from "react"
 
 const fadeUp: Variants = {
@@ -28,7 +27,7 @@ export function Hero() {
   return (
     <section
       ref={ref}
-      className="dark relative min-h-screen flex flex-col justify-end px-4 sm:px-6 pb-12 sm:pb-16 pt-24 sm:pt-32 overflow-hidden bg-background"
+      className="dark relative min-h-screen px-4 sm:px-6 pt-40 sm:pt-48 overflow-hidden bg-background"
     >
       {/* Video de fondo: equipo trabajando.
           object-position sesgado hacia abajo: en pantallas angostas/altas (notebooks)
@@ -44,6 +43,9 @@ export function Hero() {
         src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260314_131748_f2ca2a28-fed7-44c8-b9a9-bd9acdd5ec31.mp4"
       />
 
+      {/* Scrim: garantiza contraste del texto sobre zonas brillantes del video */}
+      <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none" />
+
       {/* Subtle blue glow top-left */}
       <motion.div
         style={{ y: y1, opacity }}
@@ -58,119 +60,43 @@ export function Hero() {
       {/* Thin horizontal rule top */}
       <div className="absolute top-20 sm:top-24 left-4 sm:left-6 right-4 sm:right-6 h-px bg-border/40" />
 
-      {/* Index labels */}
-      <motion.div
-        custom={0}
-        variants={fadeUp}
-        initial="hidden"
-        animate="visible"
-        className="absolute top-[5.5rem] sm:top-28 left-4 sm:left-6 flex items-center gap-4"
-      >
-        <span className="text-[9px] sm:text-[10px] tracking-[0.2em] sm:tracking-[0.25em] text-muted-foreground uppercase">
-          Córdoba, Argentina — Remoto Global
-        </span>
-      </motion.div>
-
-      <motion.div
-        custom={0}
-        variants={fadeUp}
-        initial="hidden"
-        animate="visible"
-        className="absolute top-[5.5rem] sm:top-28 right-4 sm:right-6 flex items-center gap-4"
-      >
-    
-      </motion.div>
-
       {/* Main content */}
       <div className="relative z-10 max-w-7xl mx-auto w-full">
-        {/* Eyebrow + Urgency badge */}
-        <motion.div
-          custom={1}
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6"
-        >
-          <div className="flex items-center gap-2 sm:gap-3">
-            <span className="w-6 sm:w-8 h-px bg-neon" />
-            <span className="text-[9px] sm:text-[10px] tracking-[0.25em] sm:tracking-[0.3em] text-neon uppercase font-mono">
-              Software a medida
-            </span>
-          </div>
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-sm border border-neon/40 bg-neon/5 backdrop-blur-sm animate-pulse w-fit">
-            <span className="w-2 h-2 rounded-full bg-neon animate-ping" />
-            <span className="text-[9px] sm:text-[10px] font-bold text-foreground tracking-wider uppercase">
-              Solo 3 proyectos nuevos/mes
-            </span>
-          </div>
-        </motion.div>
-
         {/* Oversized headline */}
         <motion.h1
           custom={2}
           variants={fadeUp}
           initial="hidden"
           animate="visible"
-          className="text-[clamp(2rem,10vw,7rem)] font-black leading-[0.9] tracking-tight text-foreground uppercase"
+          className="text-[clamp(2.75rem,13vw,7rem)] font-black leading-[0.9] tracking-tight text-foreground uppercase"
         >
-          Código que
+          Software a medida.
           <br />
           <span
             className="text-neon"
             style={{ textShadow: "0 0 40px oklch(0.55 0.25 264 / 0.4), 0 0 60px oklch(0.55 0.25 264 / 0.2)" }}
           >
-            resuelve
+            Resultados reales.
           </span>
-          <br />
-          problemas
-          <span className="text-neon">.</span>
         </motion.h1>
+      </div>
 
-        {/* Bottom row: description + CTAs */}
-        <motion.div
-          custom={3}
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          className="mt-8 sm:mt-12 flex flex-col lg:flex-row items-start lg:items-end justify-between gap-6 sm:gap-8"
-        >
-          <p className="max-w-md text-sm sm:text-base text-muted-foreground leading-relaxed">
-            Desarrollamos software a medida, soluciones de inteligencia artificial
-            y automatizaciones con transparencia total y calidad garantizada. Sin
-            intermediarios. Sin letra chica.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full sm:w-auto">
-            <a
-              href="#contacto"
-              className="inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3 sm:py-4 bg-neon text-foreground font-bold text-sm tracking-wide hover:bg-neon-bright transition-all duration-300 rounded-sm hover:scale-105 active:scale-95 hover:shadow-lg hover:shadow-neon/20 text-center"
-            >
-              Primera consulta gratis <ArrowRight className="w-4 h-4" />
-            </a>
-            <a
-              href="#proyectos"
-              className="inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3 sm:py-4 border border-border text-muted-foreground font-medium text-sm tracking-wide hover:border-neon/50 hover:text-foreground transition-all duration-300 rounded-sm hover:scale-105 active:scale-95 text-center"
-            >
-              Ver proyectos
-            </a>
-          </div>
-        </motion.div>
-
-        {/* Stats bar */}
-        <motion.div
-          custom={4}
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          className="mt-10 sm:mt-14 pt-6 sm:pt-8 border-t border-border/40 grid grid-cols-2 sm:flex sm:flex-wrap gap-6 sm:gap-10"
-        >
+      {/* Stats bar: pinned near the bottom, independent of the headline's position */}
+      <motion.div
+        custom={4}
+        variants={fadeUp}
+        initial="hidden"
+        animate="visible"
+        className="absolute inset-x-0 bottom-8 sm:bottom-12 z-10 px-4 sm:px-6"
+      >
+        <div className="max-w-7xl mx-auto pt-6 sm:pt-8 border-t border-border/40 flex flex-wrap justify-center gap-8 sm:gap-14 text-center">
           {[
             { value: "53", label: "Proyectos entregados" },
             { value: "97%", label: "Satisfacción del cliente" },
             { value: "3.5", label: "Años de experiencia" },
           ].map((stat) => (
-            <div key={stat.label} className="flex flex-col gap-1">
-              <span className="text-2xl sm:text-3xl font-black text-neon leading-none">
+            <div key={stat.label} className="flex flex-col items-center gap-1">
+              <span className="text-2xl sm:text-3xl font-black text-white leading-none">
                 {stat.value}
               </span>
               <span className="text-[10px] sm:text-[11px] text-muted-foreground tracking-wider uppercase">
@@ -178,8 +104,8 @@ export function Hero() {
               </span>
             </div>
           ))}
-        </motion.div>
-      </div>
+        </div>
+      </motion.div>
     </section>
   )
 }
