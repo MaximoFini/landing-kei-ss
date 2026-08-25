@@ -26,7 +26,24 @@ export function Hero() {
   const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [1, 0.8, 0])
 
   return (
-    <section ref={ref} className="relative min-h-screen flex flex-col justify-end px-4 sm:px-6 pb-12 sm:pb-16 pt-24 sm:pt-32 overflow-hidden">
+    <section
+      ref={ref}
+      className="dark relative min-h-screen flex flex-col justify-end px-4 sm:px-6 pb-12 sm:pb-16 pt-24 sm:pt-32 overflow-hidden bg-background"
+    >
+      {/* Video de fondo: equipo trabajando.
+          object-position sesgado hacia abajo: en pantallas angostas/altas (notebooks)
+          object-cover recorta de los costados y arriba primero, así la gente se
+          mantiene visible en vez de perderse fuera de cuadro. */}
+      <video
+        className="absolute inset-0 w-full h-full object-cover object-[center_60%]"
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="auto"
+        src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260314_131748_f2ca2a28-fed7-44c8-b9a9-bd9acdd5ec31.mp4"
+      />
+
       {/* Subtle blue glow top-left */}
       <motion.div
         style={{ y: y1, opacity }}
@@ -94,7 +111,7 @@ export function Hero() {
           variants={fadeUp}
           initial="hidden"
           animate="visible"
-          className="text-[clamp(2rem,12vw,9rem)] font-black leading-[0.9] tracking-tight text-foreground uppercase"
+          className="text-[clamp(2rem,10vw,7rem)] font-black leading-[0.9] tracking-tight text-foreground uppercase"
         >
           Código que
           <br />
