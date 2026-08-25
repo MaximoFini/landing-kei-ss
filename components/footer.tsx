@@ -14,6 +14,7 @@ export function Footer() {
                 alt="Kei Software logo"
                 width={32}
                 height={32}
+                unoptimized
                 className="w-7 h-7 sm:w-8 sm:h-8"
               />
               <span className="font-bold text-sm sm:text-base text-foreground tracking-tight">

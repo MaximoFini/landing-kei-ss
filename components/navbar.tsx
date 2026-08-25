@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
 
@@ -15,15 +15,9 @@ const navLinks = [
 
 export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { scrollY } = useScroll();
-  const headerOpacity = useTransform(scrollY, [0, 220], [1, 0]);
-  const headerPointerEvents = useTransform(headerOpacity, (v) => (v < 0.05 ? "none" : "auto"));
 
   return (
-    <motion.header
-      style={{ opacity: headerOpacity, pointerEvents: headerPointerEvents }}
-      className="fixed top-0 left-0 right-0 z-50 pt-3 sm:pt-4 px-4 sm:px-6"
-    >
+    <header className="fixed top-0 left-0 right-0 z-50 pt-3 sm:pt-4 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
         <nav className="h-14 sm:h-16 px-4 sm:px-6 flex items-center justify-between rounded-2xl border border-border/50 bg-background/75 backdrop-blur-xl backdrop-saturate-150 shadow-lg shadow-black/5">
           {/* Logo */}
@@ -33,6 +27,8 @@ export function Navbar() {
               alt="Kei Software logo"
               width={40}
               height={40}
+              unoptimized
+              priority
               className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg"
             />
             <span className="font-bold text-sm sm:text-base tracking-tight text-foreground">
@@ -107,6 +103,6 @@ export function Navbar() {
           )}
         </AnimatePresence>
       </div>
-    </motion.header>
+    </header>
   );
 }
