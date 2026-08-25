@@ -40,7 +40,8 @@ export function Hero() {
         muted
         playsInline
         preload="auto"
-        src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260314_131748_f2ca2a28-fed7-44c8-b9a9-bd9acdd5ec31.mp4"
+        poster="/hero-poster.jpg"
+        src="/hero-loop.mp4"
       />
 
       {/* Scrim: garantiza contraste del texto sobre zonas brillantes del video */}
@@ -72,12 +73,7 @@ export function Hero() {
         >
           Software a medida.
           <br />
-          <span
-            className="text-neon"
-            style={{ textShadow: "0 0 40px oklch(0.55 0.25 264 / 0.4), 0 0 60px oklch(0.55 0.25 264 / 0.2)" }}
-          >
-            Resultados reales.
-          </span>
+          <span className="text-neon">Resultados reales.</span>
         </motion.h1>
       </div>
 
