@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import { motion, useInView } from "framer-motion"
 import { useRef, useState } from "react"
@@ -215,7 +215,6 @@ export function Contact() {
                     <input
                       id="name"
                       type="text"
-                      autoFocus
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       placeholder="Tu nombre"
@@ -241,7 +240,6 @@ export function Contact() {
                     <input
                       id="email"
                       type="email"
-                      autoFocus
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       placeholder="tu@empresa.com"
@@ -267,7 +265,6 @@ export function Contact() {
                     <textarea
                       id="message"
                       rows={5}
-                      autoFocus
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       placeholder="Describí tu proyecto o problema..."
