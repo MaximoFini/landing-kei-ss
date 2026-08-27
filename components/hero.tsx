@@ -43,8 +43,8 @@ export function Hero() {
       <div className="absolute inset-0">
         <LiquidEther
           colors={["#0b1a42", "#1a4fc0", "#3f7dff", "#bcdcff"]}
-          mouseForce={20}
-          cursorSize={100}
+          mouseForce={16}
+          cursorSize={90}
           isViscous={false}
           viscous={30}
           iterationsViscous={12}
@@ -53,8 +53,8 @@ export function Hero() {
           BFECC={false}
           isBounce={false}
           autoDemo
-          autoSpeed={0.5}
-          autoIntensity={2.0}
+          autoSpeed={0.4}
+          autoIntensity={1.6}
           takeoverDuration={0.25}
           autoResumeDelay={50}
           autoRampDuration={1.2}
@@ -78,7 +78,7 @@ export function Hero() {
 
         {/* Headline — Antigravity Typewriter Effect */}
         <h1
-          className="font-instrument text-[clamp(2.9rem,12vw,7rem)] font-bold tracking-tight uppercase mb-8 sm:mb-10 text-center mx-auto"
+          className="font-instrument text-[clamp(3.1rem,12.84vw,7.5rem)] font-bold tracking-tight mb-8 sm:mb-10 text-center mx-auto"
           style={{
             lineHeight: 1.02,
             textShadow: "0 2px 10px rgba(0,0,0,0.85), 0 8px 30px rgba(2,6,18,0.6)",
@@ -94,11 +94,19 @@ export function Hero() {
           />
         </h1>
 
-        {/* CTAs — Stacked Vertically & Centered (Appears on text completion) */}
+        {/* CTAs — Stacked Vertically & Centered (Smooth entrance on text completion) */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={textCompleted ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          initial={{ opacity: 0, y: 18, filter: "blur(6px)" }}
+          animate={
+            textCompleted
+              ? { opacity: 1, y: 0, filter: "blur(0px)" }
+              : { opacity: 0, y: 18, filter: "blur(6px)" }
+          }
+          transition={{
+            duration: 0.85,
+            delay: 0.1,
+            ease: [0.16, 1, 0.3, 1],
+          }}
           className="flex flex-col items-center justify-center gap-3.5 mx-auto"
         >
           <SpecularButton href="#contacto">Empezá tu proyecto</SpecularButton>
@@ -120,9 +128,17 @@ export function Hero() {
 
       {/* ─── Stats bar — pinned to bottom ─── */}
       <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={textCompleted ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-        transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
+        initial={{ opacity: 0, y: 14, filter: "blur(4px)" }}
+        animate={
+          textCompleted
+            ? { opacity: 1, y: 0, filter: "blur(0px)" }
+            : { opacity: 0, y: 14, filter: "blur(4px)" }
+        }
+        transition={{
+          duration: 0.95,
+          delay: 0.25,
+          ease: [0.16, 1, 0.3, 1],
+        }}
         className="absolute inset-x-0 bottom-8 sm:bottom-12 z-10 px-4 sm:px-6 pointer-events-none"
       >
         <div className="max-w-7xl mx-auto">

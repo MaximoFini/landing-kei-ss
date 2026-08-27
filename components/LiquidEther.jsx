@@ -87,10 +87,6 @@ export default function LiquidEther({
       }
       init(container) {
         this.container = container;
-        // tope en 1.5 en vez de 2: en pantallas retina/notebooks de alta densidad
-        // esto reduce bastante el trabajo por frame del renderer y de la simulación
-        // (que además escala su propia resolución sobre este tamaño), sin notarse
-        // a simple vista en un fondo de este tipo.
         this.pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
         this.resize();
         this.renderer = new THREE.WebGLRenderer({
@@ -116,6 +112,7 @@ export default function LiquidEther({
         this.width = Math.max(1, Math.floor(rect.width));
         this.height = Math.max(1, Math.floor(rect.height));
         this.aspect = this.width / this.height;
+        this.isMobile = this.width < this.breakpoint || this.aspect < 0.85;
         if (this.renderer) this.renderer.setSize(this.width, this.height, false);
       }
       update() {
@@ -311,7 +308,10 @@ export default function LiquidEther({
         this.diff.subVectors(this.coords, this.coords_old);
         this.coords_old.copy(this.coords);
         if (this.coords_old.x === 0 && this.coords_old.y === 0) this.diff.set(0, 0);
-        if (this.isAutoActive && !this.takeoverActive) this.diff.multiplyScalar(this.autoIntensity);
+        if (this.isAutoActive && !this.takeoverActive) {
+          const intensity = Common.isMobile ? this.autoIntensity * 0.55 : this.autoIntensity;
+          this.diff.multiplyScalar(intensity);
+        }
       }
     }
     const Mouse = new MouseClass();
@@ -335,7 +335,12 @@ export default function LiquidEther({
       }
       pickNewTarget() {
         const r = Math.random;
-        this.target.set((r() * 2 - 1) * (1 - this.margin), (r() * 2 - 1) * (1 - this.margin));
+        if (Common.isMobile) {
+          // Constrain horizontal spread on portrait phones to avoid edge-to-edge flooding
+          this.target.set((r() * 2 - 1) * 0.45, (r() * 2 - 1) * 0.6);
+        } else {
+          this.target.set((r() * 2 - 1) * (1 - this.margin), (r() * 2 - 1) * (1 - this.margin));
+        }
       }
       forceStop() {
         this.active = false;
@@ -675,10 +680,14 @@ export default function LiquidEther({
         this.scene.add(this.mouse);
       }
       update(props) {
-        const forceX = (Mouse.diff.x / 2) * props.mouse_force;
-        const forceY = (Mouse.diff.y / 2) * props.mouse_force;
-        const cursorSizeX = props.cursor_size * props.cellScale.x;
-        const cursorSizeY = props.cursor_size * props.cellScale.y;
+        const mobileScale = Common.isMobile ? 0.45 : 1.0;
+        const effectiveForce = props.mouse_force * (Common.isMobile ? 0.55 : 1.0);
+        const effectiveCursorSize = props.cursor_size * mobileScale;
+
+        const forceX = (Mouse.diff.x / 2) * effectiveForce;
+        const forceY = (Mouse.diff.y / 2) * effectiveForce;
+        const cursorSizeX = effectiveCursorSize * props.cellScale.x;
+        const cursorSizeY = effectiveCursorSize * props.cellScale.y;
         const centerX = Math.min(
           Math.max(Mouse.coords.x, -1 + cursorSizeX + props.cellScale.x * 2),
           1 - cursorSizeX - props.cellScale.x * 2
@@ -690,7 +699,7 @@ export default function LiquidEther({
         const uniforms = this.mouse.material.uniforms;
         uniforms.force.value.set(forceX, forceY);
         uniforms.center.value.set(centerX, centerY);
-        uniforms.scale.value.set(props.cursor_size, props.cursor_size);
+        uniforms.scale.value.set(effectiveCursorSize, effectiveCursorSize);
         super.update();
       }
     }
