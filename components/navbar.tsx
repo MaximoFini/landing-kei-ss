@@ -57,29 +57,22 @@ export function Navbar() {
 
   return (
     <>
-      {/* SVG gooey filter */}
-      <svg className="fixed w-0 h-0 overflow-hidden" aria-hidden="true">
-        <defs>
-          <filter id="pill-gooey">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="b" />
-            <feColorMatrix in="b" mode="matrix"
-              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 26 -12" />
-          </filter>
-        </defs>
-      </svg>
-
-      <header className="fixed top-0 left-0 right-0 z-50 pt-4 px-4 sm:px-6">
-        <div className="max-w-5xl mx-auto">
+      <header className="fixed top-0 left-0 right-0 z-50 pt-4 px-4 sm:px-6 pointer-events-none">
+        <div className="max-w-5xl mx-auto pointer-events-auto">
           <motion.nav
             animate={{
               boxShadow: scrolled
-                ? "0 8px 32px -8px rgba(0,0,0,0.12)"
-                : "0 2px 16px -8px rgba(0,0,0,0.06)",
+                ? "0 12px 36px -8px rgba(0,0,0,0.12), inset 0 1px 1px 0 rgba(255,255,255,0.8)"
+                : "0 4px 20px -6px rgba(0,0,0,0.08), inset 0 1px 1px 0 rgba(255,255,255,0.45)",
+              borderColor: scrolled
+                ? "rgba(0, 0, 0, 0.08)"
+                : "rgba(255, 255, 255, 0.22)",
+              backgroundColor: scrolled
+                ? "rgba(255, 255, 255, 0.82)"
+                : "rgba(255, 255, 255, 0.55)",
             }}
-            transition={{ duration: 0.35 }}
-            className={`h-14 sm:h-16 px-2 flex items-center justify-between rounded-full border border-black/[0.06] backdrop-blur-xl backdrop-saturate-150 transition-colors duration-300 ${
-              scrolled ? "bg-white/96" : "bg-white/82"
-            }`}
+            transition={{ duration: 0.25 }}
+            className="h-14 sm:h-16 px-2 flex items-center justify-between rounded-full border backdrop-blur-xl transition-all duration-300 will-change-transform"
           >
             {/* Logo */}
             <div className="flex-1 flex items-center pl-2 sm:pl-3">
@@ -103,23 +96,18 @@ export function Navbar() {
               </a>
             </div>
 
-            {/* PillNav — each item in its own pill */}
+            {/* PillNav — smooth spring animated indicator */}
             <nav
               ref={pillRef}
-              className="hidden md:flex items-center relative bg-black/[0.055] rounded-full p-1"
+              className="hidden md:flex items-center relative bg-black/[0.04] rounded-full p-1 border border-black/[0.03]"
               aria-label="Navegación principal"
             >
-              {/* Gooey blob layer (filtered) */}
-              <div
-                className="absolute inset-1 pointer-events-none overflow-visible rounded-full"
-                style={{ filter: "url(#pill-gooey)" }}
-              >
-                <motion.div
-                  className="absolute top-0 bottom-0 bg-white rounded-full shadow-sm"
-                  animate={{ left: blobStyle.left - 4, width: blobStyle.width }}
-                  transition={{ type: "spring", stiffness: 480, damping: 36, mass: 0.85 }}
-                />
-              </div>
+              {/* Smooth indicator */}
+              <motion.div
+                className="absolute top-1 bottom-1 bg-white rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.08)] pointer-events-none"
+                animate={{ left: blobStyle.left, width: blobStyle.width }}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+              />
 
               {/* Nav items */}
               {navLinks.map((link, i) => (
@@ -130,7 +118,7 @@ export function Navbar() {
                   className={`relative z-10 px-4 py-1.5 rounded-full text-sm font-medium transition-colors duration-200 whitespace-nowrap ${
                     activeIndex === i
                       ? "text-black"
-                      : "text-black/50 hover:text-black/75"
+                      : "text-black/55 hover:text-black/80"
                   }`}
                 >
                   {link.label}
@@ -160,11 +148,11 @@ export function Navbar() {
           <AnimatePresence>
             {menuOpen && (
               <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
+                initial={{ opacity: 0, y: -10, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -10, scale: 0.98 }}
                 transition={{ duration: 0.2 }}
-                className="md:hidden mt-3 rounded-3xl border border-black/5 bg-white shadow-xl overflow-hidden"
+                className="md:hidden mt-3 rounded-3xl border border-white/40 bg-white/80 backdrop-blur-2xl backdrop-saturate-180 shadow-[0_16px_40px_rgba(0,0,0,0.12),_inset_0_1px_1px_rgba(255,255,255,0.7)] overflow-hidden"
               >
                 <ul className="flex flex-col px-4 py-4 gap-1">
                   {navLinks.map((link, idx) => (

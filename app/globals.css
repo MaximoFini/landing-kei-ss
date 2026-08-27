@@ -85,6 +85,7 @@
   --color-surface-elevated: var(--surface-elevated);
   --font-sans: "Geist", "Geist Fallback";
   --font-mono: "Geist Mono", "Geist Mono Fallback";
+  --font-instrument: var(--font-instrument-sans), sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);

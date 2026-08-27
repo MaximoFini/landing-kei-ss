@@ -5,74 +5,84 @@ interface Star {
   x: number;
   y: number;
   r: number;
-  base: number;       // base opacity
-  phase: number;      // twinkle phase offset
+  base: number;
+  phase: number;
   twinkleSpeed: number;
   dx: number;
   dy: number;
 }
 
-export function StarField({ count = 220 }: { count?: number }) {
+export function StarField({ count = 150 }: { count?: number }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d", { alpha: true });
     if (!ctx) return;
 
+    let isVisible = true;
+    let width = 0;
+    let height = 0;
+
     const resize = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
+      width = canvas.offsetWidth;
+      height = canvas.offsetHeight;
+      canvas.width = width;
+      canvas.height = height;
     };
     resize();
 
-    // Build stars — concentrate them in the upper 75% of hero
+    // Generate stars
     const stars: Star[] = Array.from({ length: count }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height * 0.78,
-      r: Math.random() * 1.1 + 0.25,
-      base: Math.random() * 0.55 + 0.1,
+      x: Math.random() * (width || 1000),
+      y: Math.random() * (height || 800) * 0.78,
+      r: Math.random() * 1.0 + 0.3,
+      base: Math.random() * 0.5 + 0.15,
       phase: Math.random() * Math.PI * 2,
-      twinkleSpeed: 0.003 + Math.random() * 0.012,
-      dx: (Math.random() - 0.5) * 0.06,
-      dy: (Math.random() - 0.5) * 0.03,
+      twinkleSpeed: 0.003 + Math.random() * 0.01,
+      dx: (Math.random() - 0.5) * 0.05,
+      dy: (Math.random() - 0.5) * 0.025,
     }));
 
     let raf: number;
     let t = 0;
 
     const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (!isVisible) {
+        raf = requestAnimationFrame(draw);
+        return;
+      }
+
+      ctx.clearRect(0, 0, width, height);
       t += 1;
 
-      for (const s of stars) {
+      for (let i = 0; i < stars.length; i++) {
+        const s = stars[i];
+
         // Drift
         s.x += s.dx;
         s.y += s.dy;
-        if (s.x < 0) s.x = canvas.width;
-        if (s.x > canvas.width) s.x = 0;
-        if (s.y < 0) s.y = canvas.height * 0.78;
-        if (s.y > canvas.height * 0.78) s.y = 0;
+        if (s.x < 0) s.x = width;
+        if (s.x > width) s.x = 0;
+        if (s.y < 0) s.y = height * 0.78;
+        if (s.y > height * 0.78) s.y = 0;
 
-        // Twinkling
+        // Twinkle calculation
         const osc = Math.sin(t * s.twinkleSpeed * 60 + s.phase);
-        const alpha = Math.max(0, s.base * (0.55 + 0.45 * osc));
+        const alpha = s.base * (0.6 + 0.4 * osc);
 
-        // Core dot
+        // Core star
+        ctx.fillStyle = `rgba(215, 230, 255, ${alpha.toFixed(3)})`;
         ctx.beginPath();
         ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(215,230,255,${alpha})`;
         ctx.fill();
 
-        // Soft halo for larger stars
-        if (s.r > 0.75) {
-          const g = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 4.5);
-          g.addColorStop(0, `rgba(160,200,255,${alpha * 0.35})`);
-          g.addColorStop(1, "rgba(0,0,0,0)");
+        // Soft halo for bigger stars without allocating memory / gradients in loop
+        if (s.r > 0.8) {
+          ctx.fillStyle = `rgba(160, 200, 255, ${(alpha * 0.25).toFixed(3)})`;
           ctx.beginPath();
-          ctx.arc(s.x, s.y, s.r * 4.5, 0, Math.PI * 2);
-          ctx.fillStyle = g;
+          ctx.arc(s.x, s.y, s.r * 2.5, 0, Math.PI * 2);
           ctx.fill();
         }
       }
@@ -81,9 +91,19 @@ export function StarField({ count = 220 }: { count?: number }) {
     };
 
     draw();
-    window.addEventListener("resize", resize);
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+      },
+      { threshold: 0.05 }
+    );
+    observer.observe(canvas);
+
+    window.addEventListener("resize", resize, { passive: true });
     return () => {
       cancelAnimationFrame(raf);
+      observer.disconnect();
       window.removeEventListener("resize", resize);
     };
   }, [count]);
@@ -92,7 +112,7 @@ export function StarField({ count = 220 }: { count?: number }) {
     <canvas
       ref={canvasRef}
       className="absolute inset-0 w-full h-full pointer-events-none"
-      style={{ mixBlendMode: "screen", opacity: 0.7 }}
+      style={{ mixBlendMode: "screen", opacity: 0.75, willChange: "transform" }}
     />
   );
 }

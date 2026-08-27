@@ -4,27 +4,28 @@ import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { SpecularButton } from "./SpecularButton";
-import { WarpText } from "./WarpText";
+import { TypewriterHeadline } from "./TypewriterHeadline";
 import { StarField } from "./StarField";
 import { Code2, Users, Clock } from "lucide-react";
 
 const LiquidEther = dynamic(() => import("@/components/LiquidEther"), { ssr: false });
 
 const stats = [
-  { value: "53+", label: "Proyectos", icon: Code2 },
-  { value: "97%", label: "Satisfacción", icon: Users },
-  { value: "3.5a", label: "Experiencia", icon: Clock },
+  { value: "7", label: "Proyectos", icon: Code2 },
+  { value: "100%", label: "Satisfacción", icon: Users },
+  { value: "2 años", label: "Experiencia", icon: Clock },
+];
+
+const HEADLINE_LINES = [
+  { text: "Software a medida.", className: "text-white justify-center" },
+  { text: "Resultados reales.", className: "text-[#3f7dff] mt-1 justify-center" },
 ];
 
 export function Hero() {
-  const [ready, setReady] = useState(false);
-  useEffect(() => {
-    const t = setTimeout(() => setReady(true), 120);
-    return () => clearTimeout(t);
-  }, []);
+  const [textCompleted, setTextCompleted] = useState(false);
 
   return (
-    <section className="dark relative min-h-screen px-4 sm:px-6 pt-36 sm:pt-44 overflow-hidden bg-background">
+    <section className="dark relative min-h-screen px-4 sm:px-6 pt-44 sm:pt-56 pb-24 sm:pb-32 flex flex-col justify-center overflow-hidden bg-background">
 
       {/* 1. Deep space gradient base */}
       <div
@@ -36,7 +37,7 @@ export function Hero() {
       />
 
       {/* 2. Stars — above gradient, below fluid */}
-      <StarField count={200} />
+      <StarField count={150} />
 
       {/* 3. Liquid Ether WebGL fluid */}
       <div className="absolute inset-0">
@@ -46,17 +47,17 @@ export function Hero() {
           cursorSize={100}
           isViscous={false}
           viscous={30}
-          iterationsViscous={16}
-          iterationsPoisson={16}
-          resolution={0.3}
+          iterationsViscous={12}
+          iterationsPoisson={10}
+          resolution={0.25}
           BFECC={false}
           isBounce={false}
           autoDemo
           autoSpeed={0.5}
-          autoIntensity={2.2}
+          autoIntensity={2.0}
           takeoverDuration={0.25}
           autoResumeDelay={50}
-          autoRampDuration={1.4}
+          autoRampDuration={1.2}
         />
       </div>
 
@@ -73,67 +74,38 @@ export function Hero() {
       <div className="absolute top-20 sm:top-24 left-4 sm:left-6 right-4 sm:right-6 h-px bg-white/[0.08]" />
 
       {/* ─── Main content ─── */}
-      <div className="relative z-10 max-w-7xl mx-auto w-full flex flex-col">
+      <div className="relative z-10 max-w-7xl mx-auto w-full flex flex-col items-center text-center my-auto">
 
-        {/* Badge — clean, no pulsing dot */}
-        <motion.div
-          initial={{ opacity: 0, y: 14 }}
-          animate={ready ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.55, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-7 sm:mb-9"
-        >
-          <span className="inline-flex items-center gap-3 text-xs sm:text-[13px] text-white/50 font-mono tracking-[0.18em] uppercase">
-            <span className="w-6 h-px bg-white/25" />
-            +50 proyectos entregados · 97% de satisfacción
-            <span className="w-6 h-px bg-white/25" />
-          </span>
-        </motion.div>
-
-        {/* Headline — WarpText word by word */}
+        {/* Headline — Antigravity Typewriter Effect */}
         <h1
-          className="text-[clamp(2.9rem,12vw,7rem)] font-black tracking-tight uppercase mb-6 sm:mb-8"
+          className="font-instrument text-[clamp(2.9rem,12vw,7rem)] font-bold tracking-tight uppercase mb-8 sm:mb-10 text-center mx-auto"
           style={{
             lineHeight: 1.02,
-            filter:
-              "drop-shadow(0 2px 4px rgba(2,6,18,0.9)) drop-shadow(0 12px 32px rgba(2,6,18,0.55))",
+            textShadow: "0 2px 10px rgba(0,0,0,0.85), 0 8px 30px rgba(2,6,18,0.6)",
           }}
         >
-          <WarpText
-            text="Software a medida."
-            delay={0.18}
-            wordDelay={0.1}
-            className="text-white"
-          />
-          <WarpText
-            text="Resultados reales."
-            delay={0.62}
-            wordDelay={0.1}
-            className="text-[#3f7dff] mt-1"
+          <TypewriterHeadline
+            lines={HEADLINE_LINES}
+            startDelay={80}
+            typingSpeed={22}
+            linePause={100}
+            cursorColor="#3f7dff"
+            onComplete={() => setTextCompleted(true)}
           />
         </h1>
 
-        {/* Subtitle */}
-        <motion.p
-          initial={{ opacity: 0, y: 18 }}
-          animate={ready ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.65, delay: 1.4, ease: [0.22, 1, 0.36, 1] }}
-          className="text-base sm:text-lg text-white/50 max-w-lg leading-relaxed mb-10 sm:mb-12"
-        >
-          Convertimos ideas en productos digitales que generan resultados medibles para tu negocio.
-        </motion.p>
-
-        {/* CTAs */}
+        {/* CTAs — Stacked Vertically & Centered (Appears on text completion) */}
         <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          animate={ready ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.65, delay: 1.6, ease: [0.22, 1, 0.36, 1] }}
-          className="flex flex-wrap items-center gap-5"
+          initial={{ opacity: 0, y: 16 }}
+          animate={textCompleted ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          className="flex flex-col items-center justify-center gap-3.5 mx-auto"
         >
           <SpecularButton href="#contacto">Empezá tu proyecto</SpecularButton>
 
           <a
             href="#proyectos"
-            className="inline-flex items-center gap-2 text-sm sm:text-[15px] font-medium text-white/50 hover:text-white/80 transition-colors duration-200 group"
+            className="inline-flex items-center justify-center gap-2 text-sm sm:text-[15px] font-medium text-white/50 hover:text-white/80 transition-colors duration-200 group pt-1"
           >
             Ver proyectos
             <svg
@@ -148,9 +120,9 @@ export function Hero() {
 
       {/* ─── Stats bar — pinned to bottom ─── */}
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={ready ? { opacity: 1 } : {}}
-        transition={{ duration: 0.8, delay: 2.0 }}
+        initial={{ opacity: 0, y: 10 }}
+        animate={textCompleted ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+        transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
         className="absolute inset-x-0 bottom-8 sm:bottom-12 z-10 px-4 sm:px-6 pointer-events-none"
       >
         <div className="max-w-7xl mx-auto">
