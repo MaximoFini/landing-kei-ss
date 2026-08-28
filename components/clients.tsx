@@ -1,17 +1,55 @@
 "use client"
 
 import { motion, useInView } from "framer-motion"
-import { useRef } from "react"
+import { useRef, useState } from "react"
+import Image from "next/image"
 
-// Logos de clientes (puedes reemplazar con URLs reales o usar componentes SVG)
-const clients = [
-  { name: "Finova Labs", logo: "FL" },
-  { name: "RetailX", logo: "RX" },
-  { name: "EduConnect", logo: "EC" },
-  { name: "LogiTrack", logo: "LT" },
-  { name: "TechCorp", logo: "TC" },
-  { name: "DataPro", logo: "DP" },
+type ClientItem = {
+  name: string
+  logo: string
+  image?: string
+}
+
+// Logos de clientes reales
+const clients: ClientItem[] = [
+  { name: "VeGroup", logo: "VG", image: "/testimonials/vegroup.png" },
+  { name: "Stability", logo: "ST", image: "/testimonials/stability.png" },
+  { name: "Alfa Club", logo: "AC", image: "/testimonials/alfa-club.png" },
+  { name: "OG Circle", logo: "OG", image: "/testimonials/ogcircle.png" },
 ]
+
+function ClientCard({ client, index, inView }: { client: ClientItem; index: number; inView: boolean }) {
+  const [imgError, setImgError] = useState(false)
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={inView ? { opacity: 1, scale: 1 } : {}}
+      transition={{ duration: 0.4, delay: index * 0.08 }}
+      className="group flex flex-col items-center gap-2.5"
+    >
+      <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-md border border-border/60 bg-surface/50 flex items-center justify-center p-3 hover:border-neon/50 hover:bg-surface hover:shadow-[0_0_20px_rgba(200,255,0,0.08)] transition-all duration-300 overflow-hidden">
+        {client.image && !imgError ? (
+          <Image
+            src={client.image}
+            alt={`Logo ${client.name}`}
+            fill
+            sizes="96px"
+            className="object-contain p-2.5 opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300"
+            onError={() => setImgError(true)}
+          />
+        ) : (
+          <span className="text-xl sm:text-2xl font-black text-muted-foreground group-hover:text-neon transition-colors font-mono">
+            {client.logo}
+          </span>
+        )}
+      </div>
+      <span className="text-xs text-muted-foreground/80 font-mono tracking-wider transition-colors group-hover:text-foreground">
+        {client.name}
+      </span>
+    </motion.div>
+  )
+}
 
 export function Clients() {
   const ref = useRef(null)
@@ -32,25 +70,14 @@ export function Clients() {
           </span>
         </motion.div>
 
-        {/* Logo grid */}
-        <div className="grid grid-cols-3 md:grid-cols-6 gap-4 sm:gap-6 lg:gap-8 items-center justify-items-center">
+        {/* Logo grid centered */}
+        <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-12 md:gap-16">
           {clients.map((client, i) => (
-            <motion.div
-              key={client.name}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={inView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ duration: 0.4, delay: i * 0.08 }}
-              className="group"
-            >
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-sm border border-border/60 bg-surface/50 flex items-center justify-center hover:border-neon/40 hover:bg-surface transition-all duration-300">
-                <span className="text-lg sm:text-xl font-black text-muted-foreground group-hover:text-neon transition-colors font-mono">
-                  {client.logo}
-                </span>
-              </div>
-            </motion.div>
+            <ClientCard key={client.name} client={client} index={i} inView={inView} />
           ))}
         </div>
       </div>
     </section>
   )
 }
+
