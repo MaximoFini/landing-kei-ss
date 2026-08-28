@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Instrument_Sans } from "next/font/google";
+import { Geist, Geist_Mono, Instrument_Sans, Google_Sans_Flex } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { StructuredData } from "@/components/structured-data";
 import { PageTransition } from "@/components/page-transition";
@@ -21,6 +21,11 @@ const instrumentSans = Instrument_Sans({
   subsets: ["latin"],
   weight: ["700"],
   variable: "--font-instrument-sans",
+  display: "swap",
+});
+const googleSansFlex = Google_Sans_Flex({
+  subsets: ["latin"],
+  variable: "--font-google-sans-flex",
   display: "swap",
 });
 
@@ -171,7 +176,7 @@ export default function RootLayout({
         <StructuredData />
       </head>
       <body
-        className={`${geist.variable} ${geistMono.variable} ${instrumentSans.variable} font-sans antialiased bg-background text-foreground min-h-screen`}
+        className={`${geist.variable} ${geistMono.variable} ${instrumentSans.variable} ${googleSansFlex.variable} font-sans antialiased bg-background text-foreground min-h-screen`}
       >
         <PageTransition>{children}</PageTransition>
         {process.env.NODE_ENV === "production" && <Analytics />}
