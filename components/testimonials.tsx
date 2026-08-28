@@ -1,29 +1,50 @@
 "use client"
 
 import { motion, useInView } from "framer-motion"
-import { useRef } from "react"
+import { useRef, useState } from "react"
+import Image from "next/image"
+import { Star } from "lucide-react"
 
-const testimonials = [
+type Testimonial = {
+  name: string
+  role: string
+  company: string
+  companyInitials: string
+  companyLogo?: string
+  rating?: number
+  comment: string
+}
+
+const testimonials: Testimonial[] = [
   {
-    name: "Rodrigo Meneses",
-    role: "CTO, Finova Labs",
-    initials: "RM",
+    name: "Joaquin Vera",
+    role: "Co-founder",
+    company: "VeGroup",
+    companyInitials: "VG",
+    companyLogo: "/testimonials/vegroup.png",
+    rating: 5,
     comment:
-      "Kei Software entregó nuestro MVP en tiempo récord. La comunicación fue impecable y nunca hubo sorpresas con el presupuesto. Su transparencia es lo que más valoro.",
+      "La verdad que tremendo trabajo y sobre todo el entendimiento sobre nuestro proyecto para seguir sumando y mejorando funciones del sistema. Una atención espectacular y muy cercana con las necesidades que hemos tenido. Muchas gracias por toda la gestión y compromiso 🙌🏻",
   },
   {
-    name: "Camila Torres",
-    role: "Directora de Operaciones, RetailX",
-    initials: "CT",
+    name: "Agustín Ramis",
+    role: "Co-founder",
+    company: "Stability",
+    companyInitials: "ST",
+    companyLogo: "/testimonials/stability.png",
+    rating: 5,
     comment:
-      "Implementaron nuestra automatización de inventario en semanas. El equipo siempre explicó cada decisión técnica con claridad. 100% recomendado.",
+      "A través de KEI Software encontramos respuestas a muchos inconvenientes que teníamos con el servicio para el cliente. Hoy contamos con una app funcional en constante mejora gracias a su equipo. Innovadores y atentos a cada detalle.",
   },
   {
-    name: "Pablo Guerrero",
-    role: "Fundador, EduConnect",
-    initials: "PG",
+    name: "Ruben Fini",
+    role: "Dueño",
+    company: "Alfa Club",
+    companyInitials: "AC",
+    companyLogo: "/testimonials/alfa-club.png",
+    rating: 5,
     comment:
-      "Su solución de IA redujo el trabajo manual de nuestro equipo en un 70%. Calidad y honestidad ante todo.",
+      "Estamos contentos con el trabajo de los chicos de KEI, hace un tiempo usábamos Mis Actividades para la administración del gimnasio, pero estábamos necesitando una solución más a medida. Los chicos entendieron nuestra necesidad y solucionaron nuestros problemas.",
   },
 ]
 
@@ -31,11 +52,12 @@ function TestimonialCard({
   t,
   index,
 }: {
-  t: (typeof testimonials)[0]
+  t: Testimonial
   index: number
 }) {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: "-80px" })
+  const [imageError, setImageError] = useState(false)
 
   return (
     <motion.div
@@ -43,25 +65,60 @@ function TestimonialCard({
       initial={{ opacity: 0, y: 30 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
-      className="flex flex-col gap-5 sm:gap-6 p-5 sm:p-7 rounded-sm bg-surface border border-border hover:border-neon/40 transition-colors"
+      className="flex flex-col justify-between gap-5 sm:gap-6 p-5 sm:p-7 rounded-sm bg-surface border border-border hover:border-neon/40 transition-colors group"
     >
-      {/* Large quote mark */}
-      <span
-        className="text-5xl sm:text-6xl font-black leading-none text-neon/20 select-none"
-        aria-hidden="true"
-      >
-        &ldquo;
-      </span>
-      <p className="text-sm text-muted-foreground leading-relaxed flex-1 -mt-3 sm:-mt-4">
-        {t.comment}
-      </p>
-      <div className="flex items-center gap-3 pt-2 border-t border-border/40">
-        <div className="w-9 h-9 rounded-sm bg-neon/10 border border-neon/20 flex items-center justify-center flex-shrink-0">
-          <span className="text-xs font-bold text-neon font-mono">{t.initials}</span>
+      <div className="flex flex-col gap-4">
+        {/* Top bar: Quote icon & Star rating */}
+        <div className="flex items-center justify-between">
+          <span
+            className="text-4xl sm:text-5xl font-black leading-none text-neon/30 select-none group-hover:text-neon/50 transition-colors"
+            aria-hidden="true"
+          >
+            &ldquo;
+          </span>
+          <div className="flex items-center gap-1">
+            {Array.from({ length: t.rating ?? 5 }).map((_, i) => (
+              <Star
+                key={i}
+                className="w-3.5 h-3.5 fill-neon text-neon"
+              />
+            ))}
+          </div>
         </div>
-        <div>
-          <p className="text-sm font-bold text-foreground leading-tight">{t.name}</p>
-          <p className="text-[11px] text-muted-foreground font-mono">{t.role}</p>
+
+        {/* Testimonial body */}
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          {t.comment}
+        </p>
+      </div>
+
+      {/* Author & Company information */}
+      <div className="flex items-center gap-3.5 pt-4 border-t border-border/40">
+        <div className="relative w-11 h-11 rounded-sm bg-background border border-border group-hover:border-neon/30 transition-colors overflow-hidden flex items-center justify-center p-1.5 flex-shrink-0">
+          {t.companyLogo && !imageError ? (
+            <Image
+              src={t.companyLogo}
+              alt={`Logo de ${t.company}`}
+              fill
+              sizes="44px"
+              className="object-contain p-1.5"
+              onError={() => setImageError(true)}
+            />
+          ) : (
+            <span className="text-xs font-bold text-neon font-mono select-none">
+              {t.companyInitials}
+            </span>
+          )}
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-bold text-foreground leading-tight truncate">
+            {t.name}
+          </p>
+          <p className="text-[11px] text-muted-foreground font-mono truncate mt-0.5">
+            <span className="text-neon/90 font-medium">{t.role}</span>
+            <span className="text-muted-foreground/60 mx-1">·</span>
+            <span className="text-foreground/80 font-medium">{t.company}</span>
+          </p>
         </div>
       </div>
     </motion.div>
@@ -90,6 +147,9 @@ export function Testimonials() {
               Lo que<br />dicen
             </h2>
           </div>
+          <p className="max-w-xs text-sm text-muted-foreground leading-relaxed">
+            Experiencias reales de fundadores y directores que construyeron con nosotros.
+          </p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
@@ -101,3 +161,4 @@ export function Testimonials() {
     </section>
   )
 }
+
