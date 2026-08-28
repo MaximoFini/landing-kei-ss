@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { SpecularButton } from "./SpecularButton";
 import { TypewriterHeadline } from "./TypewriterHeadline";
 import { StarField } from "./StarField";
+import { HeroRibbons } from "./HeroRibbons";
 import { Code2, Users, Clock } from "lucide-react";
 
 const LiquidEther = dynamic(() => import("@/components/LiquidEther"), { ssr: false });
@@ -17,15 +18,21 @@ const stats = [
 ];
 
 const HEADLINE_LINES = [
-  { text: "Software a medida.", className: "text-white justify-center" },
-  { text: "Resultados reales.", className: "text-[#3f7dff] mt-1 justify-center" },
+  {
+    text: "Software a medida.",
+    className: "text-white justify-center text-[clamp(2.6rem,8.55vw,4.75rem)]",
+  },
+  {
+    text: "Resultados reales.",
+    className: "text-[#3f7dff] justify-center text-[clamp(2.6rem,8.55vw,4.75rem)]",
+  },
 ];
 
 export function Hero() {
   const [textCompleted, setTextCompleted] = useState(false);
 
   return (
-    <section className="dark relative min-h-screen px-4 sm:px-6 pt-44 sm:pt-56 pb-24 sm:pb-32 flex flex-col justify-center overflow-hidden bg-background">
+    <section className="dark relative min-h-screen px-4 sm:px-6 pt-32 sm:pt-40 pb-24 sm:pb-32 flex flex-col justify-center overflow-hidden bg-background">
 
       {/* 1. Deep space gradient base */}
       <div
@@ -36,15 +43,19 @@ export function Hero() {
         }}
       />
 
-      {/* 2. Stars — above gradient, below fluid */}
+      {/* 2. Ribbons — diagonal flowing gradient waves, weighted toward the bottom */}
+      <HeroRibbons />
+
+      {/* 3. Stars — above gradient, below fluid */}
       <StarField count={150} />
 
-      {/* 3. Liquid Ether WebGL fluid */}
+      {/* 4. Liquid Ether WebGL fluid */}
       <div className="absolute inset-0">
         <LiquidEther
           colors={["#0b1a42", "#1a4fc0", "#3f7dff", "#bcdcff"]}
           mouseForce={16}
           cursorSize={90}
+          clickForce={0.3}
           isViscous={false}
           viscous={30}
           iterationsViscous={12}
@@ -53,15 +64,15 @@ export function Hero() {
           BFECC={false}
           isBounce={false}
           autoDemo
-          autoSpeed={0.4}
-          autoIntensity={1.6}
+          autoSpeed={0.3}
+          autoIntensity={0.9}
           takeoverDuration={0.25}
           autoResumeDelay={50}
           autoRampDuration={1.2}
         />
       </div>
 
-      {/* 4. Bottom vignette */}
+      {/* 5. Bottom vignette */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -78,9 +89,9 @@ export function Hero() {
 
         {/* Headline — Antigravity Typewriter Effect */}
         <h1
-          className="font-instrument text-[clamp(3.1rem,12.84vw,7.5rem)] font-bold tracking-tight mb-8 sm:mb-10 text-center mx-auto"
+          className="font-google-sans text-[clamp(2.6rem,8.55vw,4.75rem)] font-[450] tracking-normal mb-8 sm:mb-10 text-center mx-auto max-w-[1100px]"
           style={{
-            lineHeight: 1.02,
+            lineHeight: 1.1,
             textShadow: "0 2px 10px rgba(0,0,0,0.85), 0 8px 30px rgba(2,6,18,0.6)",
           }}
         >
@@ -94,7 +105,7 @@ export function Hero() {
           />
         </h1>
 
-        {/* CTAs — Stacked Vertically & Centered (Smooth entrance on text completion) */}
+        {/* CTAs — Side-by-side row (Smooth entrance on text completion) */}
         <motion.div
           initial={{ opacity: 0, y: 18, filter: "blur(6px)" }}
           animate={
@@ -107,13 +118,13 @@ export function Hero() {
             delay: 0.1,
             ease: [0.16, 1, 0.3, 1],
           }}
-          className="flex flex-col items-center justify-center gap-3.5 mx-auto"
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 mx-auto"
         >
           <SpecularButton href="#contacto">Empezá tu proyecto</SpecularButton>
 
           <a
             href="#proyectos"
-            className="inline-flex items-center justify-center gap-2 text-sm sm:text-[15px] font-medium text-white/50 hover:text-white/80 transition-colors duration-200 group pt-1"
+            className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full font-semibold text-[15px] text-white/85 bg-white/[0.06] border border-white/[0.14] backdrop-blur-sm hover:bg-white/[0.1] hover:text-white hover:border-white/[0.22] transition-all duration-200 group select-none"
           >
             Ver proyectos
             <svg
@@ -150,7 +161,7 @@ export function Hero() {
                   {/* Stat card */}
                   <div className="flex flex-col items-center gap-1.5 px-8 sm:px-12">
                     <Icon className="w-3.5 h-3.5 text-white/25 mb-0.5" />
-                    <span className="text-2xl sm:text-[2rem] font-black text-white leading-none tracking-tight">
+                    <span className="font-google-sans text-2xl sm:text-[2rem] font-[450] text-white leading-none tracking-tight">
                       {stat.value}
                     </span>
                     <span className="text-[9px] sm:text-[10px] text-white/30 tracking-[0.2em] uppercase font-mono">

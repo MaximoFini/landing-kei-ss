@@ -58,7 +58,7 @@ export function Navbar() {
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-50 pt-4 px-4 sm:px-6 pointer-events-none">
-        <div className="max-w-5xl mx-auto pointer-events-auto">
+        <div className="font-google-sans max-w-5xl mx-auto pointer-events-auto">
           <motion.nav
             animate={{
               boxShadow: scrolled
@@ -90,7 +90,7 @@ export function Navbar() {
                   priority
                   className="w-8 h-8 rounded-full shadow-sm"
                 />
-                <span className="font-bold text-sm sm:text-base tracking-tight text-black">
+                <span className="text-sm sm:text-base tracking-tight text-black">
                   Kei Software
                 </span>
               </a>

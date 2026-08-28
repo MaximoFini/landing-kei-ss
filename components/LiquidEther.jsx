@@ -7,6 +7,7 @@ import './LiquidEther.css';
 export default function LiquidEther({
   mouseForce = 20,
   cursorSize = 100,
+  clickForce = 0.8,
   isViscous = false,
   viscous = 30,
   iterationsViscous = 32,
@@ -136,6 +137,7 @@ export default function LiquidEther({
         this.hasUserControl = false;
         this.isAutoActive = false;
         this.autoIntensity = 2.0;
+        this.clickForce = 0.8;
         this.takeoverActive = false;
         this.takeoverStartTime = 0;
         this.takeoverDuration = 0.25;
@@ -289,7 +291,7 @@ export default function LiquidEther({
             this.coords.copy(this.clickBurst.point);
             this.coords_old.copy(this.clickBurst.point);
             const decay = 1 - t;
-            this.diff.copy(this.clickBurst.dir).multiplyScalar(decay * decay * 0.8);
+            this.diff.copy(this.clickBurst.dir).multiplyScalar(decay * decay * this.clickForce);
             return;
           }
         }
@@ -1022,6 +1024,7 @@ export default function LiquidEther({
         Common.init(props.$wrapper);
         Mouse.init(props.$wrapper);
         Mouse.autoIntensity = props.autoIntensity;
+        Mouse.clickForce = props.clickForce;
         Mouse.takeoverDuration = props.takeoverDuration;
         this.lastUserInteraction = performance.now();
         Mouse.onInteract = () => {
@@ -1106,6 +1109,7 @@ export default function LiquidEther({
       autoDemo,
       autoSpeed,
       autoIntensity,
+      clickForce,
       takeoverDuration,
       autoResumeDelay,
       autoRampDuration
@@ -1202,6 +1206,7 @@ export default function LiquidEther({
     autoDemo,
     autoSpeed,
     autoIntensity,
+    clickForce,
     takeoverDuration,
     autoResumeDelay,
     autoRampDuration
@@ -1232,6 +1237,7 @@ export default function LiquidEther({
       webgl.autoDriver.rampDurationMs = autoRampDuration * 1000;
       if (webgl.autoDriver.mouse) {
         webgl.autoDriver.mouse.autoIntensity = autoIntensity;
+        webgl.autoDriver.mouse.clickForce = clickForce;
         webgl.autoDriver.mouse.takeoverDuration = takeoverDuration;
       }
     }
@@ -1252,6 +1258,7 @@ export default function LiquidEther({
     autoDemo,
     autoSpeed,
     autoIntensity,
+    clickForce,
     takeoverDuration,
     autoResumeDelay,
     autoRampDuration
