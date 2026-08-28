@@ -30,6 +30,22 @@ const HEADLINE_LINES = [
 
 export function Hero() {
   const [textCompleted, setTextCompleted] = useState(false);
+  const [showFluid, setShowFluid] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+
+    // Defer the WebGL fluid sim's mount (WebGLRenderer + shader compilation)
+    // until after the browser has painted the headline/CTA, so it doesn't
+    // compete with hydration for the initial render.
+    if (typeof window.requestIdleCallback === "function") {
+      const id = window.requestIdleCallback(() => setShowFluid(true), { timeout: 1200 });
+      return () => window.cancelIdleCallback(id);
+    }
+    const id = window.setTimeout(() => setShowFluid(true), 200);
+    return () => window.clearTimeout(id);
+  }, []);
 
   return (
     <section className="dark relative min-h-screen px-4 sm:px-6 pt-32 sm:pt-40 pb-24 sm:pb-32 flex flex-col justify-center overflow-hidden bg-background">
@@ -49,28 +65,30 @@ export function Hero() {
       {/* 3. Stars — above gradient, below fluid */}
       <StarField count={150} />
 
-      {/* 4. Liquid Ether WebGL fluid */}
-      <div className="absolute inset-0">
-        <LiquidEther
-          colors={["#0b1a42", "#1a4fc0", "#3f7dff", "#bcdcff"]}
-          mouseForce={16}
-          cursorSize={90}
-          clickForce={0.3}
-          isViscous={false}
-          viscous={30}
-          iterationsViscous={12}
-          iterationsPoisson={10}
-          resolution={0.25}
-          BFECC={false}
-          isBounce={false}
-          autoDemo
-          autoSpeed={0.3}
-          autoIntensity={0.9}
-          takeoverDuration={0.25}
-          autoResumeDelay={50}
-          autoRampDuration={1.2}
-        />
-      </div>
+      {/* 4. Liquid Ether WebGL fluid — mounted after first paint (see showFluid) */}
+      {showFluid && (
+        <div className="absolute inset-0">
+          <LiquidEther
+            colors={["#0b1a42", "#1a4fc0", "#3f7dff", "#bcdcff"]}
+            mouseForce={16}
+            cursorSize={90}
+            clickForce={0.3}
+            isViscous={false}
+            viscous={30}
+            iterationsViscous={12}
+            iterationsPoisson={10}
+            resolution={0.25}
+            BFECC={false}
+            isBounce={false}
+            autoDemo
+            autoSpeed={0.3}
+            autoIntensity={0.9}
+            takeoverDuration={0.25}
+            autoResumeDelay={50}
+            autoRampDuration={1.2}
+          />
+        </div>
+      )}
 
       {/* 5. Bottom vignette */}
       <div

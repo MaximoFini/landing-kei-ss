@@ -154,8 +154,6 @@ export default function RootLayout({
   return (
     <html lang="es" className="bg-background scroll-smooth">
       <head>
-        {/* Preload critical assets */}
-        <link rel="preload" href="/logo.png" as="image" type="image/png" />
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"

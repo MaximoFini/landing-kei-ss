@@ -86,7 +86,6 @@ export function Navbar() {
                   alt="Kei Software"
                   width={32}
                   height={32}
-                  unoptimized
                   priority
                   className="w-8 h-8 rounded-full shadow-sm"
                 />
