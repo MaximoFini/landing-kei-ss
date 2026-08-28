@@ -88,7 +88,7 @@ export function Navbar() {
                   height={32}
                   unoptimized
                   priority
-                  className="w-8 h-8 rounded-full shadow-sm"
+                  className="w-8 h-8 object-contain"
                 />
                 <span className="font-bold text-sm sm:text-base tracking-tight text-black">
                   Kei Software
