@@ -25,7 +25,7 @@ export function StructuredData() {
     "@type": "Organization",
     name: "Kei Software",
     url: "https://keisoftware.dev",
-    logo: "https://keisoftware.dev/logo.png",
+    logo: "https://keisoftware.dev/kei-logo-nuevo.png",
     description:
       "Desarrollamos software a medida, soluciones IA y automatización con transparencia y calidad garantizada.",
     address: {

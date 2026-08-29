@@ -2,84 +2,99 @@
 
 import { motion, useInView } from "framer-motion"
 import { useRef } from "react"
-import { MessageSquare, FileCheck, Code, Rocket } from "lucide-react"
+import { MessageSquare, FileCheck, Code, Rocket, ArrowRight } from "lucide-react"
+import { SectionHeading } from "@/components/ui/section-heading"
+import { DotGrid } from "@/components/ui/dot-grid"
+import { BorderBeam } from "@/components/ui/border-beam"
 
 const steps = [
   {
     num: "01",
     icon: MessageSquare,
     title: "Consulta gratuita",
-    description: "Hablamos 30 minutos sin compromiso. Entendemos tu problema, tus objetivos y si podemos ayudarte.",
+    description:
+      "Hablamos 30 minutos sin compromiso. Entendemos tu problema, tus objetivos y si podemos ayudarte.",
     duration: "30 min",
   },
   {
     num: "02",
     icon: FileCheck,
     title: "Propuesta clara",
-    description: "Recibís un documento detallado con alcance, cronograma, tecnologías y precio fijo. Sin sorpresas.",
+    description:
+      "Recibís un documento detallado con alcance, cronograma, tecnologías y precio fijo. Sin sorpresas.",
     duration: "48 hs",
   },
   {
     num: "03",
     icon: Code,
     title: "Desarrollo ágil",
-    description: "Construimos en sprints cortos con demos semanales. Siempre sabés en qué estamos trabajando.",
+    description:
+      "Construimos en sprints cortos con demos semanales. Siempre sabés en qué estamos trabajando.",
     duration: "2-8 semanas",
   },
   {
     num: "04",
     icon: Rocket,
     title: "Entrega y soporte",
-    description: "Lanzamos tu producto, te capacitamos y damos soporte técnico incluido durante el primer mes.",
+    description:
+      "Lanzamos tu producto, te capacitamos y damos soporte técnico incluido durante el primer mes.",
     duration: "Garantizado",
   },
 ]
 
-function StepCard({ step, index }: { step: typeof steps[0]; index: number }) {
+function StepCard({ step, index }: { step: (typeof steps)[0]; index: number }) {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: "-80px" })
+  const Icon = step.icon
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 28 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay: index * 0.15, ease: [0.22, 1, 0.36, 1] }}
-      className="relative flex flex-col gap-5 p-6 rounded-sm bg-surface border border-border hover:border-neon/40 transition-all duration-300 group"
+      transition={{ duration: 0.55, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={{ y: -4 }}
+      className="group relative flex flex-col gap-5 overflow-hidden rounded-2xl border border-black/[0.07] bg-white p-6 shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] transition-[border-color,box-shadow] duration-300 hover:border-[#3f7dff]/35 hover:shadow-[0_24px_60px_-20px_rgba(63,125,255,0.35)]"
     >
-      {/* Number badge */}
-      <div className="absolute -top-3 -left-3 w-10 h-10 rounded-sm bg-neon/10 border-2 border-neon/30 flex items-center justify-center backdrop-blur-sm">
-        <span className="text-sm font-bold text-neon font-mono">{step.num}</span>
-      </div>
+      <BorderBeam
+        size={70}
+        duration={7 + index}
+        delay={index * 1.2}
+        colorFrom="#bcdcff"
+        colorTo="#3f7dff"
+        borderWidth={1.5}
+      />
 
-      {/* Icon */}
-      <div className="w-12 h-12 rounded-sm bg-neon/10 border border-neon/20 flex items-center justify-center group-hover:bg-neon/20 transition-colors mt-3">
-        <step.icon className="w-5 h-5 text-neon" />
-      </div>
+      {/* Light wash from the top on hover */}
+      <div
+        className="pointer-events-none absolute inset-0 [clip-path:circle(0%_at_50%_0%)] transition-[clip-path] duration-700 ease-out group-hover:[clip-path:circle(150%_at_50%_0%)]"
+        style={{
+          background:
+            "linear-gradient(to bottom, rgba(63,125,255,0.22) 0%, rgba(63,125,255,0.08) 60%, transparent 100%)",
+        }}
+      />
 
-      {/* Content */}
-      <div className="flex-1">
-        <h3 className="text-lg font-bold text-foreground mb-2 group-hover:text-neon transition-colors">
-          {step.title}
-        </h3>
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          {step.description}
-        </p>
-      </div>
-
-      {/* Duration */}
-      <div className="pt-3 border-t border-border/40">
-        <span className="text-xs font-mono text-muted-foreground tracking-wider">
-          ⏱ {step.duration}
+      <div className="relative z-10 flex items-center justify-between">
+        <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#3f7dff]/20 bg-[#3f7dff]/10 transition-all duration-300 group-hover:border-[#3f7dff]/40 group-hover:bg-[#3f7dff]/15 group-hover:shadow-[0_0_20px_rgba(63,125,255,0.35)]">
+          <Icon className="h-5 w-5 text-[#3f7dff]" />
+        </div>
+        <span className="font-google-sans text-3xl font-[450] text-black/[0.08] transition-colors duration-300 group-hover:text-[#3f7dff]/25">
+          {step.num}
         </span>
       </div>
 
-      {/* Arrow connector (except last) */}
-      {index < steps.length - 1 && (
-        <div className="hidden xl:block absolute -right-4 top-1/2 -translate-y-1/2 w-8 h-px bg-border">
-          <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 rotate-45 border-r border-t border-border" />
-        </div>
-      )}
+      <div className="relative z-10 flex-1">
+        <h3 className="mb-2 font-google-sans text-lg font-[450] text-[#0a0e1a]">
+          {step.title}
+        </h3>
+        <p className="text-sm leading-relaxed text-black/55">{step.description}</p>
+      </div>
+
+      <div className="relative z-10 border-t border-black/[0.06] pt-3">
+        <span className="font-mono text-xs tracking-wider text-[#3f7dff]">
+          {step.duration}
+        </span>
+      </div>
     </motion.div>
   )
 }
@@ -89,48 +104,44 @@ export function Process() {
   const inView = useInView(ref, { once: true, margin: "-60px" })
 
   return (
-    <section id="proceso" className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 bg-surface/30">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-          className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 sm:gap-6 mb-12 sm:mb-16 pb-4 sm:pb-6 border-b border-border/40"
-        >
-          <div>
-            <span className="text-[9px] sm:text-[10px] tracking-[0.25em] sm:tracking-[0.3em] text-neon uppercase font-mono">
-              Proceso
-            </span>
-            <h2 className="mt-2 sm:mt-3 text-3xl sm:text-5xl lg:text-6xl font-black text-foreground uppercase tracking-tight leading-none">
-              Cómo<br />trabajamos
-            </h2>
-          </div>
-          <p className="max-w-md text-sm text-muted-foreground leading-relaxed">
-            Un proceso predecible, transparente y sin vueltas. Desde el primer contacto hasta el lanzamiento.
-          </p>
-        </motion.div>
+    <section
+      id="proceso"
+      className="relative overflow-hidden bg-[#fafbff] px-4 py-20 sm:px-6 sm:py-28 lg:py-32"
+    >
+      <DotGrid
+        className="opacity-70"
+        gap={38}
+        proximity={140}
+        baseColor="#dbe4f7"
+        activeColor="#3f7dff"
+      />
 
-        {/* Steps grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 relative">
+      <div className="relative z-10 mx-auto max-w-7xl">
+        <SectionHeading
+          eyebrow="Proceso"
+          title="Cómo trabajamos"
+          subtitle="De la idea al producto"
+        />
+
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 xl:grid-cols-4">
           {steps.map((step, i) => (
             <StepCard key={step.num} step={step} index={i} />
           ))}
         </div>
 
-        {/* Bottom CTA */}
         <motion.div
+          ref={ref}
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 0.6 }}
-          className="mt-10 sm:mt-12 flex justify-center"
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="mt-12 flex justify-center"
         >
           <a
             href="#contacto"
-            className="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-neon text-foreground font-bold text-sm tracking-wide hover:bg-neon-bright transition-all duration-300 rounded-sm shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 hover:shadow-neon/30 w-full sm:w-auto text-center"
+            className="group inline-flex items-center justify-center gap-2 rounded-full bg-[#3f7dff] px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:scale-[1.03] hover:bg-[#2f6bec] active:scale-95"
           >
-            Empezar ahora → Primera consulta gratis
+            Empezá — primera consulta gratis
+            <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
           </a>
         </motion.div>
       </div>
