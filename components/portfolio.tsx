@@ -16,45 +16,59 @@ type Project = {
   description: string
   year: string
   tags: string[]
+  image?: string
+  position?: string
   link?: string
 }
 
 const projects: Project[] = [
   {
     num: "01",
-    title: "Finova CRM",
-    category: "Fintech · SaaS",
+    title: "Stability",
+    category: "Salud & Fitness · Plataforma Web",
     description:
-      "CRM a medida para una fintech en crecimiento. Gestión de leads, onboarding automatizado y dashboard en tiempo real.",
+      "Plataforma web y sistema a medida para gestión de clientes, turnos y seguimiento personalizado en centros de entrenamiento.",
     year: "2024",
-    tags: ["Next.js", "PostgreSQL", "Stripe"],
+    tags: ["Next.js", "React", "PostgreSQL", "Node.js"],
+    image: "/proyectos/proyecto-stability.png",
+    position: "left center",
+    link: "https://stabilityar.com/?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAcGRvZgJleHRuA2FlbQIxMQBzcnRjBmFwcF9pZA85MzY2MTk3NDMzOTI0NTkAAaceaWnFnfCoqVO76BfBRKMwlMO89rbSQLEgolV77Z21tOHTH14LBxkeRENugQ_aem_1hd5xYp3UMkRlP21J1zNNQ",
   },
   {
     num: "02",
-    title: "RetailX Inventory",
-    category: "Retail · Automatización",
+    title: "OG Circle",
+    category: "Plataforma Web · Digital Experience",
     description:
-      "Sistema de gestión de inventario con alertas inteligentes y sincronización automática con proveedores vía API.",
+      "Plataforma interactiva con diseño de alto impacto visual, arquitectura escalable y rendimiento optimizado.",
     year: "2024",
-    tags: ["Node.js", "REST API", "React"],
+    tags: ["Next.js", "React", "TypeScript", "TailwindCSS"],
+    image: "/proyectos/proyecto-og-circle-1.png",
+    position: "center center",
+    link: "https://ogcircle.vercel.app/#top",
   },
   {
     num: "03",
-    title: "EduConnect IA",
-    category: "EdTech · Inteligencia Artificial",
+    title: "Alfa Club",
+    category: "Gestión Deportiva · Sistema Web",
     description:
-      "Plataforma educativa con tutor IA personalizado. Redujo el trabajo manual del equipo pedagógico en un 70%.",
-    year: "2023",
-    tags: ["Python", "OpenAI", "React"],
+      "Sistema a medida para la administración integral, control de socios, turnos y finanzas de centro deportivo y gimnasio.",
+    year: "2024",
+    tags: ["Next.js", "React", "Node.js", "PostgreSQL"],
+    image: "/proyectos/proyecto-alfa-club-1.jpg",
+    position: "center center",
+    link: "https://www.instagram.com/alfa.mma.team/",
   },
   {
     num: "04",
-    title: "LogiTrack",
-    category: "Logística · Dashboard",
+    title: "Centro Automotores LB",
+    category: "Automotriz · Plataforma Web",
     description:
-      "Panel de control para empresa de logística con seguimiento en tiempo real de flotas y reportes automatizados.",
-    year: "2023",
-    tags: ["Next.js", "WebSockets", "Maps"],
+      "Sitio web y catálogo digital para concesionaria líder, optimizando la exhibición de vehículos y captación de clientes.",
+    year: "2024",
+    tags: ["Next.js", "React", "TypeScript", "TailwindCSS"],
+    image: "/proyectos/proyecto-centro-automotores-1.jpg",
+    position: "center center",
+    link: "https://www.instagram.com/centro_automotores/",
   },
 ]
 
@@ -86,10 +100,11 @@ const covers = [
 ]
 
 const galleryItems: AccordionGalleryItem[] = projects.map((p, i) => ({
-  image: covers[i],
+  image: p.image || covers[i],
   label: p.title,
   meta: p.category,
   alt: `${p.title} — ${p.category}`,
+  position: p.position,
   link: p.link,
 }))
 
@@ -107,7 +122,7 @@ export function Portfolio() {
       <div className="relative z-10 mx-auto max-w-7xl">
         <SectionHeading
           eyebrow="Proyectos"
-          title="Trabajo real"
+          title="Portfolio"
           subtitle="Lo que construimos"
         />
 
@@ -119,7 +134,7 @@ export function Portfolio() {
         >
           <AccordionGallery
             items={galleryItems}
-            defaultIndex={0}
+            defaultIndex={1}
             accentColor="#3f7dff"
             height={480}
             trigger="hover"
