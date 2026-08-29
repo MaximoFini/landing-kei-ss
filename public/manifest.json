@@ -1,5 +1,5 @@
 {
-  "name": "Kei Software — Software a Medida",
+  "name": "Kei Software",
   "short_name": "Kei Software",
   "description": "Desarrollamos software a medida, soluciones IA y automatización con transparencia total",
   "start_url": "/",
@@ -12,8 +12,20 @@
   "scope": "/",
   "icons": [
     {
-      "src": "/icon-light-32x32.png",
+      "src": "/icon-32.png",
       "sizes": "32x32",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
@@ -31,14 +43,14 @@
       "short_name": "Contacto",
       "description": "Contactar con Kei Software",
       "url": "/#contacto",
-      "icons": [{ "src": "/icon-light-32x32.png", "sizes": "32x32" }]
+      "icons": [{ "src": "/icon-32.png", "sizes": "32x32" }]
     },
     {
       "name": "Proyectos",
       "short_name": "Proyectos",
       "description": "Ver proyectos realizados",
       "url": "/#proyectos",
-      "icons": [{ "src": "/icon-light-32x32.png", "sizes": "32x32" }]
+      "icons": [{ "src": "/icon-32.png", "sizes": "32x32" }]
     }
   ]
 }

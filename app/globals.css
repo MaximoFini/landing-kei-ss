@@ -394,6 +394,13 @@ body {
     }
   }
 
+  /* Marquee infinito para el carrusel de logos */
+  @keyframes logo-loop {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
   /* Efecto de brillo sutil en foco */
   input:focus,
   textarea:focus {

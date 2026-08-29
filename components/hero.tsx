@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { SpecularButton } from "./SpecularButton";
@@ -104,6 +105,34 @@ export function Hero() {
 
       {/* ─── Main content ─── */}
       <div className="relative z-10 max-w-7xl mx-auto w-full flex flex-col items-center text-center my-auto">
+
+        {/* Brand lockup — logo + wordmark above the headline (enters with the CTAs) */}
+        <motion.div
+          initial={{ opacity: 0, y: -10, filter: "blur(6px)" }}
+          animate={
+            textCompleted
+              ? { opacity: 1, y: 0, filter: "blur(0px)" }
+              : { opacity: 0, y: -10, filter: "blur(6px)" }
+          }
+          transition={{ duration: 0.85, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-6 sm:mb-8 flex items-center justify-center gap-2.5 sm:gap-3"
+        >
+          <Image
+            src="/kei-logo-nuevo.png"
+            alt="Kei Software"
+            width={36}
+            height={36}
+            unoptimized
+            priority
+            className="w-7 h-7 sm:w-8 sm:h-8 rounded-full"
+          />
+          <span
+            className="font-google-sans text-lg sm:text-xl font-[450] tracking-tight text-white"
+            style={{ textShadow: "0 1px 6px rgba(0,0,0,0.6)" }}
+          >
+            Kei Software
+          </span>
+        </motion.div>
 
         {/* Headline — Antigravity Typewriter Effect */}
         <h1
