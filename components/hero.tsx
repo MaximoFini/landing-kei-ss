@@ -25,7 +25,7 @@ const HEADLINE_LINES = [
   },
   {
     text: "Resultados reales.",
-    className: "text-[#3f7dff] justify-center text-[clamp(2.6rem,8.55vw,4.75rem)]",
+    className: "text-[#3f7dff] justify-center text-[clamp(2.6rem,8.55vw,4.75rem)] mt-4 sm:mt-0",
   },
 ];
 
@@ -49,7 +49,7 @@ export function Hero() {
   }, []);
 
   return (
-    <section className="dark relative min-h-screen px-4 sm:px-6 pt-32 sm:pt-40 pb-24 sm:pb-32 flex flex-col justify-center overflow-hidden bg-background">
+    <section className="dark relative min-h-screen px-4 sm:px-6 pt-28 sm:pt-40 pb-24 sm:pb-32 flex flex-col justify-center overflow-hidden bg-background">
 
       {/* 1. Deep space gradient base */}
       <div
@@ -64,7 +64,7 @@ export function Hero() {
       <HeroRibbons />
 
       {/* 3. Stars — above gradient, below fluid */}
-      <StarField count={150} />
+      <StarField />
 
       {/* 4. Liquid Ether WebGL fluid — mounted after first paint (see showFluid) */}
       {showFluid && (
@@ -115,7 +115,7 @@ export function Hero() {
               : { opacity: 0, y: -10, filter: "blur(6px)" }
           }
           transition={{ duration: 0.85, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-6 sm:mb-8 flex items-center justify-center gap-2.5 sm:gap-3"
+          className="-translate-y-20 sm:-translate-y-24 mb-6 sm:mb-8 flex items-center justify-center gap-2.5 sm:gap-3"
         >
           <Image
             src="/kei-logo-nuevo.png"
@@ -124,19 +124,19 @@ export function Hero() {
             height={36}
             unoptimized
             priority
-            className="w-7 h-7 sm:w-8 sm:h-8 rounded-full"
+            className="w-[1.85rem] h-[1.85rem] sm:w-[2.1rem] sm:h-[2.1rem] rounded-full"
           />
           <span
-            className="font-google-sans text-lg sm:text-xl font-[450] tracking-tight text-white"
+            className="font-google-sans text-[18.9px] sm:text-[21px] font-[450] tracking-tight text-white"
             style={{ textShadow: "0 1px 6px rgba(0,0,0,0.6)" }}
           >
-            Kei Software
+            KEI Software
           </span>
         </motion.div>
 
         {/* Headline — Antigravity Typewriter Effect */}
         <h1
-          className="font-google-sans text-[clamp(2.6rem,8.55vw,4.75rem)] font-[450] tracking-normal mb-8 sm:mb-10 text-center mx-auto max-w-[1100px]"
+          className="-translate-y-6 sm:-translate-y-7 font-google-sans text-[clamp(2.6rem,8.55vw,4.75rem)] font-[450] tracking-normal mb-8 sm:mb-10 text-center mx-auto max-w-[1100px]"
           style={{
             lineHeight: 1.1,
             textShadow: "0 2px 10px rgba(0,0,0,0.85), 0 8px 30px rgba(2,6,18,0.6)",
@@ -165,7 +165,7 @@ export function Hero() {
             delay: 0.1,
             ease: [0.16, 1, 0.3, 1],
           }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-3 mx-auto"
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 mx-auto mt-3 sm:mt-2"
         >
           <SpecularButton href="#contacto">Empezá tu proyecto</SpecularButton>
 
@@ -197,7 +197,7 @@ export function Hero() {
           delay: 0.25,
           ease: [0.16, 1, 0.3, 1],
         }}
-        className="absolute inset-x-0 bottom-8 sm:bottom-12 z-10 px-4 sm:px-6 pointer-events-none"
+        className="absolute inset-x-0 bottom-20 sm:bottom-12 z-10 px-4 sm:px-6 pointer-events-none"
       >
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-center gap-0">

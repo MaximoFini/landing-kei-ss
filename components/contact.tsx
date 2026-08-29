@@ -80,7 +80,9 @@ export function Contact() {
   const fieldClass =
     "w-full rounded-xl border border-black/10 bg-[#fafbff] px-4 py-3 text-sm text-[#0a0e1a] placeholder:text-black/35 transition-all duration-300 focus:border-[#3f7dff]/50 focus:outline-none focus:ring-2 focus:ring-[#3f7dff]/25"
 
-  const labelClass = "font-mono text-[10px] uppercase tracking-[0.2em] text-black/45"
+  const stepLabelClass = "font-mono text-[10px] uppercase tracking-[0.3em] text-[#3f7dff]"
+
+  const questionClass = "font-google-sans text-lg sm:text-xl font-[450] text-[#0a0e1a]"
 
   return (
     <section
@@ -121,7 +123,7 @@ export function Contact() {
                     <Icon className="h-5 w-5 text-[#3f7dff]" />
                   </div>
                   <div>
-                    <p className={`${labelClass} mb-0.5`}>{label}</p>
+                    <p className={`${stepLabelClass} mb-0.5`}>{label}</p>
                     <p className="break-all text-sm font-medium text-[#0a0e1a] transition-colors group-hover:text-[#3f7dff] sm:text-base">
                       {value}
                     </p>
@@ -171,14 +173,9 @@ export function Contact() {
 
                 {/* Progress */}
                 <div className="flex flex-col gap-2">
-                  <div className="flex items-center justify-between">
-                    <span className={labelClass}>
-                      Paso {step} de {totalSteps}
-                    </span>
-                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#3f7dff]">
-                      {Math.round(progress)}%
-                    </span>
-                  </div>
+                  <span className={stepLabelClass}>
+                    Paso {step} de {totalSteps}
+                  </span>
                   <div className="h-1 overflow-hidden rounded-full bg-black/[0.06]">
                     <motion.div
                       className="h-full bg-[#3f7dff]"
@@ -194,9 +191,9 @@ export function Contact() {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="flex flex-col gap-1.5"
+                    className="flex flex-col gap-2.5"
                   >
-                    <label htmlFor="name" className={labelClass}>
+                    <label htmlFor="name" className={questionClass}>
                       ¿Cómo te llamás?
                     </label>
                     <input
@@ -217,9 +214,9 @@ export function Contact() {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="flex flex-col gap-1.5"
+                    className="flex flex-col gap-2.5"
                   >
-                    <label htmlFor="email" className={labelClass}>
+                    <label htmlFor="email" className={questionClass}>
                       ¿Cuál es tu email?
                     </label>
                     <input
@@ -240,9 +237,9 @@ export function Contact() {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="flex flex-col gap-1.5"
+                    className="flex flex-col gap-2.5"
                   >
-                    <label htmlFor="message" className={labelClass}>
+                    <label htmlFor="message" className={questionClass}>
                       ¿Qué necesitás?
                     </label>
                     <textarea
@@ -286,24 +283,28 @@ export function Contact() {
                   )}
 
                   {step < totalSteps ? (
-                    <button
+                    <motion.button
                       type="button"
                       onClick={nextStep}
                       disabled={!canProceed()}
-                      className="inline-flex items-center gap-2 rounded-full bg-[#3f7dff] px-6 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:scale-[1.03] hover:bg-[#2f6bec] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
+                      whileHover={canProceed() ? { scale: 1.045 } : undefined}
+                      whileTap={canProceed() ? { scale: 0.96 } : undefined}
+                      className="group inline-flex items-center gap-2.5 rounded-full bg-[#3f7dff] px-7 py-3.5 text-[15px] font-semibold text-white transition-colors duration-200 hover:bg-[#2f6bec] disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       Siguiente
-                      <ArrowRight className="h-4 w-4" />
-                    </button>
+                      <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
+                    </motion.button>
                   ) : (
-                    <button
+                    <motion.button
                       type="submit"
                       disabled={loading || !canProceed()}
-                      className="inline-flex items-center gap-2 rounded-full bg-[#3f7dff] px-6 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:scale-[1.03] hover:bg-[#2f6bec] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
+                      whileHover={!loading && canProceed() ? { scale: 1.045 } : undefined}
+                      whileTap={!loading && canProceed() ? { scale: 0.96 } : undefined}
+                      className="group inline-flex items-center gap-2.5 rounded-full bg-[#3f7dff] px-7 py-3.5 text-[15px] font-semibold text-white transition-colors duration-200 hover:bg-[#2f6bec] disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       {loading ? "Enviando..." : "Enviar mensaje"}
-                      <ArrowRight className="h-4 w-4" />
-                    </button>
+                      <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
+                    </motion.button>
                   )}
                 </div>
               </form>
