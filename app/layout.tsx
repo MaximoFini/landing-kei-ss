@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Instrument_Sans } from "next/font/google";
+import { Geist, Geist_Mono, Instrument_Sans, Google_Sans_Flex } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { StructuredData } from "@/components/structured-data";
 import { PageTransition } from "@/components/page-transition";
+import { TitleAttention } from "@/components/title-attention";
 import "./globals.css";
 
 const geist = Geist({
@@ -23,6 +24,11 @@ const instrumentSans = Instrument_Sans({
   variable: "--font-instrument-sans",
   display: "swap",
 });
+const googleSansFlex = Google_Sans_Flex({
+  subsets: ["latin"],
+  variable: "--font-google-sans-flex",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://keisoftware.dev"),
@@ -30,7 +36,7 @@ export const metadata: Metadata = {
     canonical: "https://keisoftware.dev",
   },
   title: {
-    default: "Kei Software — Software a Medida",
+    default: "Kei Software",
     template: "%s | Kei Software",
   },
   description:
@@ -113,18 +119,9 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   icons: {
     icon: [
-      {
-        url: "/icon-light-32x32.png",
-        media: "(prefers-color-scheme: light)",
-      },
-      {
-        url: "/icon-dark-32x32.png",
-        media: "(prefers-color-scheme: dark)",
-      },
-      {
-        url: "/icon.svg",
-        type: "image/svg+xml",
-      },
+      { url: "/icon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
     ],
     apple: "/apple-icon.png",
   },
@@ -150,7 +147,7 @@ export default function RootLayout({
     <html lang="es" className="bg-background scroll-smooth">
       <head>
         {/* Preload critical assets */}
-        <link rel="preload" href="/logo.png" as="image" type="image/png" />
+        <link rel="preload" href="/kei-logo-nuevo.png" as="image" type="image/png" />
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
@@ -171,8 +168,9 @@ export default function RootLayout({
         <StructuredData />
       </head>
       <body
-        className={`${geist.variable} ${geistMono.variable} ${instrumentSans.variable} font-sans antialiased bg-background text-foreground min-h-screen`}
+        className={`${geist.variable} ${geistMono.variable} ${instrumentSans.variable} ${googleSansFlex.variable} font-sans antialiased bg-background text-foreground min-h-screen`}
       >
+        <TitleAttention />
         <PageTransition>{children}</PageTransition>
         {process.env.NODE_ENV === "production" && <Analytics />}
       </body>
