@@ -16,6 +16,11 @@ const clients: ClientItem[] = [
   { name: "Stability", logo: "ST", image: "/testimonials/stability.png" },
   { name: "Alfa Club", logo: "AC", image: "/testimonials/alfa-club.png" },
   { name: "OG Circle", logo: "OG", image: "/testimonials/ogcircle.png" },
+  {
+    name: "Centro Automotores",
+    logo: "CA",
+    image: "/testimonials/centro-autos.png",
+  },
 ]
 
 function ClientLogo({ client }: { client: ClientItem }) {

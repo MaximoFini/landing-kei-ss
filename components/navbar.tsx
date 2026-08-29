@@ -153,14 +153,14 @@ export function Navbar() {
               >
                 <Image
                   src="/kei-logo-nuevo.png"
-                  alt="Kei Software"
+                  alt="KEI Software"
                   width={32}
                   height={32}
                   priority
                   className="w-8 h-8 object-contain"
                 />
                 <span className="text-sm sm:text-base tracking-tight text-black">
-                  Kei Software
+                  KEI Software
                 </span>
               </a>
             </div>

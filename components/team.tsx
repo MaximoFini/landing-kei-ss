@@ -87,7 +87,7 @@ export function Team() {
       <div className="relative z-10 mx-auto max-w-7xl">
         <SectionHeading
           eyebrow="El equipo"
-          title="Kei Software"
+          title="KEI Software"
           subtitle="Quiénes escriben el código"
         />
 

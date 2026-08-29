@@ -8,7 +8,7 @@ import { useEffect } from "react";
  */
 export function TitleAttention() {
   useEffect(() => {
-    const awayTitle = "Kei Software - Volvé!";
+    const awayTitle = "KEI Software - Volvé!";
     let original: string | null = null;
 
     const handleVisibility = () => {

@@ -119,7 +119,7 @@ export function Hero() {
         >
           <Image
             src="/kei-logo-nuevo.png"
-            alt="Kei Software"
+            alt="KEI Software"
             width={36}
             height={36}
             unoptimized
@@ -130,7 +130,7 @@ export function Hero() {
             className="font-google-sans text-lg sm:text-xl font-[450] tracking-tight text-white"
             style={{ textShadow: "0 1px 6px rgba(0,0,0,0.6)" }}
           >
-            Kei Software
+            KEI Software
           </span>
         </motion.div>
 

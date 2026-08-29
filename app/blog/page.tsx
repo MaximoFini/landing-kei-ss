@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     canonical: "https://keisoftware.dev/blog",
   },
   openGraph: {
-    title: "Blog | Kei Software",
+    title: "Blog | KEI Software",
     description: "Artículos sobre desarrollo de software, IA y automatización",
     url: "https://keisoftware.dev/blog",
   },
