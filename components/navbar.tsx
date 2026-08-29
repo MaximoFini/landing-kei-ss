@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
+import { BorderBeam } from "@/components/ui/border-beam";
 
 const navLinks = [
   { label: "Servicios", href: "#servicios" },
@@ -143,6 +144,15 @@ export function Navbar() {
             <div className="pointer-events-none absolute -inset-8 rounded-full bg-[radial-gradient(60%_120%_at_15%_0%,rgba(99,102,241,0.14),transparent_60%),radial-gradient(60%_120%_at_85%_100%,rgba(56,189,248,0.12),transparent_60%)]" />
             {/* crisp inner rim */}
             <div className="pointer-events-none absolute inset-0 rounded-full ring-1 ring-inset ring-white/40" />
+            {/* subtle traveling beam — brand-colored accent */}
+            <BorderBeam
+              size={60}
+              duration={9}
+              borderWidth={1.5}
+              colorFrom="#6366f1"
+              colorTo="#38bdf8"
+              className="opacity-70"
+            />
 
             {/* Logo */}
             <div className="relative z-10 flex-1 flex items-center pl-2 sm:pl-3">
@@ -161,7 +171,7 @@ export function Navbar() {
                   className="w-8 h-8 rounded-full shadow-sm"
                 />
                 <span className="text-sm sm:text-base tracking-tight text-black">
-                  Kei Software
+                  KEI Software
                 </span>
               </a>
             </div>
