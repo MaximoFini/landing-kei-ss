@@ -81,6 +81,7 @@ function AccordionPanel({
 
   const panelRef = useRef<HTMLAnchorElement & HTMLDivElement>(null)
   const [isHovered, setIsHovered] = useState(false)
+  const touchCoords = useRef<{ x: number; y: number; moved: boolean }>({ x: 0, y: 0, moved: false })
 
   // Floating cursor tooltip (React Bits Tilted Card style)
   const mouseX = useMotionValue(0)
@@ -95,6 +96,37 @@ function AccordionPanel({
     mouseY.set(e.clientY - rect.top)
   }
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    const t = e.touches[0]
+    touchCoords.current = { x: t.clientX, y: t.clientY, moved: false }
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    const t = e.touches[0]
+    const dx = Math.abs(t.clientX - touchCoords.current.x)
+    const dy = Math.abs(t.clientY - touchCoords.current.y)
+    if (dx > 6 || dy > 6) {
+      touchCoords.current.moved = true
+    }
+  }
+
+  const handleClick = (e: React.MouseEvent) => {
+    // If the user was scrolling or swiping their finger, do not trigger link navigation
+    if (touchCoords.current.moved) {
+      e.preventDefault()
+      return
+    }
+
+    // On mobile or unexpanded desktop: 1st tap expands the card
+    if (!isActive) {
+      e.preventDefault()
+      setActive(i)
+      return
+    }
+
+    // 2nd tap on the active card: allows navigation to item.link
+  }
+
   const panelStyle: CSSProperties = {
     borderRadius: `${radius}px`,
     flexGrow: isStacked ? undefined : isActive ? grow : 1,
@@ -102,8 +134,8 @@ function AccordionPanel({
     transition: isStacked
       ? `height ${duration}s cubic-bezier(0.22,1,0.36,1), min-height ${duration}s cubic-bezier(0.22,1,0.36,1)`
       : `flex-grow ${duration}s cubic-bezier(0.22,1,0.36,1)`,
-    minHeight: isStacked ? (isActive ? "330px" : "96px") : undefined,
-    height: isStacked ? (isActive ? "330px" : "96px") : undefined,
+    minHeight: isStacked ? (isActive ? "340px" : "96px") : undefined,
+    height: isStacked ? (isActive ? "340px" : "96px") : undefined,
     boxShadow: isActive
       ? `0 24px 60px -24px ${accentColor}66`
       : "0 10px 30px -20px rgba(5,11,28,0.6)",
@@ -127,13 +159,10 @@ function AccordionPanel({
       }}
       onMouseLeave={() => setIsHovered(false)}
       onPointerMove={handlePointerMove}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
       onFocus={() => setActive(i)}
-      onClick={(e) => {
-        if (!isActive) {
-          e.preventDefault()
-          setActive(i)
-        }
-      }}
+      onClick={handleClick}
       onKeyDown={(e) => handleKey(i, e)}
       className="group relative block min-h-0 min-w-0 cursor-pointer overflow-hidden bg-neutral-900 no-underline outline-none focus-visible:ring-2 focus-visible:ring-[#3f7dff]"
       style={panelStyle}
@@ -270,7 +299,7 @@ export function AccordionGallery({
   const [isStacked, setIsStacked] = useState(false)
 
   useEffect(() => {
-    const check = () => setIsStacked(window.innerWidth <= 640)
+    const check = () => setIsStacked(window.innerWidth <= 768)
     check()
     window.addEventListener("resize", check)
     return () => window.removeEventListener("resize", check)
@@ -278,29 +307,43 @@ export function AccordionGallery({
 
   // Auto-expand card centered in viewport when scrolling on mobile
   useEffect(() => {
-    if (!isStacked || typeof window === "undefined" || !("IntersectionObserver" in window)) return
+    if (!isStacked || typeof window === "undefined") return
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const idx = Number(entry.target.getAttribute("data-index"))
-            if (!isNaN(idx)) {
-              setActive(idx)
+    let rafId: number
+    const handleScroll = () => {
+      cancelAnimationFrame(rafId)
+      rafId = requestAnimationFrame(() => {
+        if (!rootRef.current) return
+        const panels = rootRef.current.querySelectorAll<HTMLElement>("[data-index]")
+        const screenCenterY = window.innerHeight * 0.5
+
+        let closestIndex = -1
+        let minDistance = Infinity
+
+        panels.forEach((p) => {
+          const rect = p.getBoundingClientRect()
+          // Only evaluate cards that are visible in the viewport
+          if (rect.bottom > 0 && rect.top < window.innerHeight) {
+            const cardCenterY = rect.top + rect.height * 0.5
+            const distance = Math.abs(cardCenterY - screenCenterY)
+            if (distance < minDistance) {
+              minDistance = distance
+              closestIndex = Number(p.getAttribute("data-index"))
             }
           }
         })
-      },
-      {
-        rootMargin: "-25% 0px -25% 0px",
-        threshold: 0.4,
-      }
-    )
 
-    const panels = rootRef.current?.querySelectorAll("[data-index]")
-    panels?.forEach((p) => observer.observe(p))
+        if (closestIndex >= 0) {
+          setActive(closestIndex)
+        }
+      })
+    }
 
-    return () => observer.disconnect()
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+      cancelAnimationFrame(rafId)
+    }
   }, [isStacked])
 
   const r = Math.min(Math.max(expandRatio, 0.2), 0.9)
