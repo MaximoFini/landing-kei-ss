@@ -31,6 +31,22 @@ const HEADLINE_LINES = [
 
 export function Hero() {
   const [textCompleted, setTextCompleted] = useState(false);
+  const [showFluid, setShowFluid] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+
+    // Defer the WebGL fluid sim's mount (WebGLRenderer + shader compilation)
+    // until after the browser has painted the headline/CTA, so it doesn't
+    // compete with hydration for the initial render.
+    if (typeof window.requestIdleCallback === "function") {
+      const id = window.requestIdleCallback(() => setShowFluid(true), { timeout: 1200 });
+      return () => window.cancelIdleCallback(id);
+    }
+    const id = window.setTimeout(() => setShowFluid(true), 200);
+    return () => window.clearTimeout(id);
+  }, []);
 
   return (
     <section className="dark relative min-h-screen px-4 sm:px-6 pt-32 sm:pt-40 pb-24 sm:pb-32 flex flex-col justify-center overflow-hidden bg-background">
@@ -50,28 +66,30 @@ export function Hero() {
       {/* 3. Stars — above gradient, below fluid */}
       <StarField count={150} />
 
-      {/* 4. Liquid Ether WebGL fluid */}
-      <div className="absolute inset-0">
-        <LiquidEther
-          colors={["#0b1a42", "#1a4fc0", "#3f7dff", "#bcdcff"]}
-          mouseForce={16}
-          cursorSize={90}
-          clickForce={0.3}
-          isViscous={false}
-          viscous={30}
-          iterationsViscous={12}
-          iterationsPoisson={10}
-          resolution={0.25}
-          BFECC={false}
-          isBounce={false}
-          autoDemo
-          autoSpeed={0.3}
-          autoIntensity={0.9}
-          takeoverDuration={0.25}
-          autoResumeDelay={50}
-          autoRampDuration={1.2}
-        />
-      </div>
+      {/* 4. Liquid Ether WebGL fluid — mounted after first paint (see showFluid) */}
+      {showFluid && (
+        <div className="absolute inset-0">
+          <LiquidEther
+            colors={["#0b1a42", "#1a4fc0", "#3f7dff", "#bcdcff"]}
+            mouseForce={16}
+            cursorSize={90}
+            clickForce={0.3}
+            isViscous={false}
+            viscous={30}
+            iterationsViscous={12}
+            iterationsPoisson={10}
+            resolution={0.25}
+            BFECC={false}
+            isBounce={false}
+            autoDemo
+            autoSpeed={0.3}
+            autoIntensity={0.9}
+            takeoverDuration={0.25}
+            autoResumeDelay={50}
+            autoRampDuration={1.2}
+          />
+        </div>
+      )}
 
       {/* 5. Bottom vignette */}
       <div
@@ -97,7 +115,7 @@ export function Hero() {
               : { opacity: 0, y: -10, filter: "blur(6px)" }
           }
           transition={{ duration: 0.85, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-6 sm:mb-8 flex items-center justify-center gap-2.5 sm:gap-3"
+          className="mb-2 sm:mb-3 flex items-center justify-center gap-2.5 sm:gap-3"
         >
           <Image
             src="/kei-logo-nuevo.png"
@@ -147,13 +165,15 @@ export function Hero() {
             delay: 0.1,
             ease: [0.16, 1, 0.3, 1],
           }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-3 mx-auto"
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 mx-auto -mt-6 sm:-mt-8"
         >
-          <SpecularButton href="#contacto">Empezá tu proyecto</SpecularButton>
+          <div className="scale-90">
+            <SpecularButton href="#contacto">Empezá tu proyecto</SpecularButton>
+          </div>
 
           <a
             href="#proyectos"
-            className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full font-semibold text-[15px] text-white/85 bg-white/[0.06] border border-white/[0.14] backdrop-blur-sm hover:bg-white/[0.1] hover:text-white hover:border-white/[0.22] transition-all duration-200 group select-none"
+            className="scale-90 inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full font-semibold text-[15px] text-white/85 bg-white/[0.06] border border-white/[0.14] backdrop-blur-sm hover:bg-white/[0.1] hover:text-white hover:border-white/[0.22] transition-all duration-200 group select-none"
           >
             Ver proyectos
             <svg

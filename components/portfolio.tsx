@@ -124,6 +124,7 @@ export function Portfolio() {
           eyebrow="Proyectos"
           title="Portfolio"
           subtitle="Lo que construimos"
+          subtitleClassName="mt-4 sm:mt-5"
         />
 
         <motion.div

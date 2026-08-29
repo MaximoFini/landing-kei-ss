@@ -18,6 +18,7 @@ interface SectionHeadingProps {
   description?: ReactNode
   align?: "center" | "left"
   className?: string
+  subtitleClassName?: string
 }
 
 export function SectionHeading({
@@ -27,6 +28,7 @@ export function SectionHeading({
   description,
   align = "center",
   className = "",
+  subtitleClassName = "mt-2",
 }: SectionHeadingProps) {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: "-60px" })
@@ -61,7 +63,7 @@ export function SectionHeading({
           colors={BRAND_COLORS}
           textColor="#0a0e1a"
           duration={REVEAL_DURATION}
-          className="mt-2 block font-google-sans text-sm font-[450] tracking-normal sm:text-base"
+          className={`block font-google-sans text-sm font-[450] tracking-normal sm:text-base ${subtitleClassName}`}
         />
       )}
 

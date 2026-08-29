@@ -36,8 +36,8 @@ export function Footer() {
                 alt="Kei Software logo"
                 width={32}
                 height={32}
-                unoptimized
-                className="w-7 h-7 rounded-full"
+                loading="lazy"
+                className="w-7 h-7 sm:w-8 sm:h-8"
               />
               <span className="font-google-sans text-sm sm:text-base text-white tracking-tight">
                 Kei Software
