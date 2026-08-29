@@ -115,7 +115,7 @@ export function Hero() {
               : { opacity: 0, y: -10, filter: "blur(6px)" }
           }
           transition={{ duration: 0.85, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="-translate-y-20 sm:-translate-y-8 mb-6 sm:mb-8 flex items-center justify-center gap-2.5 sm:gap-3"
+          className="-translate-y-20 sm:-translate-y-4 mb-6 sm:mb-8 flex items-center justify-center gap-2.5 sm:gap-3"
         >
           <Image
             src="/kei-logo-nuevo.png"
