@@ -97,10 +97,13 @@ function AccordionPanel({
 
   const panelStyle: CSSProperties = {
     borderRadius: `${radius}px`,
-    flexGrow: isStacked ? 1 : isActive ? grow : 1,
-    flexBasis: 0,
-    transition: `flex-grow ${duration}s cubic-bezier(0.22,1,0.36,1)`,
-    minHeight: isStacked ? (isActive ? 320 : 88) : undefined,
+    flexGrow: isStacked ? undefined : isActive ? grow : 1,
+    flexBasis: isStacked ? undefined : 0,
+    transition: isStacked
+      ? `height ${duration}s cubic-bezier(0.22,1,0.36,1), min-height ${duration}s cubic-bezier(0.22,1,0.36,1)`
+      : `flex-grow ${duration}s cubic-bezier(0.22,1,0.36,1)`,
+    minHeight: isStacked ? (isActive ? "330px" : "96px") : undefined,
+    height: isStacked ? (isActive ? "330px" : "96px") : undefined,
     boxShadow: isActive
       ? `0 24px 60px -24px ${accentColor}66`
       : "0 10px 30px -20px rgba(5,11,28,0.6)",
@@ -110,6 +113,7 @@ function AccordionPanel({
     <Tag
       ref={panelRef as any}
       key={i}
+      data-index={i}
       {...(item.link
         ? { href: item.link, target: "_blank", rel: "noopener noreferrer" }
         : {})}
@@ -119,7 +123,7 @@ function AccordionPanel({
       aria-label={item.label}
       onMouseEnter={() => {
         setIsHovered(true)
-        if (trigger === "hover") setActive(i)
+        if (trigger === "hover" && !isStacked) setActive(i)
       }}
       onMouseLeave={() => setIsHovered(false)}
       onPointerMove={handlePointerMove}
@@ -131,7 +135,7 @@ function AccordionPanel({
         }
       }}
       onKeyDown={(e) => handleKey(i, e)}
-      className="group relative block min-h-0 min-w-0 cursor-pointer overflow-hidden bg-[#0a0713] no-underline outline-none focus-visible:ring-2 focus-visible:ring-[#3f7dff]"
+      className="group relative block min-h-0 min-w-0 cursor-pointer overflow-hidden bg-neutral-900 no-underline outline-none focus-visible:ring-2 focus-visible:ring-[#3f7dff]"
       style={panelStyle}
     >
       {/* Floating cursor tooltip (React Bits Tilted Card style) */}
@@ -191,10 +195,10 @@ function AccordionPanel({
 
       {/* Caption */}
       <span
-        className={`pointer-events-none absolute bottom-5 left-5 right-5 z-[2] flex flex-col gap-1 transition-all duration-500 ${
-          isActive || isStacked
+        className={`pointer-events-none absolute bottom-4 left-4 right-4 sm:bottom-5 sm:left-5 sm:right-5 z-[2] flex flex-col gap-1 transition-all duration-500 ${
+          isActive || !isStacked
             ? "translate-x-0 opacity-100"
-            : "-translate-x-3 opacity-0"
+            : "-translate-x-2 opacity-80"
         }`}
       >
         {item.meta && (
@@ -220,7 +224,13 @@ function AccordionPanel({
           </span>
 
           {item.link && (
-            <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider text-white/90 bg-white/10 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/20">
+            <span
+              className={`inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-white/90 bg-white/10 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/20 transition-all duration-300 ${
+                isActive
+                  ? "opacity-100 scale-100"
+                  : "opacity-0 scale-95 sm:opacity-100 sm:scale-100"
+              }`}
+            >
               <span>CONOCÉ MÁS</span>
               <ArrowUpRight className="h-3.5 w-3.5 stroke-[2.5] text-[#3f7dff] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </span>
@@ -265,6 +275,33 @@ export function AccordionGallery({
     window.addEventListener("resize", check)
     return () => window.removeEventListener("resize", check)
   }, [])
+
+  // Auto-expand card centered in viewport when scrolling on mobile
+  useEffect(() => {
+    if (!isStacked || typeof window === "undefined" || !("IntersectionObserver" in window)) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const idx = Number(entry.target.getAttribute("data-index"))
+            if (!isNaN(idx)) {
+              setActive(idx)
+            }
+          }
+        })
+      },
+      {
+        rootMargin: "-25% 0px -25% 0px",
+        threshold: 0.4,
+      }
+    )
+
+    const panels = rootRef.current?.querySelectorAll("[data-index]")
+    panels?.forEach((p) => observer.observe(p))
+
+    return () => observer.disconnect()
+  }, [isStacked])
 
   const r = Math.min(Math.max(expandRatio, 0.2), 0.9)
   const grow = count > 1 ? (r * (count - 1)) / (1 - r) : 1
