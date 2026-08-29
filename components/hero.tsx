@@ -97,7 +97,7 @@ export function Hero() {
               : { opacity: 0, y: -10, filter: "blur(6px)" }
           }
           transition={{ duration: 0.85, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-6 sm:mb-8 flex items-center justify-center gap-2.5 sm:gap-3"
+          className="mb-2 sm:mb-3 flex items-center justify-center gap-2.5 sm:gap-3"
         >
           <Image
             src="/kei-logo-nuevo.png"
@@ -147,13 +147,15 @@ export function Hero() {
             delay: 0.1,
             ease: [0.16, 1, 0.3, 1],
           }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-3 mx-auto"
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 mx-auto -mt-6 sm:-mt-8"
         >
-          <SpecularButton href="#contacto">Empezá tu proyecto</SpecularButton>
+          <div className="scale-90">
+            <SpecularButton href="#contacto">Empezá tu proyecto</SpecularButton>
+          </div>
 
           <a
             href="#proyectos"
-            className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full font-semibold text-[15px] text-white/85 bg-white/[0.06] border border-white/[0.14] backdrop-blur-sm hover:bg-white/[0.1] hover:text-white hover:border-white/[0.22] transition-all duration-200 group select-none"
+            className="scale-90 inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full font-semibold text-[15px] text-white/85 bg-white/[0.06] border border-white/[0.14] backdrop-blur-sm hover:bg-white/[0.1] hover:text-white hover:border-white/[0.22] transition-all duration-200 group select-none"
           >
             Ver proyectos
             <svg
