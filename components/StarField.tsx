@@ -45,6 +45,9 @@ export function StarField({ count = 150 }: { count?: number }) {
       dy: (Math.random() - 0.5) * 0.025,
     }));
 
+    const prefersReducedMotion =
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+
     let raf: number;
     let t = 0;
 
@@ -87,7 +90,7 @@ export function StarField({ count = 150 }: { count?: number }) {
         }
       }
 
-      raf = requestAnimationFrame(draw);
+      if (!prefersReducedMotion) raf = requestAnimationFrame(draw);
     };
 
     draw();
