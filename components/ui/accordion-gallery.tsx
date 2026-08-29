@@ -81,7 +81,7 @@ function AccordionPanel({
 
   const panelRef = useRef<HTMLAnchorElement & HTMLDivElement>(null)
   const [isHovered, setIsHovered] = useState(false)
-  const touchCoords = useRef<{ x: number; y: number; moved: boolean }>({ x: 0, y: 0, moved: false })
+  const touchMoved = useRef(false)
 
   // Floating cursor tooltip (React Bits Tilted Card style)
   const mouseX = useMotionValue(0)
@@ -96,35 +96,37 @@ function AccordionPanel({
     mouseY.set(e.clientY - rect.top)
   }
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    const t = e.touches[0]
-    touchCoords.current = { x: t.clientX, y: t.clientY, moved: false }
+  const handleTouchStart = () => {
+    touchMoved.current = false
   }
 
-  const handleTouchMove = (e: React.TouchEvent) => {
-    const t = e.touches[0]
-    const dx = Math.abs(t.clientX - touchCoords.current.x)
-    const dy = Math.abs(t.clientY - touchCoords.current.y)
-    if (dx > 6 || dy > 6) {
-      touchCoords.current.moved = true
-    }
+  const handleTouchMove = () => {
+    touchMoved.current = true
   }
 
   const handleClick = (e: React.MouseEvent) => {
-    // If the user was scrolling or swiping their finger, do not trigger link navigation
-    if (touchCoords.current.moved) {
+    // If finger dragged during scroll, cancel navigation
+    if (touchMoved.current) {
+      touchMoved.current = false
       e.preventDefault()
+      e.stopPropagation()
       return
     }
 
-    // On mobile or unexpanded desktop: 1st tap expands the card
+    // 1st click/tap (if card is not expanded): expand the card, do NOT open link
     if (!isActive) {
       e.preventDefault()
+      e.stopPropagation()
       setActive(i)
       return
     }
 
-    // 2nd tap on the active card: allows navigation to item.link
+    // 2nd click/tap (when card is already expanded):
+    // If it's an <a> tag, native navigation proceeds to target="_blank".
+    // As safety fallback for mobile browsers that prevent <a> in nested components:
+    if (item.link && Tag === "div") {
+      window.open(item.link, "_blank", "noopener,noreferrer")
+    }
   }
 
   const panelStyle: CSSProperties = {
