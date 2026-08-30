@@ -60,6 +60,10 @@ export function DotGrid({
     const base = hexToRgb(baseColor)
     const active = hexToRgb(activeColor)
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    // No cursor to react to (touch) or user opted out of motion: paint the
+    // grid once and skip the requestAnimationFrame loop entirely.
+    const staticOnly =
+      reduce || window.matchMedia("(pointer: coarse)").matches
 
     let width = 0
     let height = 0
@@ -95,6 +99,26 @@ export function DotGrid({
     }
 
     build()
+
+    const drawStatic = () => {
+      ctx.clearRect(0, 0, width, height)
+      ctx.fillStyle = `rgb(${base.r},${base.g},${base.b})`
+      for (const d of dotsRef.current) {
+        ctx.beginPath()
+        ctx.arc(d.cx, d.cy, dotSize / 2, 0, Math.PI * 2)
+        ctx.fill()
+      }
+    }
+
+    if (staticOnly) {
+      drawStatic()
+      const roStatic = new ResizeObserver(() => {
+        build()
+        drawStatic()
+      })
+      roStatic.observe(wrap)
+      return () => roStatic.disconnect()
+    }
 
     const proxSq = proximity * proximity
     let raf = 0

@@ -37,6 +37,21 @@ export function Hero() {
     if (typeof window === "undefined") return;
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
 
+    // The WebGL fluid sim ships ~550 KB of three.js and runs a continuous
+    // GPU simulation. It's a desktop flourish — on phones, small tablets,
+    // low-core / low-memory devices or Data Saver it costs far more than it
+    // adds (the hero still has the gradient, ribbons and starfield), so we
+    // don't even load the chunk there.
+    const nav = window.navigator as Navigator & {
+      deviceMemory?: number;
+      connection?: { saveData?: boolean };
+    };
+    const isSmallScreen = window.matchMedia?.("(max-width: 1023px)").matches;
+    const saveData = nav.connection?.saveData === true;
+    const lowMemory =
+      typeof nav.deviceMemory === "number" && nav.deviceMemory <= 2;
+    if (isSmallScreen || saveData || lowMemory) return;
+
     // Defer the WebGL fluid sim's mount (WebGLRenderer + shader compilation)
     // until after the browser has painted the headline/CTA, so it doesn't
     // compete with hydration for the initial render.

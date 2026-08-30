@@ -7,6 +7,7 @@ import {
   type CSSProperties,
   type KeyboardEvent,
 } from "react"
+import Image from "next/image"
 import { motion, useMotionValue, useSpring } from "framer-motion"
 import { ArrowUpRight } from "lucide-react"
 
@@ -205,11 +206,13 @@ function AccordionPanel({
             filter: grayscale && !isActive ? "grayscale(0.85)" : "grayscale(0)",
           }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src={item.image}
             alt={item.alt || item.label || ""}
+            fill
             draggable={false}
+            unoptimized={item.image.startsWith("data:")}
+            sizes="(max-width: 640px) 100vw, 60vw"
             className="block h-full w-full select-none object-cover"
             style={{
               width: "100%",

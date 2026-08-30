@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
 const LEFT_A =
@@ -13,6 +14,19 @@ const RIGHT_B =
 
 export function HeroRibbons() {
   const prefersReducedMotion = useReducedMotion();
+  const [animate, setAnimate] = useState(false);
+
+  useEffect(() => {
+    // Continuously morphing a full-viewport SVG behind a 46px blur is a heavy
+    // per-frame paint. The blur makes the morph itself imperceptible on small
+    // screens, so only run it on non-touch, larger viewports.
+    if (prefersReducedMotion) return;
+    if (window.matchMedia("(pointer: coarse)").matches) return;
+    if (window.matchMedia("(max-width: 767px)").matches) return;
+    setAnimate(true);
+  }, [prefersReducedMotion]);
+
+  const morph = animate && !prefersReducedMotion;
 
   return (
     <div className="absolute inset-0 pointer-events-none">
@@ -38,7 +52,7 @@ export function HeroRibbons() {
           stroke="url(#ribbonGradient)"
           strokeWidth={150}
           strokeLinecap="round"
-          animate={prefersReducedMotion ? undefined : { d: [LEFT_A, LEFT_B, LEFT_A] }}
+          animate={morph ? { d: [LEFT_A, LEFT_B, LEFT_A] } : undefined}
           transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.path
@@ -47,7 +61,7 @@ export function HeroRibbons() {
           stroke="url(#ribbonGradient)"
           strokeWidth={150}
           strokeLinecap="round"
-          animate={prefersReducedMotion ? undefined : { d: [RIGHT_A, RIGHT_B, RIGHT_A] }}
+          animate={morph ? { d: [RIGHT_A, RIGHT_B, RIGHT_A] } : undefined}
           transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
         />
       </svg>
