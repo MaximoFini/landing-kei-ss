@@ -146,7 +146,7 @@ export function Navbar() {
                 : "rgba(255, 255, 255, 0.34)",
             }}
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="relative h-14 sm:h-16 px-2 flex items-center justify-between rounded-full border backdrop-blur-2xl backdrop-saturate-[1.8] transition-all duration-300 will-change-transform overflow-hidden isolate"
+            className="relative h-14 sm:h-16 px-2 flex items-center justify-between rounded-full border backdrop-blur-lg sm:backdrop-blur-2xl backdrop-saturate-[1.8] transition-all duration-300 will-change-transform overflow-hidden isolate"
           >
             {/* ── Glass layers ─────────────────────────────── */}
             {/* top specular highlight */}

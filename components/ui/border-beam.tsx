@@ -1,6 +1,7 @@
 "use client"
 
-import { motion, type MotionStyle, type Transition } from "framer-motion"
+import { motion, useInView, type MotionStyle, type Transition } from "framer-motion"
+import { useRef } from "react"
 
 import { cn } from "@/lib/utils"
 
@@ -64,8 +65,15 @@ export const BorderBeam = ({
   initialOffset = 0,
   borderWidth = 1,
 }: BorderBeamProps) => {
+  // The beam loops forever via CSS motion-path — expensive to keep running on
+  // every card at once. Pause it while its card is off-screen (most of them,
+  // at any given scroll position) and resume a little before it re-enters.
+  const ref = useRef<HTMLDivElement>(null)
+  const inView = useInView(ref, { margin: "200px" })
+
   return (
     <div
+      ref={ref}
       className="pointer-events-none absolute inset-0 rounded-[inherit] border-(length:--border-beam-width) border-transparent mask-[linear-gradient(transparent,transparent),linear-gradient(#000,#000)] mask-intersect [mask-clip:padding-box,border-box]"
       style={
         {
@@ -89,11 +97,15 @@ export const BorderBeam = ({
           } as MotionStyle
         }
         initial={{ offsetDistance: `${initialOffset}%` }}
-        animate={{
-          offsetDistance: reverse
-            ? [`${100 - initialOffset}%`, `${-initialOffset}%`]
-            : [`${initialOffset}%`, `${100 + initialOffset}%`],
-        }}
+        animate={
+          inView
+            ? {
+                offsetDistance: reverse
+                  ? [`${100 - initialOffset}%`, `${-initialOffset}%`]
+                  : [`${initialOffset}%`, `${100 + initialOffset}%`],
+              }
+            : undefined
+        }
         transition={{
           repeat: Infinity,
           ease: "linear",

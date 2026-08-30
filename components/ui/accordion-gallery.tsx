@@ -310,6 +310,8 @@ export function AccordionGallery({
     Math.min(Math.max(defaultIndex, 0), count - 1)
   )
   const [isStacked, setIsStacked] = useState(false)
+  const touchRafRef = useRef<number | null>(null)
+  const pendingTouchRef = useRef<{ x: number; y: number } | null>(null)
 
   useEffect(() => {
     const check = () => setIsStacked(window.innerWidth <= 768)
@@ -318,19 +320,35 @@ export function AccordionGallery({
     return () => window.removeEventListener("resize", check)
   }, [])
 
-  // Glide finger across cards on mobile ("pasarle el dedo")
+  useEffect(() => {
+    return () => {
+      if (touchRafRef.current != null) cancelAnimationFrame(touchRafRef.current)
+    }
+  }, [])
+
+  // Glide finger across cards on mobile ("pasarle el dedo") — each switch
+  // triggers a height transition on every panel, so the hit-test + state
+  // update are coalesced to one per animation frame instead of running on
+  // every touchmove (which can fire far more often than the display refreshes).
   const handleTouchMove = (e: React.TouchEvent) => {
     if (!isStacked || !rootRef.current) return
     const touch = e.touches[0]
     if (!touch) return
-    const el = document.elementFromPoint(touch.clientX, touch.clientY)
-    const panel = el?.closest("[data-index]") as HTMLElement | null
-    if (panel) {
-      const idx = Number(panel.getAttribute("data-index"))
-      if (!isNaN(idx) && idx >= 0 && idx < count && idx !== active) {
-        setActive(idx)
+    pendingTouchRef.current = { x: touch.clientX, y: touch.clientY }
+    if (touchRafRef.current != null) return
+    touchRafRef.current = requestAnimationFrame(() => {
+      touchRafRef.current = null
+      const pos = pendingTouchRef.current
+      if (!pos) return
+      const el = document.elementFromPoint(pos.x, pos.y)
+      const panel = el?.closest("[data-index]") as HTMLElement | null
+      if (panel) {
+        const idx = Number(panel.getAttribute("data-index"))
+        if (!isNaN(idx) && idx >= 0 && idx < count && idx !== active) {
+          setActive(idx)
+        }
       }
-    }
+    })
   }
 
   const r = Math.min(Math.max(expandRatio, 0.2), 0.9)
