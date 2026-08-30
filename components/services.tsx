@@ -55,11 +55,14 @@ export function Services() {
     target: gridRef,
     offset: ["start end", "end start"],
   })
-  const lampHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"])
 
   // Measure each card's vertical slot within the grid (as a 0–1 fraction) so
   // its light wash can sync to the moment the traveling lamp passes over it.
   const [cardRanges, setCardRanges] = useState<{ start: number; end: number }[]>([])
+  // Grid height in px — lets the lamp travel via a compositor-only `transform`
+  // (translateY/scaleY) instead of animating `height`, which forces layout
+  // on every scroll frame and was the source of the mobile jank.
+  const [gridHeight, setGridHeight] = useState(0)
 
   useEffect(() => {
     const grid = gridRef.current as HTMLElement | null
@@ -67,12 +70,13 @@ export function Services() {
 
     const measure = () => {
       const cards = Array.from(grid.querySelectorAll<HTMLElement>("[data-service-card]"))
-      const gridHeight = grid.offsetHeight
-      if (!gridHeight) return
+      const height = grid.offsetHeight
+      if (!height) return
+      setGridHeight(height)
       setCardRanges(
         cards.map((el) => ({
-          start: el.offsetTop / gridHeight,
-          end: (el.offsetTop + el.offsetHeight) / gridHeight,
+          start: el.offsetTop / height,
+          end: (el.offsetTop + el.offsetHeight) / height,
         }))
       )
     }
@@ -82,6 +86,8 @@ export function Services() {
     ro.observe(grid)
     return () => ro.disconnect()
   }, [])
+
+  const lampY = useTransform(scrollYProgress, [0, 1], [0, gridHeight])
 
   return (
     <section
@@ -126,12 +132,19 @@ export function Services() {
             />
           ))}
 
-          {/* Mobile — single lamp travels down through the stacked cards as you scroll */}
+          {/* Mobile — single lamp travels down through the stacked cards as you scroll.
+              The line's fill and the bulb's position are both driven by `transform`
+              (scaleY / translateY) so scrolling never triggers layout. */}
           <motion.div
-            className="pointer-events-none absolute left-1/2 top-0 -translate-x-1/2 z-20 flex flex-col items-center overflow-visible sm:hidden"
-            style={{ height: lampHeight }}
+            aria-hidden="true"
+            className="pointer-events-none absolute left-1/2 top-0 z-20 h-full w-px origin-top bg-[#3f7dff]/50 sm:hidden"
+            style={{ scaleY: scrollYProgress, x: "-50%" }}
+          />
+          <motion.div
+            aria-hidden="true"
+            className="pointer-events-none absolute left-1/2 top-0 z-20 sm:hidden"
+            style={{ y: lampY, x: "-50%" }}
           >
-            <div className="w-px flex-1 bg-[#3f7dff]/50" />
             <Lightbulb
               className="w-4 h-4 shrink-0 text-[#3f7dff]"
               style={{ filter: "drop-shadow(0 0 8px rgba(63,125,255,0.85))" }}
