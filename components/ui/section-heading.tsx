@@ -48,11 +48,10 @@ export function SectionHeading({
         </span>
       )}
 
-      <h2 className="font-google-sans text-4xl font-[450] tracking-normal text-[#0a0e1a] sm:text-5xl lg:text-6xl">
+      <h2 className="font-google-sans text-4xl font-[450] tracking-normal text-foreground sm:text-5xl lg:text-6xl">
         <DiaTextReveal
           text={title}
           colors={BRAND_COLORS}
-          textColor="#0a0e1a"
           duration={REVEAL_DURATION}
         />
       </h2>
@@ -61,7 +60,6 @@ export function SectionHeading({
         <DiaTextReveal
           text={subtitle}
           colors={BRAND_COLORS}
-          textColor="#0a0e1a"
           duration={REVEAL_DURATION}
           className={`block font-google-sans text-sm font-[450] tracking-normal sm:text-base ${subtitleClassName}`}
         />
@@ -69,7 +67,7 @@ export function SectionHeading({
 
       {description && (
         <p
-          className={`mt-4 text-sm leading-relaxed text-black/55 sm:text-base ${
+          className={`mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base ${
             centered ? "mx-auto max-w-xl" : "max-w-xl"
           }`}
         >

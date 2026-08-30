@@ -11,6 +11,9 @@ import Image from "next/image"
 import { motion, useMotionValue, useSpring } from "framer-motion"
 import { ArrowUpRight } from "lucide-react"
 
+const STACKED_COLLAPSED_HEIGHT = 88
+const STACKED_EXPANDED_HEIGHT = 340
+
 export interface AccordionGalleryItem {
   image: string
   label?: string
@@ -44,6 +47,7 @@ interface PanelProps {
   i: number
   active: number
   isStacked: boolean
+  stackedTop: number
   grow: number
   tilt: number
   parallax: number
@@ -56,6 +60,7 @@ interface PanelProps {
   trigger: "hover" | "click"
   setActive: (index: number) => void
   handleKey: (i: number, e: KeyboardEvent) => void
+  registerPanelEl: (i: number, el: HTMLElement | null) => void
 }
 
 function AccordionPanel({
@@ -63,6 +68,7 @@ function AccordionPanel({
   i,
   active,
   isStacked,
+  stackedTop,
   grow,
   tilt,
   parallax,
@@ -75,6 +81,7 @@ function AccordionPanel({
   trigger,
   setActive,
   handleKey,
+  registerPanelEl,
 }: PanelProps) {
   const isActive = i === active
   const Tag = item.link ? "a" : "div"
@@ -136,25 +143,40 @@ function AccordionPanel({
     // 2nd click/tap: when already active, native link navigation proceeds to target="_blank"
   }
 
-  const panelStyle: CSSProperties = {
-    borderRadius: `${radius}px`,
-    flexGrow: isStacked ? 1 : isActive ? grow : 1,
-    flexBasis: isStacked ? undefined : 0,
-    willChange: isStacked ? "min-height, height" : "flex-grow",
-    transform: "translateZ(0)",
-    transition: isStacked
-      ? `min-height ${duration}s cubic-bezier(0.16, 1, 0.3, 1), height ${duration}s cubic-bezier(0.16, 1, 0.3, 1)`
-      : `flex-grow ${duration}s cubic-bezier(0.16, 1, 0.3, 1)`,
-    minHeight: isStacked ? (isActive ? "340px" : "88px") : undefined,
-    height: isStacked ? (isActive ? "340px" : "88px") : undefined,
-    boxShadow: isActive
-      ? `0 24px 60px -24px ${accentColor}66`
-      : "0 10px 30px -20px rgba(5,11,28,0.6)",
-  }
+  const panelStyle: CSSProperties = isStacked
+    ? {
+        position: "absolute",
+        left: 0,
+        right: 0,
+        top: `${stackedTop}px`,
+        height: isActive ? STACKED_EXPANDED_HEIGHT : STACKED_COLLAPSED_HEIGHT,
+        borderRadius: `${radius}px`,
+        // Only the position and size animate — the accordion's total height
+        // never changes (see stackedTops in the parent), so expanding one
+        // card never shifts the page's scroll position under the user.
+        transition: `top ${duration}s cubic-bezier(0.16, 1, 0.3, 1), height ${duration}s cubic-bezier(0.16, 1, 0.3, 1)`,
+        boxShadow: isActive
+          ? `0 24px 60px -24px ${accentColor}66`
+          : "0 10px 30px -20px rgba(5,11,28,0.6)",
+      }
+    : {
+        borderRadius: `${radius}px`,
+        flexGrow: isActive ? grow : 1,
+        flexBasis: 0,
+        willChange: "flex-grow",
+        transform: "translateZ(0)",
+        transition: `flex-grow ${duration}s cubic-bezier(0.16, 1, 0.3, 1)`,
+        boxShadow: isActive
+          ? `0 24px 60px -24px ${accentColor}66`
+          : "0 10px 30px -20px rgba(5,11,28,0.6)",
+      }
 
   return (
     <Tag
-      ref={panelRef as any}
+      ref={(el: (HTMLAnchorElement & HTMLDivElement) | null) => {
+        panelRef.current = el
+        registerPanelEl(i, el)
+      }}
       key={i}
       data-index={i}
       {...(item.link
@@ -310,8 +332,8 @@ export function AccordionGallery({
     Math.min(Math.max(defaultIndex, 0), count - 1)
   )
   const [isStacked, setIsStacked] = useState(false)
-  const touchRafRef = useRef<number | null>(null)
-  const pendingTouchRef = useRef<{ x: number; y: number } | null>(null)
+  const panelElsRef = useRef<(HTMLElement | null)[]>([])
+  const scrollRafRef = useRef<number | null>(null)
 
   useEffect(() => {
     const check = () => setIsStacked(window.innerWidth <= 768)
@@ -320,36 +342,52 @@ export function AccordionGallery({
     return () => window.removeEventListener("resize", check)
   }, [])
 
-  useEffect(() => {
-    return () => {
-      if (touchRafRef.current != null) cancelAnimationFrame(touchRafRef.current)
-    }
-  }, [])
-
-  // Glide finger across cards on mobile ("pasarle el dedo") — each switch
-  // triggers a height transition on every panel, so the hit-test + state
-  // update are coalesced to one per animation frame instead of running on
-  // every touchmove (which can fire far more often than the display refreshes).
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isStacked || !rootRef.current) return
-    const touch = e.touches[0]
-    if (!touch) return
-    pendingTouchRef.current = { x: touch.clientX, y: touch.clientY }
-    if (touchRafRef.current != null) return
-    touchRafRef.current = requestAnimationFrame(() => {
-      touchRafRef.current = null
-      const pos = pendingTouchRef.current
-      if (!pos) return
-      const el = document.elementFromPoint(pos.x, pos.y)
-      const panel = el?.closest("[data-index]") as HTMLElement | null
-      if (panel) {
-        const idx = Number(panel.getAttribute("data-index"))
-        if (!isNaN(idx) && idx >= 0 && idx < count && idx !== active) {
-          setActive(idx)
-        }
-      }
-    })
+  const registerPanelEl = (i: number, el: HTMLElement | null) => {
+    panelElsRef.current[i] = el
   }
+
+  // Mobile: the open card follows scroll position instead of tap/hover — the
+  // panel whose center sits closest to a fixed "reading line" near the top
+  // of the viewport becomes active, so the first project is already open on
+  // arrival and each new one takes over (closing the previous) as it scrolls
+  // into that line.
+  useEffect(() => {
+    if (!isStacked) return
+
+    const READING_LINE = 0.38 // fraction of viewport height
+
+    const computeActive = () => {
+      scrollRafRef.current = null
+      const targetY = window.innerHeight * READING_LINE
+      let closest = 0
+      let closestDist = Infinity
+      panelElsRef.current.forEach((el, i) => {
+        if (!el) return
+        const rect = el.getBoundingClientRect()
+        const center = rect.top + rect.height / 2
+        const dist = Math.abs(center - targetY)
+        if (dist < closestDist) {
+          closestDist = dist
+          closest = i
+        }
+      })
+      setActive((prev) => (prev === closest ? prev : closest))
+    }
+
+    const onScroll = () => {
+      if (scrollRafRef.current != null) return
+      scrollRafRef.current = requestAnimationFrame(computeActive)
+    }
+
+    computeActive()
+    window.addEventListener("scroll", onScroll, { passive: true })
+    window.addEventListener("resize", onScroll)
+    return () => {
+      window.removeEventListener("scroll", onScroll)
+      window.removeEventListener("resize", onScroll)
+      if (scrollRafRef.current != null) cancelAnimationFrame(scrollRafRef.current)
+    }
+  }, [isStacked, count])
 
   const r = Math.min(Math.max(expandRatio, 0.2), 0.9)
   const grow = count > 1 ? (r * (count - 1)) / (1 - r) : 1
@@ -364,16 +402,28 @@ export function AccordionGallery({
     }
   }
 
+  // Cumulative top offset of each panel so the container's total height
+  // (one expanded + the rest collapsed, plus gaps) never changes as `active`
+  // moves — only individual panels reposition, so the page never jumps.
+  let stackedTotalHeight = 0
+  const stackedTops: number[] = []
+  for (let i = 0; i < count; i++) {
+    stackedTops.push(stackedTotalHeight)
+    stackedTotalHeight +=
+      (i === active ? STACKED_EXPANDED_HEIGHT : STACKED_COLLAPSED_HEIGHT) + gap
+  }
+  stackedTotalHeight -= count > 0 ? gap : 0
+
   return (
     <div
       ref={rootRef}
       role="list"
       aria-label="Galería de proyectos"
-      onTouchMove={handleTouchMove}
       className={`flex w-full max-w-full flex-col sm:flex-row ${className}`}
       style={{
-        gap: `${gap}px`,
-        height: isStacked ? "auto" : `${height}px`,
+        gap: isStacked ? 0 : `${gap}px`,
+        position: isStacked ? "relative" : undefined,
+        height: isStacked ? `${stackedTotalHeight}px` : `${height}px`,
         perspective: isStacked ? undefined : "1600px",
       }}
     >
@@ -384,6 +434,7 @@ export function AccordionGallery({
           i={i}
           active={active}
           isStacked={isStacked}
+          stackedTop={stackedTops[i]}
           grow={grow}
           tilt={tilt}
           parallax={parallax}
@@ -396,6 +447,7 @@ export function AccordionGallery({
           trigger={trigger}
           setActive={setActive}
           handleKey={handleKey}
+          registerPanelEl={registerPanelEl}
         />
       ))}
     </div>

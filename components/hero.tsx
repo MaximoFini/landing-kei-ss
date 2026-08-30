@@ -180,7 +180,7 @@ export function Hero() {
             delay: 0.1,
             ease: [0.16, 1, 0.3, 1],
           }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-3 mx-auto mt-3 sm:mt-2"
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 mx-auto -mt-3 sm:-mt-11"
         >
           <div className="scale-90">
             <SpecularButton href="#contacto">Empezá tu proyecto</SpecularButton>

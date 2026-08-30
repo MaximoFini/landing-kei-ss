@@ -92,7 +92,7 @@ export function Services() {
   return (
     <section
       id="servicios"
-      className="relative pt-12 pb-20 sm:pt-16 sm:pb-28 lg:pt-20 lg:pb-32 px-4 sm:px-6 overflow-hidden bg-white"
+      className="relative pt-12 pb-20 sm:pt-16 sm:pb-28 lg:pt-20 lg:pb-32 px-4 sm:px-6 overflow-hidden bg-background"
     >
       <div className="relative z-10 max-w-7xl mx-auto">
         {/* Section header */}
@@ -103,18 +103,16 @@ export function Services() {
           transition={{ duration: 0.5 }}
           className="mb-12 sm:mb-16 text-center"
         >
-          <h2 className="font-google-sans text-4xl sm:text-5xl lg:text-6xl font-[450] text-[#0a0e1a] tracking-normal">
+          <h2 className="font-google-sans text-4xl sm:text-5xl lg:text-6xl font-[450] text-foreground tracking-normal">
             <DiaTextReveal
               text="Servicios"
               colors={["#0b1a42", "#1a4fc0", "#3f7dff", "#bcdcff"]}
-              textColor="#0a0e1a"
               duration={HEADER_REVEAL_DURATION}
             />
           </h2>
           <DiaTextReveal
             text="Lo que hacemos"
             colors={["#0b1a42", "#1a4fc0", "#3f7dff", "#bcdcff"]}
-            textColor="#0a0e1a"
             duration={HEADER_REVEAL_DURATION}
             className="font-google-sans mt-2 block text-sm sm:text-base font-[450] tracking-normal"
           />
@@ -191,7 +189,7 @@ function ServiceCard({
       transition={{ duration: 0.5, delay: index * 0.08 }}
       whileHover={{ y: -4 }}
       data-service-card
-      className="group relative overflow-hidden rounded-2xl border border-black/[0.07] bg-white p-6 sm:p-8 shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] transition-[border-color,box-shadow] duration-300 hover:border-[#3f7dff]/35 hover:shadow-[0_24px_60px_-20px_rgba(63,125,255,0.35)]"
+      className="group relative overflow-hidden rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] dark:shadow-[0_2px_16px_-8px_rgba(0,0,0,0.5)] transition-[border-color,box-shadow] duration-300 hover:border-[#3f7dff]/35 hover:shadow-[0_24px_60px_-20px_rgba(63,125,255,0.35)]"
     >
       <BorderBeam
         size={70}
@@ -236,10 +234,10 @@ function ServiceCard({
       </div>
 
       {/* Content */}
-      <h3 className="relative z-10 font-google-sans text-lg sm:text-xl font-[450] text-[#0a0e1a] mb-2">
+      <h3 className="relative z-10 font-google-sans text-lg sm:text-xl font-[450] text-foreground mb-2">
         {service.title}
       </h3>
-      <p className="relative z-10 text-sm text-black/55 leading-relaxed">
+      <p className="relative z-10 text-sm text-muted-foreground leading-relaxed">
         {service.description}
       </p>
     </motion.div>
