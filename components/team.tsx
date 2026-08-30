@@ -41,7 +41,7 @@ function MemberCard({ member, index }: { member: (typeof coreMembers)[0]; index:
       transition={{ duration: 0.6, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
     >
       <TiltCard max={6} className="rounded-2xl">
-        <div className="relative overflow-hidden rounded-2xl border border-black/[0.07] bg-white shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] transition-shadow duration-300 group-hover/tilt:shadow-[0_28px_70px_-24px_rgba(63,125,255,0.32)]">
+        <div className="relative overflow-hidden rounded-2xl border border-border bg-card shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] dark:shadow-[0_2px_16px_-8px_rgba(0,0,0,0.5)] transition-shadow duration-300 group-hover/tilt:shadow-[0_28px_70px_-24px_rgba(63,125,255,0.32)]">
           <div className="relative aspect-square overflow-hidden">
             <Image
               src={member.image}
@@ -80,7 +80,7 @@ export function Team() {
   return (
     <section
       id="equipo"
-      className="relative overflow-hidden bg-[#fafbff] px-4 py-20 sm:px-6 sm:py-28 lg:py-32"
+      className="relative overflow-hidden bg-[#fafbff] dark:bg-background px-4 py-20 sm:px-6 sm:py-28 lg:py-32"
     >
       <DotGrid className="opacity-60" gap={38} baseColor="#dbe4f7" activeColor="#3f7dff" />
 

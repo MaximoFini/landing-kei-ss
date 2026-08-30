@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Volume2, VolumeX } from "lucide-react";
 import Image from "next/image";
+import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 
 const navLinks = [
   { label: "Servicios", href: "#servicios" },
@@ -25,6 +26,23 @@ export function Navbar() {
   const clickLockRef = useRef(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [soundOn, setSoundOn] = useState(false);
+  // The theme toggle flips `document.documentElement`'s class directly (so
+  // the class change lands synchronously inside a view-transition capture)
+  // instead of going through next-themes' own React state, so this reads
+  // the DOM directly too — `useTheme()` here would go stale after the very
+  // first live toggle since it only re-syncs on a full remount.
+  const [isDark, setIsDark] = useState(false);
+  useEffect(() => {
+    const syncTheme = () =>
+      setIsDark(document.documentElement.classList.contains("dark"));
+    syncTheme();
+    const observer = new MutationObserver(syncTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    return () => observer.disconnect();
+  }, []);
 
   const toggleSound = () => {
     const audio = audioRef.current;
@@ -135,13 +153,25 @@ export function Navbar() {
         <div className="font-google-sans max-w-5xl mx-auto pointer-events-auto">
           <motion.nav
             animate={{
-              boxShadow: scrolled
+              boxShadow: isDark
+                ? scrolled
+                  ? "0 20px 50px -12px rgba(0,0,0,0.55), 0 2px 8px -2px rgba(0,0,0,0.35), inset 0 1px 1px 0 rgba(255,255,255,0.08), inset 0 -1px 2px 0 rgba(255,255,255,0.04)"
+                  : "0 10px 34px -10px rgba(0,0,0,0.4), inset 0 1px 1px 0 rgba(255,255,255,0.06), inset 0 -1px 2px 0 rgba(255,255,255,0.03)"
+                : scrolled
                 ? "0 20px 50px -12px rgba(15,23,42,0.22), 0 2px 8px -2px rgba(15,23,42,0.10), inset 0 1px 1px 0 rgba(255,255,255,0.90), inset 0 -1px 2px 0 rgba(255,255,255,0.35)"
                 : "0 10px 34px -10px rgba(15,23,42,0.14), inset 0 1px 1px 0 rgba(255,255,255,0.70), inset 0 -1px 2px 0 rgba(255,255,255,0.25)",
-              borderColor: scrolled
+              borderColor: isDark
+                ? scrolled
+                  ? "rgba(255, 255, 255, 0.16)"
+                  : "rgba(255, 255, 255, 0.10)"
+                : scrolled
                 ? "rgba(255, 255, 255, 0.55)"
                 : "rgba(255, 255, 255, 0.35)",
-              backgroundColor: scrolled
+              backgroundColor: isDark
+                ? scrolled
+                  ? "rgba(18, 18, 22, 0.72)"
+                  : "rgba(18, 18, 22, 0.5)"
+                : scrolled
                 ? "rgba(255, 255, 255, 0.55)"
                 : "rgba(255, 255, 255, 0.34)",
             }}
@@ -150,13 +180,13 @@ export function Navbar() {
           >
             {/* ── Glass layers ─────────────────────────────── */}
             {/* top specular highlight */}
-            <div className="pointer-events-none absolute inset-x-0 top-0 h-1/2 rounded-t-full bg-gradient-to-b from-white/70 via-white/20 to-transparent" />
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-1/2 rounded-t-full bg-gradient-to-b from-white/70 via-white/20 to-transparent dark:from-white/10 dark:via-white/[0.03] dark:to-transparent" />
             {/* diagonal sheen */}
-            <div className="pointer-events-none absolute inset-0 rounded-full bg-[linear-gradient(115deg,rgba(255,255,255,0.55)_0%,rgba(255,255,255,0)_28%,rgba(255,255,255,0)_60%,rgba(255,255,255,0.30)_100%)]" />
+            <div className="pointer-events-none absolute inset-0 rounded-full bg-[linear-gradient(115deg,rgba(255,255,255,0.55)_0%,rgba(255,255,255,0)_28%,rgba(255,255,255,0)_60%,rgba(255,255,255,0.30)_100%)] dark:bg-[linear-gradient(115deg,rgba(255,255,255,0.08)_0%,rgba(255,255,255,0)_28%,rgba(255,255,255,0)_60%,rgba(255,255,255,0.05)_100%)]" />
             {/* subtle color refraction */}
-            <div className="pointer-events-none absolute -inset-8 rounded-full bg-[radial-gradient(60%_120%_at_15%_0%,rgba(99,102,241,0.14),transparent_60%),radial-gradient(60%_120%_at_85%_100%,rgba(56,189,248,0.12),transparent_60%)]" />
+            <div className="pointer-events-none absolute -inset-8 rounded-full bg-[radial-gradient(60%_120%_at_15%_0%,rgba(99,102,241,0.14),transparent_60%),radial-gradient(60%_120%_at_85%_100%,rgba(56,189,248,0.12),transparent_60%)] dark:bg-[radial-gradient(60%_120%_at_15%_0%,rgba(99,102,241,0.22),transparent_60%),radial-gradient(60%_120%_at_85%_100%,rgba(56,189,248,0.18),transparent_60%)]" />
             {/* crisp inner rim */}
-            <div className="pointer-events-none absolute inset-0 rounded-full ring-1 ring-inset ring-white/40" />
+            <div className="pointer-events-none absolute inset-0 rounded-full ring-1 ring-inset ring-white/40 dark:ring-white/10" />
             {/* Logo */}
             <div className="relative z-10 flex-1 flex items-center pl-2 sm:pl-3">
               <a
@@ -172,7 +202,7 @@ export function Navbar() {
                   priority
                   className="w-8 h-8 object-contain"
                 />
-                <span className="text-sm sm:text-base tracking-tight text-black">
+                <span className="text-sm sm:text-base tracking-tight text-black dark:text-white">
                   KEI Software
                 </span>
               </a>
@@ -182,7 +212,7 @@ export function Navbar() {
             <nav
               ref={pillRef}
               onMouseLeave={() => setHoverIndex(null)}
-              className="relative z-10 hidden lg:flex items-center bg-white/25 rounded-full p-1 border border-white/40 shadow-[inset_0_1px_2px_rgba(255,255,255,0.6),inset_0_-1px_2px_rgba(15,23,42,0.04)] backdrop-blur-md overflow-hidden"
+              className="relative z-10 hidden lg:flex items-center bg-white/25 dark:bg-white/[0.04] rounded-full p-1 border border-white/40 dark:border-white/10 shadow-[inset_0_1px_2px_rgba(255,255,255,0.6),inset_0_-1px_2px_rgba(15,23,42,0.04)] dark:shadow-[inset_0_1px_2px_rgba(255,255,255,0.06),inset_0_-1px_2px_rgba(0,0,0,0.2)] backdrop-blur-md overflow-hidden"
               aria-label="Navegación principal"
             >
               {/* Coloured glow trailing the indicator */}
@@ -194,12 +224,12 @@ export function Navbar() {
 
               {/* Glass indicator */}
               <motion.div
-                className="absolute top-1 bottom-1 rounded-full pointer-events-none overflow-hidden bg-white/70 ring-1 ring-white/70 shadow-[0_4px_14px_rgba(15,23,42,0.12),inset_0_1px_1px_rgba(255,255,255,0.9)] backdrop-blur-sm"
+                className="absolute top-1 bottom-1 rounded-full pointer-events-none overflow-hidden bg-white/70 dark:bg-white/10 ring-1 ring-white/70 dark:ring-white/15 shadow-[0_4px_14px_rgba(15,23,42,0.12),inset_0_1px_1px_rgba(255,255,255,0.9)] dark:shadow-[0_4px_14px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.15)] backdrop-blur-sm"
                 animate={{ left: blobStyle.left, width: blobStyle.width }}
                 transition={{ type: "spring", stiffness: 400, damping: 30 }}
               >
-                <div className="absolute inset-0 bg-gradient-to-b from-white/90 to-white/40" />
-                <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/80 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-b from-white/90 to-white/40 dark:from-white/15 dark:to-white/5" />
+                <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/80 to-transparent dark:from-white/10 dark:to-transparent" />
               </motion.div>
 
               {/* Nav items */}
@@ -213,8 +243,8 @@ export function Navbar() {
                   onBlur={() => setHoverIndex(null)}
                   className={`relative z-10 px-4 py-1.5 rounded-full text-sm font-medium transition-colors duration-300 whitespace-nowrap ${
                     indicatorIndex === i
-                      ? "text-black"
-                      : "text-black/55 hover:text-black/80"
+                      ? "text-black dark:text-white"
+                      : "text-black/55 hover:text-black/80 dark:text-white/55 dark:hover:text-white/80"
                   }`}
                 >
                   <motion.span
@@ -231,10 +261,11 @@ export function Navbar() {
             {/* CTA */}
             <div className="relative z-10 flex-1 flex items-center justify-end gap-2 pr-1 sm:pr-2">
               <audio ref={audioRef} src="/audio/hero-theme.mp3" loop preload="none" />
+              <AnimatedThemeToggler className="grid place-items-center w-9 h-9 rounded-full text-black/60 ring-1 ring-black/10 bg-white/40 backdrop-blur-md transition-all hover:text-black hover:bg-white/70 active:scale-95 dark:text-white/60 dark:ring-white/10 dark:bg-white/[0.06] dark:hover:text-white dark:hover:bg-white/[0.12]" />
               <button
                 type="button"
                 onClick={toggleSound}
-                className="hidden lg:grid place-items-center w-9 h-9 rounded-full text-black/60 ring-1 ring-black/10 bg-white/40 backdrop-blur-md transition-all hover:text-black hover:bg-white/70 active:scale-95"
+                className="grid place-items-center w-9 h-9 rounded-full text-black/60 ring-1 ring-black/10 bg-white/40 backdrop-blur-md transition-all hover:text-black hover:bg-white/70 active:scale-95 dark:text-white/60 dark:ring-white/10 dark:bg-white/[0.06] dark:hover:text-white dark:hover:bg-white/[0.12]"
                 aria-pressed={soundOn}
                 aria-label={soundOn ? "Silenciar música" : "Reproducir música"}
                 title={soundOn ? "Silenciar música" : "Reproducir música"}
@@ -243,15 +274,15 @@ export function Navbar() {
               </button>
               <a
                 href="#contacto"
-                className="hidden lg:inline-flex items-center justify-center px-5 py-2 rounded-full bg-black text-white text-sm font-medium hover:bg-gray-800 transition-all shadow-sm ring-1 ring-black/10 hover:scale-[1.03] active:scale-95"
+                className="hidden lg:inline-flex items-center justify-center px-5 py-2 rounded-full bg-black text-white text-sm font-medium hover:bg-gray-800 transition-all shadow-sm ring-1 ring-black/10 hover:scale-[1.03] active:scale-95 dark:bg-white dark:text-black dark:hover:bg-white/85 dark:ring-white/10"
               >
                 Consultar
               </a>
               <button
                 className={`lg:hidden relative grid place-items-center w-9 h-9 rounded-xl transition-colors ${
                   menuOpen
-                    ? "bg-white text-black ring-1 ring-black/10 shadow-sm"
-                    : "text-black/70 hover:text-black"
+                    ? "bg-white text-black ring-1 ring-black/10 shadow-sm dark:bg-zinc-800 dark:text-white dark:ring-white/10"
+                    : "text-black/70 hover:text-black dark:text-white/70 dark:hover:text-white"
                 }`}
                 onClick={() => setMenuOpen(!menuOpen)}
                 aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
@@ -280,10 +311,10 @@ export function Navbar() {
             {/* Frosted, blurred backdrop */}
             <div
               onClick={() => setMenuOpen(false)}
-              className="absolute inset-0 bg-white/70 backdrop-blur-2xl backdrop-saturate-[1.8]"
+              className="absolute inset-0 bg-white/70 dark:bg-zinc-950/85 backdrop-blur-2xl backdrop-saturate-[1.8]"
             />
             {/* soft brand glow */}
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(80%_50%_at_50%_0%,rgba(99,102,241,0.10),transparent_60%),radial-gradient(70%_50%_at_50%_100%,rgba(56,189,248,0.10),transparent_60%)]" />
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(80%_50%_at_50%_0%,rgba(99,102,241,0.10),transparent_60%),radial-gradient(70%_50%_at_50%_100%,rgba(56,189,248,0.10),transparent_60%)] dark:bg-[radial-gradient(80%_50%_at_50%_0%,rgba(99,102,241,0.20),transparent_60%),radial-gradient(70%_50%_at_50%_100%,rgba(56,189,248,0.18),transparent_60%)]" />
 
             <motion.nav
               initial={{ y: 8, opacity: 0 }}
@@ -304,10 +335,12 @@ export function Navbar() {
                     <button
                       onClick={() => { handleNavClick(idx, link.href); setMenuOpen(false); }}
                       className={`flex w-full items-baseline gap-3 py-3 text-left transition-colors ${
-                        idx === activeIndex ? "text-black" : "text-black/45 active:text-black"
+                        idx === activeIndex
+                          ? "text-black dark:text-white"
+                          : "text-black/45 active:text-black dark:text-white/45 dark:active:text-white"
                       }`}
                     >
-                      <span className="font-mono text-xs tabular-nums text-black/30">
+                      <span className="font-mono text-xs tabular-nums text-black/30 dark:text-white/30">
                         {String(idx + 1).padStart(2, "0")}
                       </span>
                       <span className="text-3xl font-semibold tracking-tight">
@@ -324,7 +357,7 @@ export function Navbar() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 + navLinks.length * 0.05, duration: 0.3 }}
-                className="flex items-center justify-center rounded-full bg-black px-6 py-4 text-sm font-medium text-white shadow-lg ring-1 ring-black/10 active:scale-95"
+                className="flex items-center justify-center rounded-full bg-black px-6 py-4 text-sm font-medium text-white shadow-lg ring-1 ring-black/10 active:scale-95 dark:bg-white dark:text-black dark:ring-white/10"
               >
                 Primera consulta gratis
               </motion.a>

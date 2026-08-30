@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { StructuredData } from "@/components/structured-data";
 import { PageTransition } from "@/components/page-transition";
 import { TitleAttention } from "@/components/title-attention";
+import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 
 const geist = Geist({
@@ -129,7 +130,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className="bg-background scroll-smooth">
+    <html lang="es" className="bg-background scroll-smooth" suppressHydrationWarning>
       <head>
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         <link
@@ -153,8 +154,15 @@ export default function RootLayout({
       <body
         className={`${geist.variable} ${geistMono.variable} ${googleSansFlex.variable} font-sans antialiased bg-background text-foreground min-h-screen`}
       >
-        <TitleAttention />
-        <PageTransition>{children}</PageTransition>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem={false}
+          disableTransitionOnChange
+        >
+          <TitleAttention />
+          <PageTransition>{children}</PageTransition>
+        </ThemeProvider>
         {process.env.NODE_ENV === "production" && <Analytics />}
       </body>
     </html>

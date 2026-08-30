@@ -50,7 +50,7 @@ function StepCard({ step, index }: { step: (typeof steps)[0]; index: number }) {
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.55, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
       whileHover={{ y: -4 }}
-      className="group relative flex flex-col gap-5 overflow-hidden rounded-2xl border border-black/[0.07] bg-white p-6 shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] transition-[border-color,box-shadow] duration-300 hover:border-[#3f7dff]/35 hover:shadow-[0_24px_60px_-20px_rgba(63,125,255,0.35)]"
+      className="group relative flex flex-col gap-5 overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] dark:shadow-[0_2px_16px_-8px_rgba(0,0,0,0.5)] transition-[border-color,box-shadow] duration-300 hover:border-[#3f7dff]/35 hover:shadow-[0_24px_60px_-20px_rgba(63,125,255,0.35)]"
     >
       <BorderBeam
         size={70}
@@ -74,16 +74,16 @@ function StepCard({ step, index }: { step: (typeof steps)[0]; index: number }) {
         <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#3f7dff]/20 bg-[#3f7dff]/10 transition-all duration-300 group-hover:border-[#3f7dff]/40 group-hover:bg-[#3f7dff]/15 group-hover:shadow-[0_0_20px_rgba(63,125,255,0.35)]">
           <Icon className="h-5 w-5 text-[#3f7dff]" />
         </div>
-        <span className="font-google-sans text-3xl font-[450] text-black/[0.08] transition-colors duration-300 group-hover:text-[#3f7dff]/25">
+        <span className="font-google-sans text-3xl font-[450] text-foreground/[0.08] transition-colors duration-300 group-hover:text-[#3f7dff]/25">
           {step.num}
         </span>
       </div>
 
       <div className="relative z-10 flex-1">
-        <h3 className="mb-2 font-google-sans text-lg font-[450] text-[#0a0e1a]">
+        <h3 className="mb-2 font-google-sans text-lg font-[450] text-foreground">
           {step.title}
         </h3>
-        <p className="text-sm leading-relaxed text-black/55">{step.description}</p>
+        <p className="text-sm leading-relaxed text-muted-foreground">{step.description}</p>
       </div>
     </motion.div>
   )
@@ -96,7 +96,7 @@ export function Process() {
   return (
     <section
       id="proceso"
-      className="relative overflow-hidden bg-[#fafbff] px-4 pt-16 pb-12 sm:px-6 sm:pt-24 sm:pb-14 lg:pt-28 lg:pb-16"
+      className="relative overflow-hidden bg-[#fafbff] dark:bg-background px-4 pt-16 pb-12 sm:px-6 sm:pt-24 sm:pb-14 lg:pt-28 lg:pb-16"
     >
       <DotGrid
         className="opacity-70"

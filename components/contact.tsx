@@ -78,16 +78,16 @@ export function Contact() {
   }
 
   const fieldClass =
-    "w-full rounded-xl border border-black/10 bg-[#fafbff] px-4 py-3 text-sm text-[#0a0e1a] placeholder:text-black/35 transition-all duration-300 focus:border-[#3f7dff]/50 focus:outline-none focus:ring-2 focus:ring-[#3f7dff]/25"
+    "w-full rounded-xl border border-border bg-muted/50 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground transition-all duration-300 focus:border-[#3f7dff]/50 focus:outline-none focus:ring-2 focus:ring-[#3f7dff]/25"
 
   const stepLabelClass = "font-mono text-[10px] uppercase tracking-[0.3em] text-[#3f7dff]"
 
-  const questionClass = "font-google-sans text-lg sm:text-xl font-[450] text-[#0a0e1a]"
+  const questionClass = "font-google-sans text-lg sm:text-xl font-[450] text-foreground"
 
   return (
     <section
       id="contacto"
-      className="relative overflow-hidden bg-white px-4 py-20 sm:px-6 sm:py-28 lg:py-32"
+      className="relative overflow-hidden bg-background px-4 py-20 sm:px-6 sm:py-28 lg:py-32"
     >
       <LightAurora intensity={0.7} />
 
@@ -107,7 +107,7 @@ export function Contact() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="flex flex-col gap-8 sm:gap-10"
           >
-            <p className="max-w-sm text-sm leading-relaxed text-black/55 sm:text-base">
+            <p className="max-w-sm text-sm leading-relaxed text-muted-foreground sm:text-base">
               Queremos entender tu problema y resolverlo. Contanos qué necesitás y
               te respondemos en menos de 24 horas.
             </p>
@@ -124,7 +124,7 @@ export function Contact() {
                   </div>
                   <div>
                     <p className={`${stepLabelClass} mb-0.5`}>{label}</p>
-                    <p className="break-all text-sm font-medium text-[#0a0e1a] transition-colors group-hover:text-[#3f7dff] sm:text-base">
+                    <p className="break-all text-sm font-medium text-foreground transition-colors group-hover:text-[#3f7dff] sm:text-base">
                       {value}
                     </p>
                   </div>
@@ -140,7 +140,7 @@ export function Contact() {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             {sent ? (
-              <div className="flex min-h-[350px] flex-col items-center justify-center gap-5 rounded-2xl border border-[#3f7dff]/25 bg-white p-8 text-center shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] sm:min-h-[400px] sm:p-12">
+              <div className="flex min-h-[350px] flex-col items-center justify-center gap-5 rounded-2xl border border-[#3f7dff]/25 bg-card p-8 text-center shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] dark:shadow-[0_2px_16px_-8px_rgba(0,0,0,0.5)] sm:min-h-[400px] sm:p-12">
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
@@ -150,10 +150,10 @@ export function Contact() {
                   <CheckCircle className="h-6 w-6 text-[#3f7dff]" />
                 </motion.div>
                 <div>
-                  <h3 className="font-google-sans text-xl font-[450] text-[#0a0e1a]">
+                  <h3 className="font-google-sans text-xl font-[450] text-foreground">
                     Mensaje recibido
                   </h3>
-                  <p className="mt-2 text-sm text-black/55">
+                  <p className="mt-2 text-sm text-muted-foreground">
                     Te contactamos en menos de 24 horas.
                   </p>
                 </div>
@@ -161,7 +161,7 @@ export function Contact() {
             ) : (
               <form
                 onSubmit={handleSubmit}
-                className="relative flex flex-col gap-6 overflow-hidden rounded-2xl border border-black/[0.07] bg-white p-6 shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] sm:p-8"
+                className="relative flex flex-col gap-6 overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] dark:shadow-[0_2px_16px_-8px_rgba(0,0,0,0.5)] sm:p-8"
               >
                 <BorderBeam
                   size={80}
@@ -176,7 +176,7 @@ export function Contact() {
                   <span className={stepLabelClass}>
                     Paso {step} de {totalSteps}
                   </span>
-                  <div className="h-1 overflow-hidden rounded-full bg-black/[0.06]">
+                  <div className="h-1 overflow-hidden rounded-full bg-muted">
                     <motion.div
                       className="h-full bg-[#3f7dff]"
                       initial={{ width: 0 }}
@@ -262,7 +262,7 @@ export function Contact() {
                     id="form-error"
                     role="alert"
                     aria-live="assertive"
-                    className="rounded-xl border border-red-300/60 bg-red-50 px-3 py-2 text-xs text-red-600"
+                    className="rounded-xl border border-red-300/60 bg-red-50 px-3 py-2 text-xs text-red-600 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-400"
                   >
                     {error}
                   </p>
@@ -273,7 +273,7 @@ export function Contact() {
                     <button
                       type="button"
                       onClick={prevStep}
-                      className="inline-flex items-center gap-2 px-2 py-2.5 text-sm font-medium text-black/45 transition-colors hover:text-[#0a0e1a]"
+                      className="inline-flex items-center gap-2 px-2 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
                     >
                       <ArrowLeft className="h-4 w-4" />
                       Atrás

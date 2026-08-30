@@ -85,7 +85,7 @@ function TestimonialCard({ t, index }: { t: Testimonial; index: number }) {
         className="h-full rounded-2xl"
         style={{ height: "100%" }}
       >
-        <div className="relative flex h-full min-h-[320px] flex-col justify-between gap-5 overflow-hidden rounded-2xl border border-black/[0.07] bg-white p-6 shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] transition-shadow duration-300 group-hover/tilt:shadow-[0_28px_70px_-24px_rgba(63,125,255,0.32)] sm:p-7">
+        <div className="relative flex h-full min-h-[320px] flex-col justify-between gap-5 overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] dark:shadow-[0_2px_16px_-8px_rgba(0,0,0,0.5)] transition-shadow duration-300 group-hover/tilt:shadow-[0_28px_70px_-24px_rgba(63,125,255,0.32)] sm:p-7">
           <BorderBeam
             size={64}
             duration={8 + (index % 4)}
@@ -97,11 +97,11 @@ function TestimonialCard({ t, index }: { t: Testimonial; index: number }) {
 
           <div className="flex flex-col gap-4">
             <Quote className="h-7 w-7 text-[#3f7dff]/30" />
-            <p className="text-sm leading-relaxed text-black/60">{t.comment}</p>
+            <p className="text-sm leading-relaxed text-muted-foreground">{t.comment}</p>
           </div>
 
-          <div className="flex items-center gap-3.5 border-t border-black/[0.06] pt-4">
-            <div className="relative flex h-11 w-11 flex-shrink-0 items-center justify-center overflow-hidden rounded-xl border border-black/[0.07] bg-white p-1.5 shadow-sm">
+          <div className="flex items-center gap-3.5 border-t border-border pt-4">
+            <div className="relative flex h-11 w-11 flex-shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border bg-card p-1.5 shadow-sm">
               {t.companyLogo && !imageError ? (
                 <Image
                   src={t.companyLogo}
@@ -118,13 +118,13 @@ function TestimonialCard({ t, index }: { t: Testimonial; index: number }) {
               )}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="truncate font-google-sans text-sm font-[450] text-[#0a0e1a]">
+              <p className="truncate font-google-sans text-sm font-[450] text-foreground">
                 {t.name}
               </p>
-              <p className="mt-0.5 truncate font-mono text-[11px] text-black/45">
+              <p className="mt-0.5 truncate font-mono text-[11px] text-muted-foreground">
                 <span className="text-[#3f7dff]">{t.role}</span>
-                <span className="mx-1 text-black/30">·</span>
-                <span className="text-black/60">{t.company}</span>
+                <span className="mx-1 text-muted-foreground/60">·</span>
+                <span className="text-muted-foreground">{t.company}</span>
               </p>
             </div>
           </div>
@@ -173,7 +173,7 @@ export function Testimonials() {
   }, [emblaApi, onSelect])
 
   return (
-    <section className="relative overflow-hidden bg-white px-4 py-20 sm:px-6 sm:py-28 lg:py-32">
+    <section className="relative overflow-hidden bg-background px-4 py-20 sm:px-6 sm:py-28 lg:py-32">
       <LightAurora intensity={0.6} />
 
       <div className="relative z-10 mx-auto max-w-7xl">
@@ -190,7 +190,7 @@ export function Testimonials() {
               type="button"
               onClick={scrollPrev}
               disabled={!prevBtnEnabled}
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-black/10 bg-white/90 text-neutral-800 shadow-sm backdrop-blur-md transition-all duration-200 hover:bg-[#3f7dff] hover:text-white hover:border-[#3f7dff] active:scale-95 disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-card/90 text-foreground shadow-sm backdrop-blur-md transition-all duration-200 hover:bg-[#3f7dff] hover:text-white hover:border-[#3f7dff] active:scale-95 disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
               aria-label="Testimonio anterior"
             >
               <ChevronLeft className="h-5 w-5 stroke-[2.2]" />
@@ -199,7 +199,7 @@ export function Testimonials() {
               type="button"
               onClick={scrollNext}
               disabled={!nextBtnEnabled}
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-black/10 bg-white/90 text-neutral-800 shadow-sm backdrop-blur-md transition-all duration-200 hover:bg-[#3f7dff] hover:text-white hover:border-[#3f7dff] active:scale-95 disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-card/90 text-foreground shadow-sm backdrop-blur-md transition-all duration-200 hover:bg-[#3f7dff] hover:text-white hover:border-[#3f7dff] active:scale-95 disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
               aria-label="Siguiente testimonio"
             >
               <ChevronRight className="h-5 w-5 stroke-[2.2]" />
@@ -233,7 +233,7 @@ export function Testimonials() {
                 className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
                   index === selectedIndex
                     ? "w-8 bg-[#3f7dff]"
-                    : "w-2 bg-black/15 hover:bg-black/30"
+                    : "w-2 bg-foreground/15 hover:bg-foreground/30"
                 }`}
               />
             ))}

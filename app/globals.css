@@ -548,3 +548,26 @@ body {
     animation: none !important;
   }
 }
+
+/* ========================================
+   THEME TOGGLE — circular reveal transition
+   ======================================== */
+
+/* Disable the browser's default cross-fade so the toggle's own clip-path
+   animation (see animated-theme-toggler.tsx) is the only thing visible.
+   The new state sits underneath, fully visible; the old state sits on top
+   and gets clipped with a shrinking circle, uncovering the new state as it
+   shrinks. This must NOT depend on light/dark direction. */
+::view-transition-group(root) {
+  animation: none;
+}
+
+::view-transition-new(root) {
+  animation: none;
+  z-index: 1;
+}
+
+::view-transition-old(root) {
+  animation: none;
+  z-index: 2147483646;
+}
