@@ -84,21 +84,12 @@ export const metadata: Metadata = {
     description:
       "Desarrollamos software a medida, soluciones IA y automatización con transparencia total. Córdoba, Argentina.",
     siteName: "KEI Software",
-    images: [
-      {
-        url: "/og-image.svg",
-        width: 1200,
-        height: 630,
-        alt: "KEI Software — Software a Medida | Córdoba, Argentina",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "KEI Software — Software a Medida | Desarrollo Web & IA",
     description:
       "Desarrollamos software a medida, soluciones IA y automatización con transparencia total. Córdoba, Argentina.",
-    images: ["/og-image.svg"],
   },
   robots: {
     index: true,

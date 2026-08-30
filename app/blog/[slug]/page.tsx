@@ -2,7 +2,16 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Calendar, Clock, ArrowLeft, Tag } from "lucide-react";
-import { getPostBySlug, getRelatedPosts, getAllPosts } from "@/lib/blog";
+import {
+  getPostBySlug,
+  getRelatedPosts,
+  getAllPosts,
+  renderMarkdown,
+} from "@/lib/blog";
+import {
+  BlogPostingStructuredData,
+  BreadcrumbStructuredData,
+} from "@/components/blog-structured-data";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -64,6 +73,20 @@ export default async function BlogPostPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-background">
+      <BlogPostingStructuredData
+        post={post}
+        url={`https://keisoftware.dev/blog/${post.slug}`}
+      />
+      <BreadcrumbStructuredData
+        items={[
+          { name: "Inicio", url: "https://keisoftware.dev" },
+          { name: "Blog", url: "https://keisoftware.dev/blog" },
+          {
+            name: post.title,
+            url: `https://keisoftware.dev/blog/${post.slug}`,
+          },
+        ]}
+      />
       {/* Header */}
       <header className="border-b border-border/40">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6">
@@ -125,7 +148,7 @@ export default async function BlogPostPage({ params }: PageProps) {
             <div
               className="blog-content"
               dangerouslySetInnerHTML={{
-                __html: post.content.replace(/\n/g, "<br />"),
+                __html: renderMarkdown(post.content),
               }}
             />
           </div>

@@ -1,3 +1,5 @@
+import { marked } from "marked";
+
 // Blog data and utilities
 // Aquí defines todos tus posts del blog
 // Más adelante puedes migrar esto a un CMS como Contentful, Sanity, o una base de datos
@@ -415,6 +417,20 @@ Estas prácticas nos permiten entregar en tiempo, presupuesto, y con calidad exc
     `,
   },
 ];
+
+// Render a post's Markdown body to HTML.
+// The leading `# H1` line is stripped so the rendered article body starts at H2
+// (the page already renders the post title as the single <h1>).
+// Marked output is trusted here: blog content is authored in-repo, never user
+// input, so no HTML sanitizer is needed.
+export function renderMarkdown(md: string): string {
+  const withoutLeadingH1 = md.replace(/^\s*#\s+.*(\r?\n)?/, "");
+  return marked.parse(withoutLeadingH1, {
+    async: false,
+    gfm: true,
+    breaks: false,
+  });
+}
 
 // Utility functions
 export function getAllPosts(): BlogPost[] {

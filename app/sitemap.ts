@@ -7,10 +7,13 @@ import { getAllPosts } from "@/lib/blog";
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://keisoftware.dev";
-  const currentDate = new Date();
 
   // Get all blog posts
   const posts = getAllPosts();
+
+  // Stable lastModified: newest post date, falling back to a fixed date.
+  const latestPostDate = posts.length > 0 ? new Date(posts[0].date) : new Date("2026-08-29");
+  const homeLastModified = new Date("2026-08-29");
   const blogPosts: MetadataRoute.Sitemap = posts.map((post) => ({
     url: `${baseUrl}/blog/${post.slug}`,
     lastModified: new Date(post.date),
@@ -21,13 +24,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
       url: baseUrl,
-      lastModified: currentDate,
+      lastModified: homeLastModified,
       changeFrequency: "weekly",
       priority: 1,
     },
     {
       url: `${baseUrl}/blog`,
-      lastModified: currentDate,
+      lastModified: latestPostDate,
       changeFrequency: "weekly",
       priority: 0.9,
     },

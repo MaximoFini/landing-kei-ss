@@ -2,6 +2,10 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Calendar, Clock } from "lucide-react";
 import { getAllPosts, getFeaturedPosts } from "@/lib/blog";
+import {
+  BlogListStructuredData,
+  BreadcrumbStructuredData,
+} from "@/components/blog-structured-data";
 
 export const metadata: Metadata = {
   title: "Blog de Desarrollo y Tecnología",
@@ -24,6 +28,13 @@ export default function BlogPage() {
 
   return (
     <div className="min-h-screen bg-background">
+      <BlogListStructuredData posts={allPosts} />
+      <BreadcrumbStructuredData
+        items={[
+          { name: "Inicio", url: "https://keisoftware.dev" },
+          { name: "Blog", url: "https://keisoftware.dev/blog" },
+        ]}
+      />
       {/* Header */}
       <header className="border-b border-border/40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
@@ -46,8 +57,8 @@ export default function BlogPage() {
             </span>
           </div>
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-foreground uppercase tracking-tight leading-none mb-6">
-            Insights &<br />
-            <span className="text-neon">Conocimiento</span>
+            Desarrollo de Software, IA<br />
+            <span className="text-neon">y Automatización</span>
           </h1>
           <p className="max-w-2xl text-muted-foreground text-lg leading-relaxed">
             Exploramos desarrollo de software, IA, automatización y las
