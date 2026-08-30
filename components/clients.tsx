@@ -12,14 +12,14 @@ type ClientItem = {
 }
 
 const clients: ClientItem[] = [
-  { name: "VeGroup", logo: "VG", image: "/testimonials/vegroup.png" },
-  { name: "Stability", logo: "ST", image: "/testimonials/stability.png" },
-  { name: "Alfa Club", logo: "AC", image: "/testimonials/alfa-club.png" },
-  { name: "OG Circle", logo: "OG", image: "/testimonials/ogcircle.png" },
+  { name: "VeGroup", logo: "VG", image: "/testimonials/vegroup.webp" },
+  { name: "Stability", logo: "ST", image: "/testimonials/stability.webp" },
+  { name: "Alfa Club", logo: "AC", image: "/testimonials/alfa-club.webp" },
+  { name: "OG Circle", logo: "OG", image: "/testimonials/ogcircle.webp" },
   {
     name: "Centro Automotores",
     logo: "CA",
-    image: "/testimonials/centro-autos.png",
+    image: "/testimonials/centro-autos.webp",
   },
 ]
 
