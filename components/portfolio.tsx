@@ -60,13 +60,13 @@ const projects: Project[] = [
   },
   {
     num: "04",
-    title: "Centro Automotores LB",
+    title: "Centro Automotores",
     category: "Automotriz · Plataforma Web",
     description:
       "Sitio web y catálogo digital para concesionaria líder, optimizando la exhibición de vehículos y captación de clientes.",
     year: "2024",
     tags: ["Next.js", "React", "TypeScript", "TailwindCSS"],
-    image: "/proyectos/proyecto-centro-automotores-1.jpg",
+    image: "/proyectos/proyecto-centro-automotores.jpg",
     position: "center center",
     link: "https://www.instagram.com/centro_automotores/",
   },
@@ -115,7 +115,7 @@ export function Portfolio() {
   return (
     <section
       id="proyectos"
-      className="relative overflow-hidden bg-white px-4 py-20 sm:px-6 sm:py-28 lg:py-32"
+      className="relative overflow-hidden bg-white px-4 pt-10 pb-16 sm:px-6 sm:pt-14 sm:pb-24 lg:pt-16 lg:pb-28"
     >
       <LightAurora intensity={0.7} />
 
@@ -138,6 +138,7 @@ export function Portfolio() {
             defaultIndex={1}
             accentColor="#3f7dff"
             height={480}
+            duration={0.38}
             trigger="hover"
           />
         </motion.div>

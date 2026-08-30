@@ -119,7 +119,7 @@ export function Hero() {
         >
           <Image
             src="/kei-logo-nuevo.png"
-            alt="Kei Software"
+            alt="KEI Software"
             width={36}
             height={36}
             unoptimized

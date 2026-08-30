@@ -106,7 +106,7 @@ export function Process() {
   return (
     <section
       id="proceso"
-      className="relative overflow-hidden bg-[#fafbff] px-4 py-20 sm:px-6 sm:py-28 lg:py-32"
+      className="relative overflow-hidden bg-[#fafbff] px-4 pt-16 pb-12 sm:px-6 sm:pt-24 sm:pb-14 lg:pt-28 lg:pb-16"
     >
       <DotGrid
         className="opacity-70"
@@ -134,7 +134,7 @@ export function Process() {
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="mt-12 flex justify-center"
+          className="mt-8 sm:mt-10 flex justify-center"
         >
           <a
             href="#contacto"

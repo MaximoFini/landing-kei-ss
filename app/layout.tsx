@@ -36,8 +36,8 @@ export const metadata: Metadata = {
     canonical: "https://keisoftware.dev",
   },
   title: {
-    default: "Kei Software",
-    template: "%s | Kei Software",
+    default: "KEI Software",
+    template: "%s | KEI Software",
   },
   description:
     "Desarrollamos software a medida, soluciones IA y automatización con transparencia y calidad garantizada. Córdoba, Argentina.",
@@ -61,12 +61,12 @@ export const metadata: Metadata = {
     "ERP personalizado",
     "desarrollo remoto",
   ],
-  authors: [{ name: "Kei Software" }],
-  creator: "Kei Software",
-  publisher: "Kei Software",
+  authors: [{ name: "KEI Software" }],
+  creator: "KEI Software",
+  publisher: "KEI Software",
   category: "Technology",
   classification: "Software Development Services",
-  applicationName: "Kei Software",
+  applicationName: "KEI Software",
   referrer: "origin-when-cross-origin",
   formatDetection: {
     telephone: false,
@@ -80,22 +80,22 @@ export const metadata: Metadata = {
     type: "website",
     locale: "es_AR",
     url: "https://keisoftware.dev",
-    title: "Kei Software — Software a Medida | Desarrollo Web & IA",
+    title: "KEI Software — Software a Medida | Desarrollo Web & IA",
     description:
       "Desarrollamos software a medida, soluciones IA y automatización con transparencia total. Córdoba, Argentina.",
-    siteName: "Kei Software",
+    siteName: "KEI Software",
     images: [
       {
         url: "/og-image.svg",
         width: 1200,
         height: 630,
-        alt: "Kei Software — Software a Medida | Córdoba, Argentina",
+        alt: "KEI Software — Software a Medida | Córdoba, Argentina",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kei Software — Software a Medida | Desarrollo Web & IA",
+    title: "KEI Software — Software a Medida | Desarrollo Web & IA",
     description:
       "Desarrollamos software a medida, soluciones IA y automatización con transparencia total. Córdoba, Argentina.",
     images: ["/og-image.svg"],
@@ -114,7 +114,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Kei Software",
+    title: "KEI Software",
   },
   manifest: "/manifest.json",
   icons: {

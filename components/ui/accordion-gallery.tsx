@@ -14,6 +14,7 @@ export interface AccordionGalleryItem {
   image: string
   label?: string
   meta?: string
+  tags?: string[]
   link?: string
   alt?: string
   position?: string
@@ -76,17 +77,17 @@ function AccordionPanel({
 }: PanelProps) {
   const isActive = i === active
   const Tag = item.link ? "a" : "div"
-  const rot = isActive ? 0 : i < active ? tilt : -tilt
-  const drift = Math.max(-1.5, Math.min(1.5, active - i))
 
   const panelRef = useRef<HTMLAnchorElement & HTMLDivElement>(null)
   const [isHovered, setIsHovered] = useState(false)
+  const touchMoved = useRef(false)
+  const touchStartPos = useRef<{ x: number; y: number } | null>(null)
 
-  // Floating cursor tooltip (React Bits Tilted Card style)
+  // Floating cursor tooltip (Snappy, ultra-fluid spring physics)
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
-  const springX = useSpring(mouseX, { stiffness: 380, damping: 28 })
-  const springY = useSpring(mouseY, { stiffness: 380, damping: 28 })
+  const springX = useSpring(mouseX, { stiffness: 450, damping: 26 })
+  const springY = useSpring(mouseY, { stiffness: 450, damping: 26 })
 
   const handlePointerMove = (e: React.PointerEvent) => {
     if (!panelRef.current) return
@@ -95,12 +96,56 @@ function AccordionPanel({
     mouseY.set(e.clientY - rect.top)
   }
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchMoved.current = false
+    const touch = e.touches[0]
+    if (touch) {
+      touchStartPos.current = { x: touch.clientX, y: touch.clientY }
+    }
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    const touch = e.touches[0]
+    if (touch && touchStartPos.current) {
+      const dx = Math.abs(touch.clientX - touchStartPos.current.x)
+      const dy = Math.abs(touch.clientY - touchStartPos.current.y)
+      if (dx > 10 || dy > 10) {
+        touchMoved.current = true
+      }
+    }
+  }
+
+  const handleClick = (e: React.MouseEvent) => {
+    // If the user was scrolling/gliding with finger, cancel click navigation
+    if (touchMoved.current) {
+      touchMoved.current = false
+      e.preventDefault()
+      e.stopPropagation()
+      return
+    }
+
+    // 1st click/tap on mobile: if card is not active, expand it and DO NOT open link
+    if (!isActive) {
+      e.preventDefault()
+      e.stopPropagation()
+      setActive(i)
+      return
+    }
+
+    // 2nd click/tap: when already active, native link navigation proceeds to target="_blank"
+  }
+
   const panelStyle: CSSProperties = {
     borderRadius: `${radius}px`,
     flexGrow: isStacked ? 1 : isActive ? grow : 1,
-    flexBasis: 0,
-    transition: `flex-grow ${duration}s cubic-bezier(0.22,1,0.36,1)`,
-    minHeight: isStacked ? (isActive ? 320 : 88) : undefined,
+    flexBasis: isStacked ? undefined : 0,
+    willChange: isStacked ? "min-height, height" : "flex-grow",
+    transform: "translateZ(0)",
+    transition: isStacked
+      ? `min-height ${duration}s cubic-bezier(0.16, 1, 0.3, 1), height ${duration}s cubic-bezier(0.16, 1, 0.3, 1)`
+      : `flex-grow ${duration}s cubic-bezier(0.16, 1, 0.3, 1)`,
+    minHeight: isStacked ? (isActive ? "340px" : "88px") : undefined,
+    height: isStacked ? (isActive ? "340px" : "88px") : undefined,
     boxShadow: isActive
       ? `0 24px 60px -24px ${accentColor}66`
       : "0 10px 30px -20px rgba(5,11,28,0.6)",
@@ -110,6 +155,7 @@ function AccordionPanel({
     <Tag
       ref={panelRef as any}
       key={i}
+      data-index={i}
       {...(item.link
         ? { href: item.link, target: "_blank", rel: "noopener noreferrer" }
         : {})}
@@ -119,17 +165,14 @@ function AccordionPanel({
       aria-label={item.label}
       onMouseEnter={() => {
         setIsHovered(true)
-        if (trigger === "hover") setActive(i)
+        if (trigger === "hover" && !isStacked) setActive(i)
       }}
       onMouseLeave={() => setIsHovered(false)}
       onPointerMove={handlePointerMove}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
       onFocus={() => setActive(i)}
-      onClick={(e) => {
-        if (!isActive) {
-          e.preventDefault()
-          setActive(i)
-        }
-      }}
+      onClick={handleClick}
       onKeyDown={(e) => handleKey(i, e)}
       className="group relative block min-h-0 min-w-0 cursor-pointer overflow-hidden bg-[#0a0713] no-underline outline-none focus-visible:ring-2 focus-visible:ring-[#3f7dff]"
       style={panelStyle}
@@ -191,10 +234,10 @@ function AccordionPanel({
 
       {/* Caption */}
       <span
-        className={`pointer-events-none absolute bottom-5 left-5 right-5 z-[2] flex flex-col gap-1 transition-all duration-500 ${
+        className={`pointer-events-none absolute bottom-4 left-4 right-4 sm:bottom-5 sm:left-5 sm:right-5 z-[2] flex flex-col gap-1 transition-all duration-300 ${
           isActive || isStacked
             ? "translate-x-0 opacity-100"
-            : "-translate-x-3 opacity-0"
+            : "-translate-x-3 opacity-0 pointer-events-none"
         }`}
       >
         {item.meta && (
@@ -220,7 +263,13 @@ function AccordionPanel({
           </span>
 
           {item.link && (
-            <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider text-white/90 bg-white/10 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/20">
+            <span
+              className={`inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-white/90 bg-white/10 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/20 transition-all duration-300 ${
+                isActive
+                  ? "opacity-100 scale-100"
+                  : "opacity-0 scale-95 pointer-events-none"
+              }`}
+            >
               <span>CONOCÉ MÁS</span>
               <ArrowUpRight className="h-3.5 w-3.5 stroke-[2.5] text-[#3f7dff] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </span>
@@ -245,7 +294,7 @@ export function AccordionGallery({
   gap = 10,
   radius = 20,
   expandRatio = 0.55,
-  duration = 0.6,
+  duration = 0.38,
   tilt = 6,
   parallax = 40,
   trigger = "click",
@@ -260,11 +309,26 @@ export function AccordionGallery({
   const [isStacked, setIsStacked] = useState(false)
 
   useEffect(() => {
-    const check = () => setIsStacked(window.innerWidth <= 640)
+    const check = () => setIsStacked(window.innerWidth <= 768)
     check()
     window.addEventListener("resize", check)
     return () => window.removeEventListener("resize", check)
   }, [])
+
+  // Glide finger across cards on mobile ("pasarle el dedo")
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isStacked || !rootRef.current) return
+    const touch = e.touches[0]
+    if (!touch) return
+    const el = document.elementFromPoint(touch.clientX, touch.clientY)
+    const panel = el?.closest("[data-index]") as HTMLElement | null
+    if (panel) {
+      const idx = Number(panel.getAttribute("data-index"))
+      if (!isNaN(idx) && idx >= 0 && idx < count && idx !== active) {
+        setActive(idx)
+      }
+    }
+  }
 
   const r = Math.min(Math.max(expandRatio, 0.2), 0.9)
   const grow = count > 1 ? (r * (count - 1)) / (1 - r) : 1
@@ -284,6 +348,7 @@ export function AccordionGallery({
       ref={rootRef}
       role="list"
       aria-label="Galería de proyectos"
+      onTouchMove={handleTouchMove}
       className={`flex w-full max-w-full flex-col sm:flex-row ${className}`}
       style={{
         gap: `${gap}px`,

@@ -1,9 +1,10 @@
 "use client"
 
 import { motion, useInView } from "framer-motion"
-import { useRef, useState } from "react"
+import { useRef, useState, useEffect, useCallback } from "react"
 import Image from "next/image"
-import { Quote } from "lucide-react"
+import { Quote, ChevronLeft, ChevronRight } from "lucide-react"
+import useEmblaCarousel from "embla-carousel-react"
 import { SectionHeading } from "@/components/ui/section-heading"
 import { LightAurora } from "@/components/ui/light-aurora"
 import { TiltCard } from "@/components/ui/tilt-card"
@@ -20,6 +21,33 @@ type Testimonial = {
 
 const testimonials: Testimonial[] = [
   {
+    name: "Juan Borrego",
+    role: "Co-founder",
+    company: "Stability",
+    companyInitials: "ST",
+    companyLogo: "/testimonials/stability.png",
+    comment:
+      "Si lo tuviera que describir con una palabra a KEI, sería con “soluciones” ya que nos dio respuestas a muchas de las problemáticas que teníamos que solucionar con nuestro proyecto pero no sabíamos cómo.",
+  },
+  {
+    name: "Agustín",
+    role: "Co-founder",
+    company: "Stability",
+    companyInitials: "ST",
+    companyLogo: "/testimonials/stability.png",
+    comment:
+      "Trabajar con KEI fue clave para llevar Stability al siguiente nivel. Desarrollaron una plataforma ágil, moderna y totalmente a medida que nos facilitó la gestión integral de nuestros clientes y entrenamientos.",
+  },
+  {
+    name: "Gabriel Alvarez",
+    role: "Dueño",
+    company: "Centro Automotores",
+    companyInitials: "CA",
+    companyLogo: "/testimonials/centro-autos.png",
+    comment:
+      "Excelente experiencia con KEI SOFTWARE. Me desarrollaron una aplicación a medida para la concesionaria que me permite organizar clientes, vehículos, movimientos de dinero y tener toda la información del negocio mucho más ordenada y accesible. Muy buena atención, predisposición y, sobre todo, entendieron perfectamente lo que necesitaba. ¡Totalmente recomendados!",
+  },
+  {
     name: "Joaquin Vera",
     role: "Co-founder",
     company: "VeGroup",
@@ -27,15 +55,6 @@ const testimonials: Testimonial[] = [
     companyLogo: "/testimonials/vegroup.png",
     comment:
       "La verdad que tremendo trabajo y sobre todo el entendimiento sobre nuestro proyecto para seguir sumando y mejorando funciones del sistema. Una atención espectacular y muy cercana con las necesidades que hemos tenido. Muchas gracias por toda la gestión y compromiso 🙌🏻",
-  },
-  {
-    name: "Agustín Ramis",
-    role: "Co-founder",
-    company: "Stability",
-    companyInitials: "ST",
-    companyLogo: "/testimonials/stability.png",
-    comment:
-      "A través de KEI Software encontramos respuestas a muchos inconvenientes que teníamos con el servicio para el cliente. Hoy contamos con una app funcional en constante mejora gracias a su equipo. Innovadores y atentos a cada detalle.",
   },
   {
     name: "Ruben Fini",
@@ -50,26 +69,27 @@ const testimonials: Testimonial[] = [
 
 function TestimonialCard({ t, index }: { t: Testimonial; index: number }) {
   const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: "-80px" })
+  const inView = useInView(ref, { once: true, margin: "-60px" })
   const [imageError, setImageError] = useState(false)
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 24 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.5, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
+      className="h-full"
     >
       <TiltCard
         max={5}
         className="h-full rounded-2xl"
         style={{ height: "100%" }}
       >
-        <div className="relative flex h-full flex-col justify-between gap-5 overflow-hidden rounded-2xl border border-black/[0.07] bg-white p-6 shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] transition-shadow duration-300 group-hover/tilt:shadow-[0_28px_70px_-24px_rgba(63,125,255,0.32)] sm:p-7">
+        <div className="relative flex h-full min-h-[320px] flex-col justify-between gap-5 overflow-hidden rounded-2xl border border-black/[0.07] bg-white p-6 shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] transition-shadow duration-300 group-hover/tilt:shadow-[0_28px_70px_-24px_rgba(63,125,255,0.32)] sm:p-7">
           <BorderBeam
             size={64}
-            duration={8 + index}
-            delay={index * 1.4}
+            duration={8 + (index % 4)}
+            delay={(index % 4) * 1.4}
             colorFrom="#bcdcff"
             colorTo="#3f7dff"
             borderWidth={1.5}
@@ -81,14 +101,14 @@ function TestimonialCard({ t, index }: { t: Testimonial; index: number }) {
           </div>
 
           <div className="flex items-center gap-3.5 border-t border-black/[0.06] pt-4">
-            <div className="relative flex h-11 w-11 flex-shrink-0 items-center justify-center overflow-hidden rounded-xl border border-black/[0.07] bg-white p-1.5">
+            <div className="relative flex h-11 w-11 flex-shrink-0 items-center justify-center overflow-hidden rounded-xl border border-black/[0.07] bg-white p-1.5 shadow-sm">
               {t.companyLogo && !imageError ? (
                 <Image
                   src={t.companyLogo}
                   alt={`Logo de ${t.company}`}
                   fill
                   sizes="44px"
-                  className="object-contain p-1.5"
+                  className="object-contain p-1"
                   onError={() => setImageError(true)}
                 />
               ) : (
@@ -115,22 +135,111 @@ function TestimonialCard({ t, index }: { t: Testimonial; index: number }) {
 }
 
 export function Testimonials() {
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    align: "start",
+    loop: false,
+    slidesToScroll: 1,
+  })
+
+  const [prevBtnEnabled, setPrevBtnEnabled] = useState(false)
+  const [nextBtnEnabled, setNextBtnEnabled] = useState(true)
+  const [selectedIndex, setSelectedIndex] = useState(0)
+  const [scrollSnaps, setScrollSnaps] = useState<number[]>([])
+
+  const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi])
+  const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi])
+  const scrollTo = useCallback(
+    (index: number) => emblaApi && emblaApi.scrollTo(index),
+    [emblaApi]
+  )
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return
+    setSelectedIndex(emblaApi.selectedScrollSnap())
+    setPrevBtnEnabled(emblaApi.canScrollPrev())
+    setNextBtnEnabled(emblaApi.canScrollNext())
+  }, [emblaApi])
+
+  useEffect(() => {
+    if (!emblaApi) return
+    onSelect()
+    setScrollSnaps(emblaApi.scrollSnapList())
+    emblaApi.on("select", onSelect)
+    emblaApi.on("reInit", onSelect)
+    return () => {
+      emblaApi.off("select", onSelect)
+      emblaApi.off("reInit", onSelect)
+    }
+  }, [emblaApi, onSelect])
+
   return (
     <section className="relative overflow-hidden bg-white px-4 py-20 sm:px-6 sm:py-28 lg:py-32">
       <LightAurora intensity={0.6} />
 
       <div className="relative z-10 mx-auto max-w-7xl">
-        <SectionHeading
-          eyebrow="Clientes"
-          title="Lo que dicen"
-          subtitle="Experiencias reales"
-        />
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-8 sm:mb-12">
+          <SectionHeading
+            eyebrow="Clientes"
+            title="Lo que dicen"
+            subtitle="Experiencias reales"
+            className="text-left"
+          />
 
-        <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {testimonials.map((t, i) => (
-            <TestimonialCard key={t.name} t={t} index={i} />
-          ))}
+          {/* Navigation Arrows */}
+          <div className="flex items-center gap-2.5 self-start sm:self-end">
+            <button
+              type="button"
+              onClick={scrollPrev}
+              disabled={!prevBtnEnabled}
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-black/10 bg-white/90 text-neutral-800 shadow-sm backdrop-blur-md transition-all duration-200 hover:bg-[#3f7dff] hover:text-white hover:border-[#3f7dff] active:scale-95 disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
+              aria-label="Testimonio anterior"
+            >
+              <ChevronLeft className="h-5 w-5 stroke-[2.2]" />
+            </button>
+            <button
+              type="button"
+              onClick={scrollNext}
+              disabled={!nextBtnEnabled}
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-black/10 bg-white/90 text-neutral-800 shadow-sm backdrop-blur-md transition-all duration-200 hover:bg-[#3f7dff] hover:text-white hover:border-[#3f7dff] active:scale-95 disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
+              aria-label="Siguiente testimonio"
+            >
+              <ChevronRight className="h-5 w-5 stroke-[2.2]" />
+            </button>
+          </div>
         </div>
+
+        {/* Carousel Container (3 items visible on desktop, 2 on tablet, 1 on mobile) */}
+        <div className="overflow-hidden -mx-4 px-4 sm:-mx-6 sm:px-6" ref={emblaRef}>
+          <div className="flex -ml-4 sm:-ml-5 items-stretch">
+            {testimonials.map((t, i) => (
+              <div
+                key={`${t.name}-${i}`}
+                className="min-w-0 flex-[0_0_100%] pl-4 sm:pl-5 sm:flex-[0_0_50%] lg:flex-[0_0_33.333333%]"
+              >
+                <TestimonialCard t={t} index={i} />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Pagination Dots */}
+        {scrollSnaps.length > 1 && (
+          <div className="mt-8 flex justify-center items-center gap-2">
+            {scrollSnaps.map((_, index) => (
+              <button
+                key={index}
+                type="button"
+                onClick={() => scrollTo(index)}
+                aria-label={`Ir al testimonio ${index + 1}`}
+                className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                  index === selectedIndex
+                    ? "w-8 bg-[#3f7dff]"
+                    : "w-2 bg-black/15 hover:bg-black/30"
+                }`}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   )

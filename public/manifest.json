@@ -1,6 +1,6 @@
 {
-  "name": "Kei Software",
-  "short_name": "Kei Software",
+  "name": "KEI Software",
+  "short_name": "KEI Software",
   "description": "Desarrollamos software a medida, soluciones IA y automatización con transparencia total",
   "start_url": "/",
   "display": "standalone",
@@ -41,7 +41,7 @@
     {
       "name": "Contacto",
       "short_name": "Contacto",
-      "description": "Contactar con Kei Software",
+      "description": "Contactar con KEI Software",
       "url": "/#contacto",
       "icons": [{ "src": "/icon-32.png", "sizes": "32x32" }]
     },

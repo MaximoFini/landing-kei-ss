@@ -163,7 +163,7 @@ export function Navbar() {
               >
                 <Image
                   src="/kei-logo-nuevo.png"
-                  alt="Kei Software"
+                  alt="KEI Software"
                   width={32}
                   height={32}
                   priority

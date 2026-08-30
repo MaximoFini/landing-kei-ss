@@ -1,4 +1,4 @@
-﻿/**
+/**
  * JSON-LD Structured Data for SEO
  * Helps search engines understand your business better
  */
@@ -6,7 +6,7 @@ export function StructuredData() {
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "Kei Software",
+    name: "KEI Software",
     url: "https://keisoftware.dev",
     description:
       "Desarrollamos software a medida, soluciones IA y automatización",
@@ -23,7 +23,7 @@ export function StructuredData() {
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "Kei Software",
+    name: "KEI Software",
     url: "https://keisoftware.dev",
     logo: "https://keisoftware.dev/kei-logo-nuevo.png",
     description:
@@ -48,7 +48,7 @@ export function StructuredData() {
   const localBusinessSchema = {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
-    name: "Kei Software",
+    name: "KEI Software",
     description:
       "Desarrollo de software a medida, inteligencia artificial y automatización",
     url: "https://keisoftware.dev",
@@ -79,7 +79,7 @@ export function StructuredData() {
     serviceType: "Software Development",
     provider: {
       "@type": "Organization",
-      name: "Kei Software",
+      name: "KEI Software",
     },
     areaServed: {
       "@type": "Country",
@@ -164,7 +164,7 @@ export function StructuredData() {
       },
       {
         "@type": "Question",
-        name: "¿Qué tipo de proyectos desarrolla Kei Software?",
+        name: "¿Qué tipo de proyectos desarrolla KEI Software?",
         acceptedAnswer: {
           "@type": "Answer",
           text: "Desarrollamos software a medida, aplicaciones web y móviles, plataformas e-commerce, CRMs y ERPs personalizados, soluciones con inteligencia artificial y sistemas de automatización para empresas de distintos tamaños e industrias.",
@@ -172,7 +172,7 @@ export function StructuredData() {
       },
       {
         "@type": "Question",
-        name: "¿Cómo puedo contactar a Kei Software?",
+        name: "¿Cómo puedo contactar a KEI Software?",
         acceptedAnswer: {
           "@type": "Answer",
           text: "Podés escribirnos por WhatsApp al +54 351 361-4462, completar el formulario de contacto en keisoftware.dev, o enviarnos un email. Respondemos en menos de 24 horas hábiles y la primera consulta es sin cargo.",
@@ -188,7 +188,7 @@ export function StructuredData() {
       },
       {
         "@type": "Question",
-        name: "¿Dónde está ubicada Kei Software?",
+        name: "¿Dónde está ubicada KEI Software?",
         acceptedAnswer: {
           "@type": "Answer",
           text: "Tenemos nuestra base en Córdoba, Argentina, y trabajamos 100% remoto con clientes de toda Argentina y el mundo.",

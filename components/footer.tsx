@@ -19,7 +19,7 @@ export function Footer() {
             style={{ lineHeight: 0.8 }}
             aria-hidden="true"
           >
-            <span className="text-white">Kei</span>{" "}
+            <span className="text-white">KEI</span>{" "}
             <span className="text-[#3f7dff]">Software</span>
           </p>
         </div>
@@ -33,14 +33,14 @@ export function Footer() {
             <a href="#" className="flex items-center gap-2.5">
               <Image
                 src="/kei-logo-nuevo.png"
-                alt="Kei Software logo"
+                alt="KEI Software logo"
                 width={32}
                 height={32}
                 loading="lazy"
                 className="w-7 h-7 sm:w-8 sm:h-8"
               />
               <span className="font-google-sans text-sm sm:text-base text-white tracking-tight">
-                Kei Software
+                KEI Software
               </span>
             </a>
           </div>
@@ -70,7 +70,7 @@ export function Footer() {
               href="https://www.linkedin.com/company/keii-solutions"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="LinkedIn de Kei Software"
+              aria-label="LinkedIn de KEI Software"
               className="w-8 h-8 rounded-sm border border-white/15 flex items-center justify-center text-white/50 hover:text-white hover:border-white/30 transition-colors"
             >
               <Linkedin className="w-3.5 h-3.5" />
@@ -80,7 +80,7 @@ export function Footer() {
 
         <div className="max-w-[1600px] mx-auto mt-8 pt-6 border-t border-white/[0.06] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
           <p className="text-[11px] text-white/35">
-            &copy; {new Date().getFullYear()} Kei Software. Todos los derechos reservados.
+            &copy; {new Date().getFullYear()} KEI Software. Todos los derechos reservados.
           </p>
           <p className="text-[11px] text-white/35">
             Primera consulta sin cargo
