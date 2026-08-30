@@ -25,7 +25,7 @@ const testimonials: Testimonial[] = [
     role: "Co-founder",
     company: "Stability",
     companyInitials: "ST",
-    companyLogo: "/testimonials/stability.png",
+    companyLogo: "/testimonials/stability.webp",
     comment:
       "Si lo tuviera que describir con una palabra a KEI, sería con “soluciones” ya que nos dio respuestas a muchas de las problemáticas que teníamos que solucionar con nuestro proyecto pero no sabíamos cómo.",
   },
@@ -34,7 +34,7 @@ const testimonials: Testimonial[] = [
     role: "Co-founder",
     company: "Stability",
     companyInitials: "ST",
-    companyLogo: "/testimonials/stability.png",
+    companyLogo: "/testimonials/stability.webp",
     comment:
       "Trabajar con KEI fue clave para llevar Stability al siguiente nivel. Desarrollaron una plataforma ágil, moderna y totalmente a medida que nos facilitó la gestión integral de nuestros clientes y entrenamientos.",
   },
@@ -43,7 +43,7 @@ const testimonials: Testimonial[] = [
     role: "Dueño",
     company: "Centro Automotores",
     companyInitials: "CA",
-    companyLogo: "/testimonials/centro-autos.png",
+    companyLogo: "/testimonials/centro-autos.webp",
     comment:
       "Excelente experiencia con KEI SOFTWARE. Me desarrollaron una aplicación a medida para la concesionaria que me permite organizar clientes, vehículos, movimientos de dinero y tener toda la información del negocio mucho más ordenada y accesible. Muy buena atención, predisposición y, sobre todo, entendieron perfectamente lo que necesitaba. ¡Totalmente recomendados!",
   },
@@ -52,7 +52,7 @@ const testimonials: Testimonial[] = [
     role: "Co-founder",
     company: "VeGroup",
     companyInitials: "VG",
-    companyLogo: "/testimonials/vegroup.png",
+    companyLogo: "/testimonials/vegroup.webp",
     comment:
       "La verdad que tremendo trabajo y sobre todo el entendimiento sobre nuestro proyecto para seguir sumando y mejorando funciones del sistema. Una atención espectacular y muy cercana con las necesidades que hemos tenido. Muchas gracias por toda la gestión y compromiso 🙌🏻",
   },
@@ -61,7 +61,7 @@ const testimonials: Testimonial[] = [
     role: "Dueño",
     company: "Alfa Club",
     companyInitials: "AC",
-    companyLogo: "/testimonials/alfa-club.png",
+    companyLogo: "/testimonials/alfa-club.webp",
     comment:
       "Estamos contentos con el trabajo de los chicos de KEI, hace un tiempo usábamos Mis Actividades para la administración del gimnasio, pero estábamos necesitando una solución más a medida. Los chicos entendieron nuestra necesidad y solucionaron nuestros problemas.",
   },

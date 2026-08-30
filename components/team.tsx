@@ -12,19 +12,19 @@ const coreMembers = [
   {
     name: "Jerónimo Zallocco",
     role: "Co-founder / Full Stack Developer",
-    image: "/team/jeronimo-zallocco.jpg",
+    image: "/team/jeronimo-zallocco.webp",
     linkedin: "https://www.linkedin.com/in/jer%C3%B3nimo-zallocco-036090417/",
   },
   {
     name: "Máximo Fini",
     role: "Co-founder / Project Manager",
-    image: "/team/maximo-fini.jpg",
+    image: "/team/maximo-fini.webp",
     linkedin: "https://www.linkedin.com/in/maximo-fini-560742201/",
   },
   {
     name: "Ramiro Celada",
     role: "Co-founder / Product Manager",
-    image: "/team/ramiro-celada.jpg",
+    image: "/team/ramiro-celada.webp",
     linkedin: "https://www.linkedin.com/in/ramiro-celada/",
   },
 ]
