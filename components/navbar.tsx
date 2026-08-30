@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Volume2, VolumeX } from "lucide-react";
 import Image from "next/image";
 
 const navLinks = [
@@ -23,6 +23,20 @@ export function Navbar() {
   const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const pillRef = useRef<HTMLDivElement>(null);
   const clickLockRef = useRef(0);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [soundOn, setSoundOn] = useState(false);
+
+  const toggleSound = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (soundOn) {
+      audio.pause();
+      setSoundOn(false);
+    } else {
+      audio.volume = 0.35;
+      void audio.play().then(() => setSoundOn(true)).catch(() => setSoundOn(false));
+    }
+  };
 
   // Scroll state + scrollspy: highlight the section currently in view
   useEffect(() => {
@@ -215,7 +229,18 @@ export function Navbar() {
             </nav>
 
             {/* CTA */}
-            <div className="relative z-10 flex-1 flex items-center justify-end pr-1 sm:pr-2">
+            <div className="relative z-10 flex-1 flex items-center justify-end gap-2 pr-1 sm:pr-2">
+              <audio ref={audioRef} src="/audio/hero-theme.mp3" loop preload="none" />
+              <button
+                type="button"
+                onClick={toggleSound}
+                className="hidden lg:grid place-items-center w-9 h-9 rounded-full text-black/60 ring-1 ring-black/10 bg-white/40 backdrop-blur-md transition-all hover:text-black hover:bg-white/70 active:scale-95"
+                aria-pressed={soundOn}
+                aria-label={soundOn ? "Silenciar música" : "Reproducir música"}
+                title={soundOn ? "Silenciar música" : "Reproducir música"}
+              >
+                {soundOn ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+              </button>
               <a
                 href="#contacto"
                 className="hidden lg:inline-flex items-center justify-center px-5 py-2 rounded-full bg-black text-white text-sm font-medium hover:bg-gray-800 transition-all shadow-sm ring-1 ring-black/10 hover:scale-[1.03] active:scale-95"
