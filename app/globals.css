@@ -85,7 +85,6 @@
   --color-surface-elevated: var(--surface-elevated);
   --font-sans: "Geist", "Geist Fallback";
   --font-mono: "Geist Mono", "Geist Mono Fallback";
-  --font-instrument: var(--font-instrument-sans), sans-serif;
   --font-google-sans: var(--font-google-sans-flex), "Google Sans", sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -539,5 +538,13 @@ body {
     to {
       transform: translate3d(0, -300px, 0);
     }
+  }
+}
+
+/* Respect reduced-motion: freeze the drifting starfield layers (they keep
+   compositing every frame otherwise, even on low-power devices). */
+@media (prefers-reduced-motion: reduce) {
+  .star-field__layer {
+    animation: none !important;
   }
 }

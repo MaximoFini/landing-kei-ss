@@ -1,6 +1,7 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { useEffect, useState } from "react"
+import { motion, useReducedMotion } from "framer-motion"
 
 interface LightAuroraProps {
   className?: string
@@ -13,6 +14,18 @@ interface LightAuroraProps {
  * counterpart to the hero's deep-space ribbons.
  */
 export function LightAurora({ className = "", intensity = 1 }: LightAuroraProps) {
+  const prefersReducedMotion = useReducedMotion()
+  const [drift, setDrift] = useState(false)
+
+  useEffect(() => {
+    // Animating left/top on three 40px-blurred full-section blobs forces a
+    // paint every frame. The drift is very slow (18-26s) and barely
+    // perceptible, so skip it on touch devices and for reduced-motion.
+    if (prefersReducedMotion) return
+    if (window.matchMedia("(pointer: coarse)").matches) return
+    setDrift(true)
+  }, [prefersReducedMotion])
+
   const blobs = [
     {
       color: "rgba(63,125,255,0.20)",
@@ -54,10 +67,14 @@ export function LightAurora({ className = "", intensity = 1 }: LightAuroraProps)
             filter: "blur(40px)",
           }}
           initial={{ left: b.from.x, top: b.from.y }}
-          animate={{
-            left: [b.from.x, b.to.x, b.from.x],
-            top: [b.from.y, b.to.y, b.from.y],
-          }}
+          animate={
+            drift
+              ? {
+                  left: [b.from.x, b.to.x, b.from.x],
+                  top: [b.from.y, b.to.y, b.from.y],
+                }
+              : undefined
+          }
           transition={{ duration: b.duration, repeat: Infinity, ease: "easeInOut" }}
         />
       ))}
