@@ -1,0 +1,13 @@
+{
+  "extraKnownMarketplaces": {
+    "claude-plugins": {
+      "source": {
+        "source": "github",
+        "repo": "MaximoFini/skill-sdd"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "spec-driven-development@claude-plugins": true
+  }
+}
