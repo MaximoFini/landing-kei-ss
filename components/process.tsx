@@ -14,7 +14,6 @@ const steps = [
     title: "Consulta gratuita",
     description:
       "Hablamos 30 minutos sin compromiso. Entendemos tu problema, tus objetivos y si podemos ayudarte.",
-    duration: "30 min",
   },
   {
     num: "02",
@@ -22,7 +21,6 @@ const steps = [
     title: "Propuesta clara",
     description:
       "Recibís un documento detallado con alcance, cronograma, tecnologías y precio fijo. Sin sorpresas.",
-    duration: "48 hs",
   },
   {
     num: "03",
@@ -30,7 +28,6 @@ const steps = [
     title: "Desarrollo ágil",
     description:
       "Construimos en sprints cortos con demos semanales. Siempre sabés en qué estamos trabajando.",
-    duration: "2-8 semanas",
   },
   {
     num: "04",
@@ -38,7 +35,6 @@ const steps = [
     title: "Entrega y soporte",
     description:
       "Lanzamos tu producto, te capacitamos y damos soporte técnico incluido durante el primer mes.",
-    duration: "Garantizado",
   },
 ]
 
@@ -89,12 +85,6 @@ function StepCard({ step, index }: { step: (typeof steps)[0]; index: number }) {
         </h3>
         <p className="text-sm leading-relaxed text-black/55">{step.description}</p>
       </div>
-
-      <div className="relative z-10 border-t border-black/[0.06] pt-3">
-        <span className="font-mono text-xs tracking-wider text-[#3f7dff]">
-          {step.duration}
-        </span>
-      </div>
     </motion.div>
   )
 }
@@ -140,7 +130,7 @@ export function Process() {
             href="#contacto"
             className="group inline-flex items-center justify-center gap-2 rounded-full bg-[#3f7dff] px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:scale-[1.03] hover:bg-[#2f6bec] active:scale-95"
           >
-            Empezá — primera consulta gratis
+            Empezá - Primer consulta gratis
             <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
           </a>
         </motion.div>

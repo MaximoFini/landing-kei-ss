@@ -177,16 +177,15 @@ export function Testimonials() {
       <LightAurora intensity={0.6} />
 
       <div className="relative z-10 mx-auto max-w-7xl">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-8 sm:mb-12">
+        <div className="relative mb-8 sm:mb-12">
           <SectionHeading
             eyebrow="Clientes"
             title="Lo que dicen"
             subtitle="Experiencias reales"
-            className="text-left"
           />
 
           {/* Navigation Arrows */}
-          <div className="flex items-center gap-2.5 self-start sm:self-end">
+          <div className="flex items-center justify-center gap-2.5 sm:absolute sm:right-0 sm:bottom-0 sm:justify-end">
             <button
               type="button"
               onClick={scrollPrev}
