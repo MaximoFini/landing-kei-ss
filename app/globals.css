@@ -136,6 +136,13 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Stop the rubber-band / overscroll bounce past the top and footer on mobile,
+   so the page feels anchored once you reach the footer edge. */
+html,
+body {
+  overscroll-behavior-y: none;
+}
+
 /* Prevent text size adjustment on orientation change in iOS */
 html {
   -webkit-text-size-adjust: 100%;
