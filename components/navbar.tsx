@@ -265,7 +265,7 @@ export function Navbar() {
               <button
                 type="button"
                 onClick={toggleSound}
-                className="grid place-items-center w-9 h-9 rounded-full text-black/60 ring-1 ring-black/10 bg-white/40 backdrop-blur-md transition-all hover:text-black hover:bg-white/70 active:scale-95 dark:text-white/60 dark:ring-white/10 dark:bg-white/[0.06] dark:hover:text-white dark:hover:bg-white/[0.12]"
+                className="grid place-items-center w-9 h-9 rounded-full text-black ring-1 ring-black/10 bg-white/40 backdrop-blur-md transition-all hover:bg-white/70 active:scale-95 dark:text-white dark:ring-white/10 dark:bg-white/[0.06] dark:hover:bg-white/[0.12]"
                 aria-pressed={soundOn}
                 aria-label={soundOn ? "Silenciar música" : "Reproducir música"}
                 title={soundOn ? "Silenciar música" : "Reproducir música"}
@@ -279,7 +279,7 @@ export function Navbar() {
                 Consultar
               </a>
               <button
-                className={`lg:hidden relative grid place-items-center w-9 h-9 rounded-xl transition-colors ${
+                className={`lg:hidden relative grid place-items-center w-9 h-9 rounded-full transition-colors ${
                   menuOpen
                     ? "bg-white text-black ring-1 ring-black/10 shadow-sm dark:bg-zinc-800 dark:text-white dark:ring-white/10"
                     : "text-black/70 hover:text-black dark:text-white/70 dark:hover:text-white"
