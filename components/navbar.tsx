@@ -56,46 +56,74 @@ export function Navbar() {
     }
   };
 
-  // Scroll state + scrollspy: highlight the section currently in view
+  // Scroll state + scrollspy: highlight the section currently in view.
+  //
+  // The section positions (`offsetTop`) and the page's max scroll are read
+  // only on mount / resize / `load` / whenever the page height changes, and
+  // cached. The scroll handler itself reads just `scrollY` / `innerHeight`
+  // (neither forces layout), so scrolling no longer triggers a synchronous
+  // reflow the way reading `offsetTop` per section on every scroll event did.
   useEffect(() => {
-    const sections = navLinks
-      .map((l, i) =>
-        l.href.startsWith("#") ? { i, el: document.getElementById(l.href.slice(1)) } : null
-      )
-      .filter((s): s is { i: number; el: HTMLElement } => !!s && !!s.el);
+    let offsets: { i: number; top: number }[] = [];
+    let maxScroll = 0;
+
+    const measure = () => {
+      offsets = navLinks
+        .map((l, i) =>
+          l.href.startsWith("#")
+            ? { i, el: document.getElementById(l.href.slice(1)) }
+            : null
+        )
+        .filter((s): s is { i: number; el: HTMLElement } => !!s && !!s.el)
+        .map((s) => ({ i: s.i, top: s.el.offsetTop }));
+      maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    };
 
     const onScroll = () => {
       setScrolled(window.scrollY > 12);
 
       // Ignore while a click-triggered smooth scroll is settling
-      if (Date.now() - clickLockRef.current < 700 || sections.length === 0) return;
+      if (Date.now() - clickLockRef.current < 700 || offsets.length === 0) return;
+
+      // Self-heal: if positions were cached before the lazy sections laid out
+      // (last section still at 0), re-read now. Happens at most once.
+      if (offsets.length > 1 && offsets[offsets.length - 1].top === 0) measure();
 
       const probe = window.scrollY + window.innerHeight * 0.32;
-      let current = sections[0].i;
-      for (const s of sections) {
-        if (s.el.offsetTop <= probe) current = s.i;
+      let current = offsets[0].i;
+      for (const o of offsets) {
+        if (o.top <= probe) current = o.i;
       }
       // Snap to the last section only when genuinely scrolled to the bottom
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
       if (maxScroll > 200 && window.scrollY >= maxScroll - 4) {
-        current = sections[sections.length - 1].i;
+        current = offsets[offsets.length - 1].i;
       }
       setActiveIndex((prev) => (prev === current ? prev : current));
     };
 
-    onScroll();
-    // Recompute once layout has settled (fonts, images, hero animation)
-    const t1 = setTimeout(onScroll, 300);
-    const t2 = setTimeout(onScroll, 1200);
+    const remeasure = () => {
+      measure();
+      onScroll();
+    };
+
+    remeasure();
+    // Below-the-fold sections are lazy-mounted and fonts/images shift layout,
+    // so re-measure when the page height changes, on resize/load, and via a
+    // couple of timed fallbacks (mirrors the old timed re-runs).
+    const t1 = setTimeout(remeasure, 300);
+    const t2 = setTimeout(remeasure, 1200);
+    const ro = new ResizeObserver(remeasure);
+    ro.observe(document.documentElement);
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    window.addEventListener("load", onScroll);
+    window.addEventListener("resize", remeasure);
+    window.addEventListener("load", remeasure);
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
+      ro.disconnect();
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      window.removeEventListener("load", onScroll);
+      window.removeEventListener("resize", remeasure);
+      window.removeEventListener("load", remeasure);
     };
   }, []);
 
@@ -108,9 +136,12 @@ export function Navbar() {
     setBlobStyle({ left: er.left - cr.left, width: er.width });
   };
 
-  // Follow hovered item when hovering, otherwise rest on the active item
+  // Follow hovered item when hovering, otherwise rest on the active item.
+  // Deferred one frame so the measurement reads happen after React's commit
+  // has settled rather than forcing a synchronous layout during it.
   useEffect(() => {
-    updateBlob(hoverIndex ?? activeIndex);
+    const id = requestAnimationFrame(() => updateBlob(hoverIndex ?? activeIndex));
+    return () => cancelAnimationFrame(id);
   }, [activeIndex, hoverIndex]);
 
   // Set initial blob on mount
@@ -147,36 +178,40 @@ export function Navbar() {
 
   const indicatorIndex = hoverIndex ?? activeIndex;
 
+  // Surface tokens for the pill. Driven by plain React state + a CSS
+  // transition (see the nav's className) instead of a Framer `animate` —
+  // same crossfade, no per-frame JS, and SSR gets the right values inline.
+  const navSurface: React.CSSProperties = {
+    boxShadow: isDark
+      ? scrolled
+        ? "0 20px 50px -12px rgba(0,0,0,0.55), 0 2px 8px -2px rgba(0,0,0,0.35), inset 0 1px 1px 0 rgba(255,255,255,0.08), inset 0 -1px 2px 0 rgba(255,255,255,0.04)"
+        : "0 10px 34px -10px rgba(0,0,0,0.4), inset 0 1px 1px 0 rgba(255,255,255,0.06), inset 0 -1px 2px 0 rgba(255,255,255,0.03)"
+      : scrolled
+      ? "0 20px 50px -12px rgba(15,23,42,0.22), 0 2px 8px -2px rgba(15,23,42,0.10), inset 0 1px 1px 0 rgba(255,255,255,0.90), inset 0 -1px 2px 0 rgba(255,255,255,0.35)"
+      : "0 10px 34px -10px rgba(15,23,42,0.14), inset 0 1px 1px 0 rgba(255,255,255,0.70), inset 0 -1px 2px 0 rgba(255,255,255,0.25)",
+    borderColor: isDark
+      ? scrolled
+        ? "rgba(255, 255, 255, 0.16)"
+        : "rgba(255, 255, 255, 0.10)"
+      : scrolled
+      ? "rgba(255, 255, 255, 0.55)"
+      : "rgba(255, 255, 255, 0.35)",
+    backgroundColor: isDark
+      ? scrolled
+        ? "rgba(18, 18, 22, 0.72)"
+        : "rgba(18, 18, 22, 0.5)"
+      : scrolled
+      ? "rgba(255, 255, 255, 0.55)"
+      : "rgba(255, 255, 255, 0.34)",
+  };
+
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-[60] pt-4 px-4 sm:px-6 pointer-events-none">
         <div className="font-google-sans max-w-5xl mx-auto pointer-events-auto">
-          <m.nav
-            animate={{
-              boxShadow: isDark
-                ? scrolled
-                  ? "0 20px 50px -12px rgba(0,0,0,0.55), 0 2px 8px -2px rgba(0,0,0,0.35), inset 0 1px 1px 0 rgba(255,255,255,0.08), inset 0 -1px 2px 0 rgba(255,255,255,0.04)"
-                  : "0 10px 34px -10px rgba(0,0,0,0.4), inset 0 1px 1px 0 rgba(255,255,255,0.06), inset 0 -1px 2px 0 rgba(255,255,255,0.03)"
-                : scrolled
-                ? "0 20px 50px -12px rgba(15,23,42,0.22), 0 2px 8px -2px rgba(15,23,42,0.10), inset 0 1px 1px 0 rgba(255,255,255,0.90), inset 0 -1px 2px 0 rgba(255,255,255,0.35)"
-                : "0 10px 34px -10px rgba(15,23,42,0.14), inset 0 1px 1px 0 rgba(255,255,255,0.70), inset 0 -1px 2px 0 rgba(255,255,255,0.25)",
-              borderColor: isDark
-                ? scrolled
-                  ? "rgba(255, 255, 255, 0.16)"
-                  : "rgba(255, 255, 255, 0.10)"
-                : scrolled
-                ? "rgba(255, 255, 255, 0.55)"
-                : "rgba(255, 255, 255, 0.35)",
-              backgroundColor: isDark
-                ? scrolled
-                  ? "rgba(18, 18, 22, 0.72)"
-                  : "rgba(18, 18, 22, 0.5)"
-                : scrolled
-                ? "rgba(255, 255, 255, 0.55)"
-                : "rgba(255, 255, 255, 0.34)",
-            }}
-            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="relative h-14 sm:h-16 px-2 flex items-center justify-between rounded-full border backdrop-blur-lg sm:backdrop-blur-2xl backdrop-saturate-[1.8] transition-all duration-300 will-change-transform overflow-hidden isolate"
+          <nav
+            style={navSurface}
+            className="relative h-14 sm:h-16 px-2 flex items-center justify-between rounded-full border backdrop-blur-lg sm:backdrop-blur-2xl backdrop-saturate-[1.8] transition-all duration-[350ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform overflow-hidden isolate"
           >
             {/* ── Glass layers ─────────────────────────────── */}
             {/* top specular highlight */}
@@ -291,7 +326,7 @@ export function Navbar() {
                 {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </button>
             </div>
-          </m.nav>
+          </nav>
         </div>
       </header>
 

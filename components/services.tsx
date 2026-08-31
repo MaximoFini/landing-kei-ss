@@ -51,10 +51,12 @@ export function Services() {
   const inView = useInView(ref, { once: true, margin: "-60px" })
 
   const gridRef = useRef(null)
-  const { scrollYProgress } = useScroll({
-    target: gridRef,
-    offset: ["start end", "end start"],
-  })
+  // Raw window scroll (a plain MotionValue read of `scrollY` — never touches
+  // layout). We rebuild the 0–1 progress ourselves from the grid's geometry,
+  // which is measured ONCE per resize below, so scrolling no longer forces a
+  // synchronous layout the way `useScroll({ target })` did (it walked the
+  // offsetParent chain on every scroll event — ~38 ms reflows in the trace).
+  const { scrollY } = useScroll()
 
   // Measure each card's vertical slot within the grid (as a 0–1 fraction) so
   // its light wash can sync to the moment the traveling lamp passes over it.
@@ -63,6 +65,10 @@ export function Services() {
   // (translateY/scaleY) instead of animating `height`, which forces layout
   // on every scroll frame and was the source of the mobile jank.
   const [gridHeight, setGridHeight] = useState(0)
+  // Window-scroll range that maps to progress 0→1, replicating framer's
+  // offset ["start end", "end start"]: 0 when the grid's top reaches the
+  // viewport bottom, 1 when the grid's bottom reaches the viewport top.
+  const [scrollRange, setScrollRange] = useState<[number, number]>([0, 1])
 
   useEffect(() => {
     const grid = gridRef.current as HTMLElement | null
@@ -72,7 +78,10 @@ export function Services() {
       const cards = Array.from(grid.querySelectorAll<HTMLElement>("[data-service-card]"))
       const height = grid.offsetHeight
       if (!height) return
+      const gridTop = grid.getBoundingClientRect().top + window.scrollY
+      const vh = window.innerHeight
       setGridHeight(height)
+      setScrollRange([gridTop - vh, gridTop + height])
       setCardRanges(
         cards.map((el) => ({
           start: el.offsetTop / height,
@@ -84,9 +93,14 @@ export function Services() {
     measure()
     const ro = new ResizeObserver(measure)
     ro.observe(grid)
-    return () => ro.disconnect()
+    window.addEventListener("resize", measure)
+    return () => {
+      ro.disconnect()
+      window.removeEventListener("resize", measure)
+    }
   }, [])
 
+  const scrollYProgress = useTransform(scrollY, scrollRange, [0, 1], { clamp: true })
   const lampY = useTransform(scrollYProgress, [0, 1], [0, gridHeight])
 
   return (
