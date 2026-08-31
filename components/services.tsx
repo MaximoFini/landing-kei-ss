@@ -8,6 +8,21 @@ import { BorderBeam } from "@/components/ui/border-beam"
 
 const HEADER_REVEAL_DURATION = 1.3
 
+// `sm` breakpoint. The border beams and hover lamp are desktop-only flourishes;
+// mounting them on phones just adds continuous main-thread animation work that
+// competes with the scroll-driven lamp for frames.
+function useIsDesktop() {
+  const [isDesktop, setIsDesktop] = useState(false)
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 640px)")
+    const apply = () => setIsDesktop(mq.matches)
+    apply()
+    mq.addEventListener("change", apply)
+    return () => mq.removeEventListener("change", apply)
+  }, [])
+  return isDesktop
+}
+
 interface Service {
   num: string
   icon: LucideIcon
@@ -63,6 +78,7 @@ export function Services() {
   // (translateY/scaleY) instead of animating `height`, which forces layout
   // on every scroll frame and was the source of the mobile jank.
   const [gridHeight, setGridHeight] = useState(0)
+  const isDesktop = useIsDesktop()
 
   useEffect(() => {
     const grid = gridRef.current as HTMLElement | null
@@ -127,6 +143,7 @@ export function Services() {
               index={i}
               scrollYProgress={scrollYProgress}
               range={cardRanges[i]}
+              isDesktop={isDesktop}
             />
           ))}
 
@@ -159,11 +176,13 @@ function ServiceCard({
   index,
   scrollYProgress,
   range,
+  isDesktop,
 }: {
   service: Service
   index: number
   scrollYProgress: MotionValue<number>
   range?: { start: number; end: number }
+  isDesktop: boolean
 }) {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: "-60px" })
@@ -191,14 +210,16 @@ function ServiceCard({
       data-service-card
       className="group relative overflow-hidden rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] dark:shadow-[0_2px_16px_-8px_rgba(0,0,0,0.5)] transition-[border-color,box-shadow] duration-300 hover:border-[#3f7dff]/35 hover:shadow-[0_24px_60px_-20px_rgba(63,125,255,0.35)]"
     >
-      <BorderBeam
-        size={70}
-        duration={7 + index}
-        delay={index * 1.2}
-        colorFrom="#bcdcff"
-        colorTo="#3f7dff"
-        borderWidth={1.5}
-      />
+      {isDesktop && (
+        <BorderBeam
+          size={70}
+          duration={7 + index}
+          delay={index * 1.2}
+          colorFrom="#bcdcff"
+          colorTo="#3f7dff"
+          borderWidth={1.5}
+        />
+      )}
 
       {/* Light wash — desktop: grows from a point at the top on hover, collapses back into it on leave */}
       <div
@@ -209,15 +230,21 @@ function ServiceCard({
         }}
       />
 
-      {/* Light wash — mobile: same illumination, driven by the lamp's scroll position instead of hover */}
-      <motion.div
-        className="absolute inset-0 pointer-events-none sm:hidden"
-        style={{
-          background:
-            "linear-gradient(to bottom, rgba(63,125,255,0.28) 0%, rgba(63,125,255,0.16) 50%, rgba(63,125,255,0.1) 100%)",
-          opacity: litOpacity,
-        }}
-      />
+      {/* Light wash — mobile: same illumination, driven by the lamp's scroll position instead of hover.
+          `translateZ(0)` + `will-change` keep it on its own compositor layer so the
+          scroll-driven opacity change never repaints the card underneath. */}
+      {!isDesktop && (
+        <motion.div
+          className="absolute inset-0 pointer-events-none sm:hidden"
+          style={{
+            background:
+              "linear-gradient(to bottom, rgba(63,125,255,0.28) 0%, rgba(63,125,255,0.16) 50%, rgba(63,125,255,0.1) 100%)",
+            opacity: litOpacity,
+            transform: "translateZ(0)",
+            willChange: "opacity",
+          }}
+        />
+      )}
 
       {/* Lamp — a cord drops down from the top edge with a bulb at its tip, lighting the card (desktop hover only; mobile uses the scroll-driven lamp in the grid) */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 z-20 h-0 opacity-0 sm:group-hover:h-14 sm:group-hover:opacity-100 transition-[height,opacity] duration-500 ease-out overflow-visible pointer-events-none hidden sm:flex sm:flex-col sm:items-center">
