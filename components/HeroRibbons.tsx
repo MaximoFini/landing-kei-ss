@@ -15,35 +15,18 @@ const RIGHT_B =
 export function HeroRibbons() {
   const prefersReducedMotion = useReducedMotion();
   const [animate, setAnimate] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    // A full-viewport SVG behind a 46px blur is a heavy GPU layer even when it
-    // isn't morphing — and its blur tail bleeds ~140px past the hero, stuttering
-    // the top of the next section as it scrolls in. On phones swap it for a
-    // plain CSS gradient (no filter); the morph, imperceptible behind the blur
-    // anyway, only runs on non-touch larger viewports.
-    const coarse = window.matchMedia("(pointer: coarse)").matches;
-    const small = window.matchMedia("(max-width: 767px)").matches;
-    setIsMobile(coarse || small);
-    if (prefersReducedMotion || coarse || small) return;
+    // Continuously morphing a full-viewport SVG behind a 46px blur is a heavy
+    // per-frame paint. The blur makes the morph itself imperceptible on small
+    // screens, so only run it on non-touch, larger viewports.
+    if (prefersReducedMotion) return;
+    if (window.matchMedia("(pointer: coarse)").matches) return;
+    if (window.matchMedia("(max-width: 767px)").matches) return;
     setAnimate(true);
   }, [prefersReducedMotion]);
 
   const morph = animate && !prefersReducedMotion;
-
-  if (isMobile) {
-    return (
-      <div
-        className="absolute inset-0 pointer-events-none"
-        aria-hidden="true"
-        style={{
-          background:
-            "radial-gradient(60% 55% at -8% 42%, rgba(63,125,255,0.22) 0%, rgba(26,79,192,0.10) 45%, transparent 72%), radial-gradient(60% 55% at 108% 42%, rgba(63,125,255,0.22) 0%, rgba(26,79,192,0.10) 45%, transparent 72%)",
-        }}
-      />
-    );
-  }
 
   return (
     <div className="absolute inset-0 pointer-events-none">
