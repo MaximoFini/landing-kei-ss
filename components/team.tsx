@@ -1,12 +1,13 @@
 "use client"
 
 import { motion, useInView } from "framer-motion"
-import { useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
 import { Linkedin } from "lucide-react"
 import { SectionHeading } from "@/components/ui/section-heading"
 import { DotGrid } from "@/components/ui/dot-grid"
 import { TiltCard } from "@/components/ui/tilt-card"
+import { cn } from "@/lib/utils"
 
 const coreMembers = [
   {
@@ -29,29 +30,51 @@ const coreMembers = [
   },
 ]
 
-function MemberCard({ member, index }: { member: (typeof coreMembers)[0]; index: number }) {
+function MemberCard({
+  member,
+  index,
+  active,
+}: {
+  member: (typeof coreMembers)[0]
+  index: number
+  active: boolean
+}) {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: "-80px" })
 
   return (
     <motion.div
       ref={ref}
+      data-member-card
       initial={{ opacity: 0, y: 36 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
     >
       <TiltCard max={6} className="rounded-2xl">
-        <div className="relative overflow-hidden rounded-2xl border border-border bg-card shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] dark:shadow-[0_2px_16px_-8px_rgba(0,0,0,0.5)] transition-shadow duration-300 group-hover/tilt:shadow-[0_28px_70px_-24px_rgba(63,125,255,0.32)]">
+        <div
+          className={cn(
+            "relative overflow-hidden rounded-2xl border border-border bg-card shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] dark:shadow-[0_2px_16px_-8px_rgba(0,0,0,0.5)] transition-shadow duration-300 group-hover/tilt:shadow-[0_28px_70px_-24px_rgba(63,125,255,0.32)]",
+            active && "shadow-[0_28px_70px_-24px_rgba(63,125,255,0.32)]"
+          )}
+        >
           <div className="relative aspect-square overflow-hidden">
             <Image
               src={member.image}
               alt={`Foto de ${member.name}`}
               fill
               sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-              className="object-cover object-top grayscale transition-all duration-500 group-hover/tilt:grayscale-0"
+              className={cn(
+                "object-cover object-top transition-all duration-500 group-hover/tilt:grayscale-0",
+                active ? "grayscale-0" : "grayscale"
+              )}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#050b1c]/50 via-transparent to-transparent" />
-            <div className="absolute inset-0 bg-[#3f7dff]/10 opacity-0 transition-opacity duration-500 group-hover/tilt:opacity-100" />
+            <div
+              className={cn(
+                "absolute inset-0 bg-[#3f7dff]/10 transition-opacity duration-500 group-hover/tilt:opacity-100",
+                active ? "opacity-100" : "opacity-0"
+              )}
+            />
             <a
               href={member.linkedin}
               target="_blank"
@@ -77,6 +100,52 @@ function MemberCard({ member, index }: { member: (typeof coreMembers)[0]; index:
 }
 
 export function Team() {
+  const gridRef = useRef<HTMLDivElement>(null)
+
+  // Desktop reveals each photo's colour on pointer hover. Touch devices have no
+  // hover, so as you scroll the section we light up whichever card sits nearest
+  // the vertical centre of the viewport — one at a time, reverting as it moves
+  // away. A rAF-throttled scroll listener (rather than an observer per card)
+  // keeps the hand-off between cards exact.
+  const [activeIndex, setActiveIndex] = useState<number | null>(null)
+
+  useEffect(() => {
+    if (!window.matchMedia?.("(pointer: coarse)").matches) return
+    const grid = gridRef.current
+    if (!grid) return
+
+    let raf = 0
+    const update = () => {
+      raf = 0
+      const cards = grid.querySelectorAll<HTMLElement>("[data-member-card]")
+      const mid = window.innerHeight / 2
+      const reach = window.innerHeight * 0.4
+      let best: number | null = null
+      let bestDist = Infinity
+      cards.forEach((el, i) => {
+        const r = el.getBoundingClientRect()
+        const dist = Math.abs(r.top + r.height / 2 - mid)
+        if (dist < bestDist && dist < reach) {
+          bestDist = dist
+          best = i
+        }
+      })
+      setActiveIndex(best)
+    }
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update)
+    }
+
+    update()
+    window.addEventListener("scroll", onScroll, { passive: true })
+    window.addEventListener("resize", onScroll)
+    return () => {
+      window.removeEventListener("scroll", onScroll)
+      window.removeEventListener("resize", onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
+
   return (
     <section
       id="equipo"
@@ -91,9 +160,17 @@ export function Team() {
           subtitle="Quiénes escriben el código"
         />
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div
+          ref={gridRef}
+          className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+        >
           {coreMembers.map((member, i) => (
-            <MemberCard key={member.name} member={member} index={i} />
+            <MemberCard
+              key={member.name}
+              member={member}
+              index={i}
+              active={activeIndex === i}
+            />
           ))}
         </div>
       </div>
