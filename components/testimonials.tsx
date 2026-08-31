@@ -137,7 +137,7 @@ function TestimonialCard({ t, index }: { t: Testimonial; index: number }) {
 export function Testimonials() {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "start",
-    loop: false,
+    loop: true,
     slidesToScroll: 1,
   })
 
