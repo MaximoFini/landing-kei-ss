@@ -58,6 +58,7 @@ interface PanelProps {
   trigger: "hover" | "click"
   setActive: (index: number) => void
   handleKey: (i: number, e: KeyboardEvent) => void
+  registerPanelEl: (i: number, el: HTMLElement | null) => void
 }
 
 function AccordionPanel({
@@ -77,11 +78,9 @@ function AccordionPanel({
   trigger,
   setActive,
   handleKey,
+  registerPanelEl,
 }: PanelProps) {
   const isActive = i === active
-  // On mobile every card is presented "open": caption visible, full-colour
-  // image, strong gradient. Nothing animates on scroll.
-  const shown = isActive || isMobile
   const Tag = item.link ? "a" : "div"
 
   const panelRef = useRef<HTMLAnchorElement & HTMLDivElement>(null)
@@ -143,10 +142,16 @@ function AccordionPanel({
 
   const panelStyle: CSSProperties = isMobile
     ? {
+        // Fixed height — nothing about the layout changes as the active card
+        // moves, so the reveal never reflows the page. The "activation" is
+        // done purely with opacity + transform inside the card.
         position: "relative",
         height: mobileCardHeight,
         borderRadius: `${radius}px`,
-        boxShadow: "0 14px 34px -20px rgba(5,11,28,0.55)",
+        transition: "box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
+        boxShadow: isActive
+          ? `0 22px 55px -26px ${accentColor}66`
+          : "0 12px 30px -20px rgba(5,11,28,0.55)",
       }
     : {
         borderRadius: `${radius}px`,
@@ -164,6 +169,7 @@ function AccordionPanel({
     <Tag
       ref={(el: (HTMLAnchorElement & HTMLDivElement) | null) => {
         panelRef.current = el
+        registerPanelEl(i, el)
       }}
       key={i}
       data-index={i}
@@ -218,6 +224,17 @@ function AccordionPanel({
               grayscale && !isActive && !isMobile
                 ? "grayscale(0.85)"
                 : "grayscale(0)",
+            // Mobile: the cover eases from a slight zoom to rest as the card
+            // becomes active — a compositor-only transform, no repaint.
+            transform: isMobile
+              ? isActive
+                ? "scale(1)"
+                : "scale(1.06)"
+              : undefined,
+            transition: isMobile
+              ? "transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)"
+              : undefined,
+            willChange: isMobile ? "transform" : undefined,
           }}
         >
           <Image
@@ -242,7 +259,7 @@ function AccordionPanel({
         <div
           className="pointer-events-none absolute inset-0 transition-opacity duration-500"
           style={{
-            background: shown
+            background: isActive
               ? `linear-gradient(180deg, transparent 40%, ${overlayColor}ee 100%)`
               : `linear-gradient(180deg, transparent 65%, ${overlayColor}77 100%)`,
           }}
@@ -252,10 +269,10 @@ function AccordionPanel({
 
       {/* Caption */}
       <span
-        className={`pointer-events-none absolute bottom-4 left-4 right-4 sm:bottom-5 sm:left-5 sm:right-5 z-[2] flex flex-col gap-1 transition-all duration-300 ${
-          shown
-            ? "translate-x-0 opacity-100"
-            : "-translate-x-3 opacity-0 pointer-events-none"
+        className={`pointer-events-none absolute bottom-4 left-4 right-4 sm:bottom-5 sm:left-5 sm:right-5 z-[2] flex flex-col gap-1 transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          isActive
+            ? "translate-x-0 translate-y-0 opacity-100"
+            : "translate-y-2 opacity-0 pointer-events-none sm:translate-y-0 sm:-translate-x-3"
         }`}
       >
         {item.meta && (
@@ -283,7 +300,7 @@ function AccordionPanel({
           {item.link && (
             <span
               className={`inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-white/90 bg-white/10 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/20 transition-all duration-300 ${
-                shown
+                isActive
                   ? "opacity-100 scale-100"
                   : "opacity-0 scale-95 pointer-events-none"
               }`}
@@ -304,10 +321,13 @@ function AccordionPanel({
  * Desktop (>768px): panels expand on hover/click via a compositor-friendly
  * `flex-grow` tween, with a React-Bits-style floating cursor tooltip.
  *
- * Mobile (<=768px): NO scroll-driven accordion. Every project is a static,
- * fixed-height card — caption always visible, full-colour image, lazy-loaded so
- * the covers stream in after the hero as the user scrolls. This trades the
- * fancy expand animation for a rock-solid 60fps scroll.
+ * Mobile (<=768px): fixed-height card stack. Cards never change size, so the
+ * page never reflows while scrolling. The card crossing a thin "reading band"
+ * near the viewport centre becomes active — tracked with an IntersectionObserver
+ * (browser-scheduled, no scroll listener, no per-frame getBoundingClientRect) —
+ * and its activation is a pure opacity + transform transition (caption rises in,
+ * cover eases out of a slight zoom, gradient deepens). 60fps scroll, and the
+ * "cards open as you scroll" feel is kept.
  */
 export function AccordionGallery({
   items,
@@ -332,6 +352,7 @@ export function AccordionGallery({
   )
   // null until measured, so SSR/first paint doesn't assume a layout.
   const [isMobile, setIsMobile] = useState<boolean | null>(null)
+  const panelElsRef = useRef<(HTMLElement | null)[]>([])
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth <= 768)
@@ -340,11 +361,46 @@ export function AccordionGallery({
     return () => window.removeEventListener("resize", check)
   }, [])
 
+  const registerPanelEl = (i: number, el: HTMLElement | null) => {
+    panelElsRef.current[i] = el
+  }
+
+  // Render the mobile stack until proven desktop — avoids a flash of the
+  // desktop row on phones.
+  const mobile = isMobile !== false
+
+  // Mobile: the active card follows scroll position. An IntersectionObserver
+  // with a thin root band (~6% of the viewport, a little above centre) means
+  // exactly one card is "intersecting" at a time, and the browser schedules the
+  // callbacks itself — no scroll handler, no rAF loop, no layout reads.
+  useEffect(() => {
+    if (!mobile || count === 0 || typeof IntersectionObserver === "undefined") {
+      return
+    }
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue
+          const idx = Number((entry.target as HTMLElement).dataset.index)
+          if (!Number.isNaN(idx)) {
+            setActive((prev) => (prev === idx ? prev : idx))
+          }
+        }
+      },
+      { rootMargin: "-44% 0px -50% 0px", threshold: 0 }
+    )
+
+    const els = panelElsRef.current.slice(0, count)
+    els.forEach((el) => el && io.observe(el))
+    return () => io.disconnect()
+  }, [mobile, count])
+
   const r = Math.min(Math.max(expandRatio, 0.2), 0.9)
   const grow = count > 1 ? (r * (count - 1)) / (1 - r) : 1
 
   const handleKey = (i: number, e: KeyboardEvent) => {
-    if (isMobile) return
+    if (mobile) return
     if (e.key === "ArrowRight" || e.key === "ArrowDown") {
       e.preventDefault()
       setActive((i + 1) % count)
@@ -353,10 +409,6 @@ export function AccordionGallery({
       setActive((i - 1 + count) % count)
     }
   }
-
-  // Render the mobile stack until proven desktop — avoids a flash of the
-  // desktop row on phones.
-  const mobile = isMobile !== false
 
   return (
     <div
@@ -389,6 +441,7 @@ export function AccordionGallery({
           trigger={trigger}
           setActive={setActive}
           handleKey={handleKey}
+          registerPanelEl={registerPanelEl}
         />
       ))}
     </div>
