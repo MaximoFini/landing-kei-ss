@@ -11,9 +11,6 @@ import Image from "next/image"
 import { motion, useMotionValue, useSpring } from "framer-motion"
 import { ArrowUpRight } from "lucide-react"
 
-const STACKED_COLLAPSED_HEIGHT = 88
-const STACKED_EXPANDED_HEIGHT = 340
-
 export interface AccordionGalleryItem {
   image: string
   label?: string
@@ -31,6 +28,8 @@ interface AccordionGalleryProps {
   overlayColor?: string
   textColor?: string
   height?: number
+  /** Fixed height of each card in the mobile stack (px). */
+  mobileCardHeight?: number
   gap?: number
   radius?: number
   expandRatio?: number
@@ -46,11 +45,10 @@ interface PanelProps {
   item: AccordionGalleryItem
   i: number
   active: number
-  isStacked: boolean
-  stackedTop: number
+  isMobile: boolean
+  mobileCardHeight: number
+  eagerImage: boolean
   grow: number
-  tilt: number
-  parallax: number
   duration: number
   radius: number
   accentColor: string
@@ -60,18 +58,16 @@ interface PanelProps {
   trigger: "hover" | "click"
   setActive: (index: number) => void
   handleKey: (i: number, e: KeyboardEvent) => void
-  registerPanelEl: (i: number, el: HTMLElement | null) => void
 }
 
 function AccordionPanel({
   item,
   i,
   active,
-  isStacked,
-  stackedTop,
+  isMobile,
+  mobileCardHeight,
+  eagerImage,
   grow,
-  tilt,
-  parallax,
   duration,
   radius,
   accentColor,
@@ -81,9 +77,11 @@ function AccordionPanel({
   trigger,
   setActive,
   handleKey,
-  registerPanelEl,
 }: PanelProps) {
   const isActive = i === active
+  // On mobile every card is presented "open": caption visible, full-colour
+  // image, strong gradient. Nothing animates on scroll.
+  const shown = isActive || isMobile
   const Tag = item.link ? "a" : "div"
 
   const panelRef = useRef<HTMLAnchorElement & HTMLDivElement>(null)
@@ -91,14 +89,14 @@ function AccordionPanel({
   const touchMoved = useRef(false)
   const touchStartPos = useRef<{ x: number; y: number } | null>(null)
 
-  // Floating cursor tooltip (Snappy, ultra-fluid spring physics)
+  // Floating cursor tooltip (desktop only) — snappy spring physics.
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
   const springX = useSpring(mouseX, { stiffness: 450, damping: 26 })
   const springY = useSpring(mouseY, { stiffness: 450, damping: 26 })
 
   const handlePointerMove = (e: React.PointerEvent) => {
-    if (!panelRef.current) return
+    if (isMobile || !panelRef.current) return
     const rect = panelRef.current.getBoundingClientRect()
     mouseX.set(e.clientX - rect.left)
     mouseY.set(e.clientY - rect.top)
@@ -124,7 +122,7 @@ function AccordionPanel({
   }
 
   const handleClick = (e: React.MouseEvent) => {
-    // If the user was scrolling/gliding with finger, cancel click navigation
+    // If the finger was scrolling/gliding, cancel click navigation.
     if (touchMoved.current) {
       touchMoved.current = false
       e.preventDefault()
@@ -132,37 +130,23 @@ function AccordionPanel({
       return
     }
 
-    // 1st click/tap on mobile: if card is not active, expand it and DO NOT open link
-    if (!isActive) {
+    // Desktop: first click on a collapsed panel expands it instead of navigating.
+    if (!isMobile && !isActive) {
       e.preventDefault()
       e.stopPropagation()
       setActive(i)
       return
     }
 
-    // 2nd click/tap: when already active, native link navigation proceeds to target="_blank"
+    // Otherwise the native <a target="_blank"> navigation proceeds.
   }
 
-  const panelStyle: CSSProperties = isStacked
+  const panelStyle: CSSProperties = isMobile
     ? {
-        position: "absolute",
-        left: 0,
-        right: 0,
-        top: 0,
-        // Position via `transform` (compositor-only) rather than animating
-        // `top`, and keep the layer hot + layout-isolated so the height tween
-        // never reflows its neighbours. The accordion's total height never
-        // changes (see stackedTops in the parent), so opening a card never
-        // shifts the page's scroll position under the user.
-        transform: `translate3d(0, ${stackedTop}px, 0)`,
-        height: isActive ? STACKED_EXPANDED_HEIGHT : STACKED_COLLAPSED_HEIGHT,
+        position: "relative",
+        height: mobileCardHeight,
         borderRadius: `${radius}px`,
-        willChange: "transform, height",
-        contain: "layout",
-        transition: `transform ${duration}s cubic-bezier(0.16, 1, 0.3, 1), height ${duration}s cubic-bezier(0.16, 1, 0.3, 1)`,
-        boxShadow: isActive
-          ? `0 24px 60px -24px ${accentColor}66`
-          : "0 10px 30px -20px rgba(5,11,28,0.6)",
+        boxShadow: "0 14px 34px -20px rgba(5,11,28,0.55)",
       }
     : {
         borderRadius: `${radius}px`,
@@ -180,7 +164,6 @@ function AccordionPanel({
     <Tag
       ref={(el: (HTMLAnchorElement & HTMLDivElement) | null) => {
         panelRef.current = el
-        registerPanelEl(i, el)
       }}
       key={i}
       data-index={i}
@@ -192,8 +175,9 @@ function AccordionPanel({
       aria-current={isActive ? "true" : undefined}
       aria-label={item.label}
       onMouseEnter={() => {
+        if (isMobile) return
         setIsHovered(true)
-        if (trigger === "hover" && !isStacked) setActive(i)
+        if (trigger === "hover") setActive(i)
       }}
       onMouseLeave={() => setIsHovered(false)}
       onPointerMove={handlePointerMove}
@@ -205,8 +189,8 @@ function AccordionPanel({
       className="group relative block min-h-0 min-w-0 cursor-pointer overflow-hidden bg-[#0a0713] no-underline outline-none focus-visible:ring-2 focus-visible:ring-[#3f7dff]"
       style={panelStyle}
     >
-      {/* Floating cursor tooltip (React Bits Tilted Card style) */}
-      {item.link && (
+      {/* Floating cursor tooltip — desktop only */}
+      {item.link && !isMobile && (
         <motion.div
           aria-hidden="true"
           className="pointer-events-none absolute z-30 hidden sm:flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-[11px] font-semibold tracking-wider text-[#050b1c] shadow-[0_12px_32px_rgba(0,0,0,0.4)] backdrop-blur-md border border-white/40 uppercase"
@@ -230,12 +214,10 @@ function AccordionPanel({
         <div
           className="absolute inset-0 block h-full w-full sm:transition-[filter] sm:duration-[600ms] sm:ease-[cubic-bezier(0.22,1,0.36,1)]"
           style={{
-            filter: grayscale && !isActive ? "grayscale(0.85)" : "grayscale(0)",
-            // On mobile the desaturation resolves in lock-step with the panel
-            // open instead of trailing it by ~200ms.
-            transition: isStacked
-              ? `filter ${duration}s cubic-bezier(0.16, 1, 0.3, 1)`
-              : undefined,
+            filter:
+              grayscale && !isActive && !isMobile
+                ? "grayscale(0.85)"
+                : "grayscale(0)",
           }}
         >
           <Image
@@ -244,6 +226,7 @@ function AccordionPanel({
             fill
             draggable={false}
             unoptimized={item.image.startsWith("data:")}
+            loading={eagerImage ? "eager" : "lazy"}
             sizes="(max-width: 640px) 100vw, 60vw"
             className="block h-full w-full select-none object-cover"
             style={{
@@ -259,7 +242,7 @@ function AccordionPanel({
         <div
           className="pointer-events-none absolute inset-0 transition-opacity duration-500"
           style={{
-            background: isActive
+            background: shown
               ? `linear-gradient(180deg, transparent 40%, ${overlayColor}ee 100%)`
               : `linear-gradient(180deg, transparent 65%, ${overlayColor}77 100%)`,
           }}
@@ -270,7 +253,7 @@ function AccordionPanel({
       {/* Caption */}
       <span
         className={`pointer-events-none absolute bottom-4 left-4 right-4 sm:bottom-5 sm:left-5 sm:right-5 z-[2] flex flex-col gap-1 transition-all duration-300 ${
-          isActive || isStacked
+          shown
             ? "translate-x-0 opacity-100"
             : "-translate-x-3 opacity-0 pointer-events-none"
         }`}
@@ -300,7 +283,7 @@ function AccordionPanel({
           {item.link && (
             <span
               className={`inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-white/90 bg-white/10 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/20 transition-all duration-300 ${
-                isActive
+                shown
                   ? "opacity-100 scale-100"
                   : "opacity-0 scale-95 pointer-events-none"
               }`}
@@ -316,8 +299,15 @@ function AccordionPanel({
 }
 
 /**
- * Image accordion — panels expand on hover/click revealing parallax imagery and
- * a caption with React Bits Tilted Card style cursor tooltip.
+ * Image accordion.
+ *
+ * Desktop (>768px): panels expand on hover/click via a compositor-friendly
+ * `flex-grow` tween, with a React-Bits-style floating cursor tooltip.
+ *
+ * Mobile (<=768px): NO scroll-driven accordion. Every project is a static,
+ * fixed-height card — caption always visible, full-colour image, lazy-loaded so
+ * the covers stream in after the hero as the user scrolls. This trades the
+ * fancy expand animation for a rock-solid 60fps scroll.
  */
 export function AccordionGallery({
   items,
@@ -326,12 +316,11 @@ export function AccordionGallery({
   overlayColor = "#050b1c",
   textColor = "#ffffff",
   height = 460,
+  mobileCardHeight = 300,
   gap = 10,
   radius = 20,
   expandRatio = 0.55,
   duration = 0.38,
-  tilt = 6,
-  parallax = 40,
   trigger = "click",
   grayscale = true,
   className = "",
@@ -341,68 +330,21 @@ export function AccordionGallery({
   const [active, setActive] = useState(
     Math.min(Math.max(defaultIndex, 0), count - 1)
   )
-  const [isStacked, setIsStacked] = useState(false)
-  const panelElsRef = useRef<(HTMLElement | null)[]>([])
-  const scrollRafRef = useRef<number | null>(null)
+  // null until measured, so SSR/first paint doesn't assume a layout.
+  const [isMobile, setIsMobile] = useState<boolean | null>(null)
 
   useEffect(() => {
-    const check = () => setIsStacked(window.innerWidth <= 768)
+    const check = () => setIsMobile(window.innerWidth <= 768)
     check()
     window.addEventListener("resize", check)
     return () => window.removeEventListener("resize", check)
   }, [])
 
-  const registerPanelEl = (i: number, el: HTMLElement | null) => {
-    panelElsRef.current[i] = el
-  }
-
-  // Mobile: the open card follows scroll position instead of tap/hover — the
-  // panel whose center sits closest to a fixed "reading line" near the top
-  // of the viewport becomes active, so the first project is already open on
-  // arrival and each new one takes over (closing the previous) as it scrolls
-  // into that line.
-  useEffect(() => {
-    if (!isStacked) return
-
-    const READING_LINE = 0.38 // fraction of viewport height
-
-    const computeActive = () => {
-      scrollRafRef.current = null
-      const targetY = window.innerHeight * READING_LINE
-      let closest = 0
-      let closestDist = Infinity
-      panelElsRef.current.forEach((el, i) => {
-        if (!el) return
-        const rect = el.getBoundingClientRect()
-        const center = rect.top + rect.height / 2
-        const dist = Math.abs(center - targetY)
-        if (dist < closestDist) {
-          closestDist = dist
-          closest = i
-        }
-      })
-      setActive((prev) => (prev === closest ? prev : closest))
-    }
-
-    const onScroll = () => {
-      if (scrollRafRef.current != null) return
-      scrollRafRef.current = requestAnimationFrame(computeActive)
-    }
-
-    computeActive()
-    window.addEventListener("scroll", onScroll, { passive: true })
-    window.addEventListener("resize", onScroll)
-    return () => {
-      window.removeEventListener("scroll", onScroll)
-      window.removeEventListener("resize", onScroll)
-      if (scrollRafRef.current != null) cancelAnimationFrame(scrollRafRef.current)
-    }
-  }, [isStacked, count])
-
   const r = Math.min(Math.max(expandRatio, 0.2), 0.9)
   const grow = count > 1 ? (r * (count - 1)) / (1 - r) : 1
 
   const handleKey = (i: number, e: KeyboardEvent) => {
+    if (isMobile) return
     if (e.key === "ArrowRight" || e.key === "ArrowDown") {
       e.preventDefault()
       setActive((i + 1) % count)
@@ -412,17 +354,9 @@ export function AccordionGallery({
     }
   }
 
-  // Cumulative top offset of each panel so the container's total height
-  // (one expanded + the rest collapsed, plus gaps) never changes as `active`
-  // moves — only individual panels reposition, so the page never jumps.
-  let stackedTotalHeight = 0
-  const stackedTops: number[] = []
-  for (let i = 0; i < count; i++) {
-    stackedTops.push(stackedTotalHeight)
-    stackedTotalHeight +=
-      (i === active ? STACKED_EXPANDED_HEIGHT : STACKED_COLLAPSED_HEIGHT) + gap
-  }
-  stackedTotalHeight -= count > 0 ? gap : 0
+  // Render the mobile stack until proven desktop — avoids a flash of the
+  // desktop row on phones.
+  const mobile = isMobile !== false
 
   return (
     <div
@@ -431,10 +365,9 @@ export function AccordionGallery({
       aria-label="Galería de proyectos"
       className={`flex w-full max-w-full flex-col sm:flex-row ${className}`}
       style={{
-        gap: isStacked ? 0 : `${gap}px`,
-        position: isStacked ? "relative" : undefined,
-        height: isStacked ? `${stackedTotalHeight}px` : `${height}px`,
-        perspective: isStacked ? undefined : "1600px",
+        gap: `${gap}px`,
+        height: mobile ? "auto" : `${height}px`,
+        perspective: mobile ? undefined : "1600px",
       }}
     >
       {items.map((item, i) => (
@@ -443,11 +376,10 @@ export function AccordionGallery({
           item={item}
           i={i}
           active={active}
-          isStacked={isStacked}
-          stackedTop={stackedTops[i]}
+          isMobile={mobile}
+          mobileCardHeight={mobileCardHeight}
+          eagerImage={false}
           grow={grow}
-          tilt={tilt}
-          parallax={parallax}
           duration={duration}
           radius={radius}
           accentColor={accentColor}
@@ -457,7 +389,6 @@ export function AccordionGallery({
           trigger={trigger}
           setActive={setActive}
           handleKey={handleKey}
-          registerPanelEl={registerPanelEl}
         />
       ))}
     </div>
