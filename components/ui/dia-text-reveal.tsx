@@ -209,7 +209,15 @@ export function DiaTextReveal({
   }
 
   useEffect(() => {
-    if (prefersReducedMotion) {
+    // The sweep animates `background-image` (a fresh gradient string) every
+    // frame behind `background-clip: text`, which repaints the rasterised
+    // heading each tick. On phones that lands right as the section scrolls in
+    // and stutters everything nearby, so touch devices jump straight to the
+    // resolved state — same as reduced-motion.
+    const coarsePointer =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(pointer: coarse)").matches
+    if (prefersReducedMotion || coarsePointer) {
       sweepPos.set(SWEEP_END)
       return
     }
