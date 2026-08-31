@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "@/lib/motion";
 import { ArrowRight } from "lucide-react";
 
 interface SpecularButtonProps {
@@ -10,7 +10,7 @@ interface SpecularButtonProps {
 
 export function SpecularButton({ href, children }: SpecularButtonProps) {
   return (
-    <motion.a
+    <m.a
       href={href}
       whileHover={{ scale: 1.045 }}
       whileTap={{ scale: 0.96 }}
@@ -18,11 +18,11 @@ export function SpecularButton({ href, children }: SpecularButtonProps) {
       style={{ backgroundColor: "#3f7dff" }}
     >
       <span>{children}</span>
-      <motion.span
+      <m.span
         className="group-hover:translate-x-1 transition-transform duration-200"
       >
         <ArrowRight className="w-4 h-4" />
-      </motion.span>
-    </motion.a>
+      </m.span>
+    </m.a>
   );
 }

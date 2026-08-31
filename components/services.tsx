@@ -1,6 +1,6 @@
 "use client"
 
-import { motion, useInView, useScroll, useTransform, type MotionValue } from "framer-motion"
+import { m, useInView, useScroll, useTransform, type MotionValue } from "@/lib/motion"
 import { useEffect, useRef, useState } from "react"
 import { Globe, Brain, Zap, Database, Lightbulb, type LucideIcon } from "lucide-react"
 import { DiaTextReveal } from "@/components/ui/dia-text-reveal"
@@ -96,7 +96,7 @@ export function Services() {
     >
       <div className="relative z-10 max-w-7xl mx-auto">
         {/* Section header */}
-        <motion.div
+        <m.div
           ref={ref}
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -116,7 +116,7 @@ export function Services() {
             duration={HEADER_REVEAL_DURATION}
             className="font-google-sans mt-2 block text-sm sm:text-base font-[450] tracking-normal"
           />
-        </motion.div>
+        </m.div>
 
         {/* Cards grid */}
         <div ref={gridRef} className="relative grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
@@ -133,12 +133,12 @@ export function Services() {
           {/* Mobile — single lamp travels down through the stacked cards as you scroll.
               The line's fill and the bulb's position are both driven by `transform`
               (scaleY / translateY) so scrolling never triggers layout. */}
-          <motion.div
+          <m.div
             aria-hidden="true"
             className="pointer-events-none absolute left-1/2 top-0 z-20 h-full w-px origin-top bg-[#3f7dff]/50 sm:hidden"
             style={{ scaleY: scrollYProgress, x: "-50%" }}
           />
-          <motion.div
+          <m.div
             aria-hidden="true"
             className="pointer-events-none absolute left-1/2 top-0 z-20 sm:hidden"
             style={{ y: lampY, x: "-50%" }}
@@ -147,7 +147,7 @@ export function Services() {
               className="w-4 h-4 shrink-0 text-[#3f7dff]"
               style={{ filter: "drop-shadow(0 0 8px rgba(63,125,255,0.85))" }}
             />
-          </motion.div>
+          </m.div>
         </div>
       </div>
     </section>
@@ -182,7 +182,7 @@ function ServiceCard({
   )
 
   return (
-    <motion.div
+    <m.div
       ref={ref}
       initial={{ opacity: 0, y: 24 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -212,7 +212,7 @@ function ServiceCard({
       {/* Light wash — mobile: same illumination, driven by the lamp's scroll position instead of hover.
           `will-change: opacity` keeps it on its own compositor layer so the
           scroll-driven opacity change composites instead of repainting the card. */}
-      <motion.div
+      <m.div
         className="absolute inset-0 pointer-events-none sm:hidden"
         style={{
           background:
@@ -243,6 +243,6 @@ function ServiceCard({
       <p className="relative z-10 text-sm text-muted-foreground leading-relaxed">
         {service.description}
       </p>
-    </motion.div>
+    </m.div>
   )
 }

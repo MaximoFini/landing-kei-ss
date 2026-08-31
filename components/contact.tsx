@@ -1,6 +1,6 @@
 "use client"
 
-import { motion, useInView } from "framer-motion"
+import { m, useInView } from "@/lib/motion"
 import { useRef, useState } from "react"
 import { Mail, Phone, CheckCircle, ArrowRight, ArrowLeft } from "lucide-react"
 import { SectionHeading } from "@/components/ui/section-heading"
@@ -100,7 +100,7 @@ export function Contact() {
 
         <div className="grid grid-cols-1 gap-10 sm:gap-12 lg:grid-cols-2 lg:gap-16">
           {/* Left — form */}
-          <motion.div
+          <m.div
             ref={ref}
             initial={{ opacity: 0, x: -24 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
@@ -108,14 +108,14 @@ export function Contact() {
           >
             {sent ? (
               <div className="flex min-h-[350px] flex-col items-center justify-center gap-5 rounded-2xl border border-[#3f7dff]/25 bg-card p-8 text-center shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] dark:shadow-[0_2px_16px_-8px_rgba(0,0,0,0.5)] sm:min-h-[400px] sm:p-12">
-                <motion.div
+                <m.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ type: "spring", duration: 0.6 }}
                   className="flex h-14 w-14 items-center justify-center rounded-2xl border border-[#3f7dff]/30 bg-[#3f7dff]/10"
                 >
                   <CheckCircle className="h-6 w-6 text-[#3f7dff]" />
-                </motion.div>
+                </m.div>
                 <div>
                   <h3 className="font-google-sans text-xl font-[450] text-foreground">
                     Mensaje recibido
@@ -144,7 +144,7 @@ export function Contact() {
                     Paso {step} de {totalSteps}
                   </span>
                   <div className="h-1 overflow-hidden rounded-full bg-muted">
-                    <motion.div
+                    <m.div
                       className="h-full bg-[#3f7dff]"
                       initial={{ width: 0 }}
                       animate={{ width: `${progress}%` }}
@@ -154,7 +154,7 @@ export function Contact() {
                 </div>
 
                 {step === 1 && (
-                  <motion.div
+                  <m.div
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3 }}
@@ -173,11 +173,11 @@ export function Contact() {
                       aria-invalid={error ? true : undefined}
                       className={fieldClass}
                     />
-                  </motion.div>
+                  </m.div>
                 )}
 
                 {step === 2 && (
-                  <motion.div
+                  <m.div
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3 }}
@@ -196,11 +196,11 @@ export function Contact() {
                       aria-invalid={error ? true : undefined}
                       className={fieldClass}
                     />
-                  </motion.div>
+                  </m.div>
                 )}
 
                 {step === 3 && (
-                  <motion.div
+                  <m.div
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3 }}
@@ -221,7 +221,7 @@ export function Contact() {
                       aria-invalid={error ? true : undefined}
                       className={`${fieldClass} resize-none`}
                     />
-                  </motion.div>
+                  </m.div>
                 )}
 
                 {error && (
@@ -250,7 +250,7 @@ export function Contact() {
                   )}
 
                   {step < totalSteps ? (
-                    <motion.button
+                    <m.button
                       type="button"
                       onClick={nextStep}
                       disabled={!canProceed()}
@@ -260,9 +260,9 @@ export function Contact() {
                     >
                       Siguiente
                       <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
-                    </motion.button>
+                    </m.button>
                   ) : (
-                    <motion.button
+                    <m.button
                       type="submit"
                       disabled={loading || !canProceed()}
                       whileHover={!loading && canProceed() ? { scale: 1.045 } : undefined}
@@ -271,15 +271,15 @@ export function Contact() {
                     >
                       {loading ? "Enviando..." : "Enviar mensaje"}
                       <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
-                    </motion.button>
+                    </m.button>
                   )}
                 </div>
               </form>
             )}
-          </motion.div>
+          </m.div>
 
           {/* Right — info */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, x: 24 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -309,7 +309,7 @@ export function Contact() {
                 </a>
               ))}
             </div>
-          </motion.div>
+          </m.div>
         </div>
       </div>
     </section>

@@ -1,6 +1,6 @@
 "use client"
 
-import { motion, useInView } from "framer-motion"
+import { m, useInView } from "@/lib/motion"
 import { useRef, useState } from "react"
 import Image from "next/image"
 import { LogoLoop } from "@/components/ui/logo-loop"
@@ -58,7 +58,7 @@ export function Clients() {
   return (
     <section className="border-y border-border bg-background px-4 py-14 sm:px-6 sm:py-16">
       <div className="mx-auto max-w-7xl">
-        <motion.p
+        <m.p
           ref={ref}
           initial={{ opacity: 0, y: 10 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -66,7 +66,7 @@ export function Clients() {
           className="mb-9 text-center font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground sm:text-[11px]"
         >
           Confían en nosotros
-        </motion.p>
+        </m.p>
 
         <LogoLoop duration={26} gap={64} repeat={3}>
           {clients.map((c) => (

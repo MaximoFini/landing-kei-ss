@@ -8,7 +8,7 @@ import {
   type KeyboardEvent,
 } from "react"
 import Image from "next/image"
-import { motion, useMotionValue, useSpring } from "framer-motion"
+import { m, useMotionValue, useSpring } from "@/lib/motion"
 import { ArrowUpRight } from "lucide-react"
 
 export interface AccordionGalleryItem {
@@ -197,7 +197,7 @@ function AccordionPanel({
     >
       {/* Floating cursor tooltip — desktop only */}
       {item.link && !isMobile && (
-        <motion.div
+        <m.div
           aria-hidden="true"
           className="pointer-events-none absolute z-30 hidden sm:flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-[11px] font-semibold tracking-wider text-[#050b1c] shadow-[0_12px_32px_rgba(0,0,0,0.4)] backdrop-blur-md border border-white/40 uppercase"
           style={{
@@ -212,7 +212,7 @@ function AccordionPanel({
         >
           <span>CONOCÉ MÁS</span>
           <ArrowUpRight className="h-3.5 w-3.5 stroke-[2.5] text-[#1a4fc0]" />
-        </motion.div>
+        </m.div>
       )}
 
       {/* Media + image */}

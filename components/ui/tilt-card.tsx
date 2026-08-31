@@ -1,12 +1,12 @@
 "use client"
 
 import {
-  motion,
+  m,
   useMotionValue,
   useSpring,
   useTransform,
   type MotionStyle,
-} from "framer-motion"
+} from "@/lib/motion"
 import { useRef, type ReactNode } from "react"
 import { cn } from "@/lib/utils"
 
@@ -67,7 +67,7 @@ export function TiltCard({
   }
 
   return (
-    <motion.div
+    <m.div
       ref={ref}
       onPointerMove={handleMove}
       onPointerLeave={reset}
@@ -81,13 +81,13 @@ export function TiltCard({
       className={cn("group/tilt relative", className)}
     >
       {spotlight && (
-        <motion.div
+        <m.div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 z-10 rounded-[inherit] opacity-0 transition-opacity duration-300 group-hover/tilt:opacity-100"
           style={{ background: spotlightBg }}
         />
       )}
       {children}
-    </motion.div>
+    </m.div>
   )
 }

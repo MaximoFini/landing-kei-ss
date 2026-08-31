@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "@/lib/motion";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
@@ -122,7 +122,7 @@ export function Hero() {
       <div className="relative z-10 max-w-7xl mx-auto w-full flex flex-col items-center text-center my-auto">
 
         {/* Brand lockup — logo + wordmark above the headline (enters with the CTAs) */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: -10, filter: "blur(6px)" }}
           animate={
             textCompleted
@@ -147,7 +147,7 @@ export function Hero() {
           >
             KEI Software
           </span>
-        </motion.div>
+        </m.div>
 
         {/* Headline — Antigravity Typewriter Effect */}
         <h1
@@ -168,7 +168,7 @@ export function Hero() {
         </h1>
 
         {/* CTAs — Side-by-side row (Smooth entrance on text completion) */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 18, filter: "blur(6px)" }}
           animate={
             textCompleted
@@ -198,11 +198,11 @@ export function Hero() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
             </svg>
           </a>
-        </motion.div>
+        </m.div>
       </div>
 
       {/* ─── Stats bar — pinned to bottom ─── */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 14, filter: "blur(4px)" }}
         animate={
           textCompleted
@@ -241,7 +241,7 @@ export function Hero() {
             })}
           </div>
         </div>
-      </motion.div>
+      </m.div>
     </section>
   );
 }

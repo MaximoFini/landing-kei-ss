@@ -1,6 +1,6 @@
 "use client"
 
-import { motion, useInView } from "framer-motion"
+import { m, useInView } from "@/lib/motion"
 import { useRef } from "react"
 import { MessageSquare, FileCheck, Code, Rocket, ArrowRight } from "lucide-react"
 import { SectionHeading } from "@/components/ui/section-heading"
@@ -44,7 +44,7 @@ function StepCard({ step, index }: { step: (typeof steps)[0]; index: number }) {
   const Icon = step.icon
 
   return (
-    <motion.div
+    <m.div
       ref={ref}
       initial={{ opacity: 0, y: 28 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -85,7 +85,7 @@ function StepCard({ step, index }: { step: (typeof steps)[0]; index: number }) {
         </h3>
         <p className="text-sm leading-relaxed text-muted-foreground">{step.description}</p>
       </div>
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -119,7 +119,7 @@ export function Process() {
           ))}
         </div>
 
-        <motion.div
+        <m.div
           ref={ref}
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -133,7 +133,7 @@ export function Process() {
             Empezá - Primer consulta gratis
             <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
           </a>
-        </motion.div>
+        </m.div>
       </div>
     </section>
   )

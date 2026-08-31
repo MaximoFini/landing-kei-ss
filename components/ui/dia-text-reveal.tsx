@@ -3,13 +3,13 @@
 import { useEffect, useRef, useState } from "react"
 import {
   animate,
-  motion,
+  m,
   useInView,
   useMotionValue,
   useReducedMotion,
   useTransform,
   type HTMLMotionProps,
-} from "framer-motion"
+} from "@/lib/motion"
 
 import { cn } from "@/lib/utils"
 
@@ -213,7 +213,7 @@ export function DiaTextReveal({
     // frame behind `background-clip: text`, which repaints the rasterised
     // heading each tick. On phones that lands right as the section scrolls in
     // and stutters everything nearby, so touch devices jump straight to the
-    // resolved state — same as reduced-motion.
+    // resolved state — same as reduced-m.
     const coarsePointer =
       typeof window !== "undefined" &&
       window.matchMedia?.("(pointer: coarse)").matches
@@ -243,7 +243,7 @@ export function DiaTextReveal({
       : undefined
 
   return (
-    <motion.span
+    <m.span
       ref={spanRef}
       className={cn("align-bottom leading-[100%] text-inherit", className)}
       style={{
@@ -266,6 +266,6 @@ export function DiaTextReveal({
       {...props}
     >
       {texts[activeIndex]}
-    </motion.span>
+    </m.span>
   )
 }

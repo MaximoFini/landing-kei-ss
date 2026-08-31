@@ -5,6 +5,7 @@ import { StructuredData } from "@/components/structured-data";
 import { PageTransition } from "@/components/page-transition";
 import { TitleAttention } from "@/components/title-attention";
 import { ThemeProvider } from "@/components/theme-provider";
+import { LazyMotionProvider } from "@/components/lazy-motion-provider";
 import "./globals.css";
 
 const geist = Geist({
@@ -160,8 +161,10 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
-          <TitleAttention />
-          <PageTransition>{children}</PageTransition>
+          <LazyMotionProvider>
+            <TitleAttention />
+            <PageTransition>{children}</PageTransition>
+          </LazyMotionProvider>
         </ThemeProvider>
         {process.env.NODE_ENV === "production" && <Analytics />}
       </body>

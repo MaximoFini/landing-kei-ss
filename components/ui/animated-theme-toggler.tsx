@@ -5,7 +5,7 @@ import { flushSync } from "react-dom"
 
 import { Moon, Sun } from "lucide-react"
 
-import { motion, AnimatePresence } from "framer-motion"
+import { m, AnimatePresence } from "@/lib/motion"
 
 import { cn } from "@/lib/utils"
 
@@ -159,7 +159,7 @@ export const AnimatedThemeToggler = ({ className }: AnimatedThemeTogglerProps) =
     >
       <AnimatePresence mode="wait" initial={false}>
         {darkMode ? (
-          <motion.span
+          <m.span
             key="sun-icon"
             initial={{ opacity: 0, scale: 0.55, rotate: 25 }}
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
@@ -168,9 +168,9 @@ export const AnimatedThemeToggler = ({ className }: AnimatedThemeTogglerProps) =
             className="text-white"
           >
             <Sun className="w-4 h-4" />
-          </motion.span>
+          </m.span>
         ) : (
-          <motion.span
+          <m.span
             key="moon-icon"
             initial={{ opacity: 0, scale: 0.55, rotate: -25 }}
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
@@ -179,7 +179,7 @@ export const AnimatedThemeToggler = ({ className }: AnimatedThemeTogglerProps) =
             className="text-black"
           >
             <Moon className="w-4 h-4" />
-          </motion.span>
+          </m.span>
         )}
       </AnimatePresence>
     </button>

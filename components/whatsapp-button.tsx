@@ -1,6 +1,6 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { m } from "@/lib/motion"
 
 export function WhatsAppButton() {
   const phoneNumber = "5493513614462" // formato internacional sin +
@@ -8,7 +8,7 @@ export function WhatsAppButton() {
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
 
   return (
-    <motion.a
+    <m.a
       href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
@@ -34,6 +34,6 @@ export function WhatsAppButton() {
       <div className="hidden sm:block absolute bottom-full right-0 mb-2 px-3 py-2 bg-surface border border-border rounded-sm whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
         <p className="text-xs text-foreground font-medium">¿Hablamos por WhatsApp?</p>
       </div>
-    </motion.a>
+    </m.a>
   )
 }

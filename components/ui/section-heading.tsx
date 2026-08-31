@@ -1,6 +1,6 @@
 "use client"
 
-import { motion, useInView } from "framer-motion"
+import { m, useInView } from "@/lib/motion"
 import { useRef, type ReactNode } from "react"
 import { DiaTextReveal } from "@/components/ui/dia-text-reveal"
 
@@ -35,7 +35,7 @@ export function SectionHeading({
   const centered = align === "center"
 
   return (
-    <motion.div
+    <m.div
       ref={ref}
       initial={{ opacity: 0, y: 20 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -74,6 +74,6 @@ export function SectionHeading({
           {description}
         </p>
       )}
-    </motion.div>
+    </m.div>
   )
 }

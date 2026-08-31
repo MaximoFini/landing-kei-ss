@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { m, useReducedMotion } from "@/lib/motion";
 
 const LEFT_A =
   "M 120,-100 C 0,250 260,420 160,620 C 80,760 260,850 140,1000";
@@ -63,7 +63,7 @@ export function HeroRibbons() {
           </linearGradient>
         </defs>
 
-        <motion.path
+        <m.path
           d={LEFT_A}
           fill="none"
           stroke="url(#ribbonGradient)"
@@ -72,7 +72,7 @@ export function HeroRibbons() {
           animate={morph ? { d: [LEFT_A, LEFT_B, LEFT_A] } : undefined}
           transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
         />
-        <motion.path
+        <m.path
           d={RIGHT_A}
           fill="none"
           stroke="url(#ribbonGradient)"

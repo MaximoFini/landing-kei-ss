@@ -1,6 +1,6 @@
 "use client"
 
-import { motion, useInView } from "framer-motion"
+import { m, useInView } from "@/lib/motion"
 import { useRef, useState, useEffect, useCallback } from "react"
 import Image from "next/image"
 import { Quote, ChevronLeft, ChevronRight } from "lucide-react"
@@ -73,7 +73,7 @@ function TestimonialCard({ t, index }: { t: Testimonial; index: number }) {
   const [imageError, setImageError] = useState(false)
 
   return (
-    <motion.div
+    <m.div
       ref={ref}
       initial={{ opacity: 0, y: 24 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -130,7 +130,7 @@ function TestimonialCard({ t, index }: { t: Testimonial; index: number }) {
           </div>
         </div>
       </TiltCard>
-    </motion.div>
+    </m.div>
   )
 }
 

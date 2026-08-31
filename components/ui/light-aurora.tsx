@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { motion, useReducedMotion } from "framer-motion"
+import { m, useReducedMotion } from "@/lib/motion"
 
 interface LightAuroraProps {
   className?: string
@@ -48,7 +48,7 @@ export function LightAurora({ className = "", intensity = 1 }: LightAuroraProps)
   useEffect(() => {
     // The drift now animates `transform` only, so it stays on the compositor and
     // never triggers layout/paint. That's cheap enough for touch devices, so the
-    // only guard left is reduced-motion.
+    // only guard left is reduced-m.
     if (prefersReducedMotion) return
     setViewport({ w: window.innerWidth, h: window.innerHeight })
   }, [prefersReducedMotion])
@@ -65,7 +65,7 @@ export function LightAurora({ className = "", intensity = 1 }: LightAuroraProps)
         const dx = viewport ? viewport.w * b.delta.x : 0
         const dy = viewport ? viewport.h * b.delta.y : 0
         return (
-          <motion.div
+          <m.div
             key={i}
             className="absolute rounded-full"
             style={{

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "@/lib/motion";
 import { Menu, X, Volume2, VolumeX } from "lucide-react";
 import Image from "next/image";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
@@ -151,7 +151,7 @@ export function Navbar() {
     <>
       <header className="fixed top-0 left-0 right-0 z-[60] pt-4 px-4 sm:px-6 pointer-events-none">
         <div className="font-google-sans max-w-5xl mx-auto pointer-events-auto">
-          <motion.nav
+          <m.nav
             animate={{
               boxShadow: isDark
                 ? scrolled
@@ -216,21 +216,21 @@ export function Navbar() {
               aria-label="Navegación principal"
             >
               {/* Coloured glow trailing the indicator */}
-              <motion.div
+              <m.div
                 className="absolute top-0 bottom-0 rounded-full bg-gradient-to-r from-indigo-400/35 via-sky-400/35 to-violet-400/35 blur-sm pointer-events-none"
                 animate={{ left: blobStyle.left, width: blobStyle.width }}
                 transition={{ type: "spring", stiffness: 380, damping: 32 }}
               />
 
               {/* Glass indicator */}
-              <motion.div
+              <m.div
                 className="absolute top-1 bottom-1 rounded-full pointer-events-none overflow-hidden bg-white/70 dark:bg-white/10 ring-1 ring-white/70 dark:ring-white/15 shadow-[0_4px_14px_rgba(15,23,42,0.12),inset_0_1px_1px_rgba(255,255,255,0.9)] dark:shadow-[0_4px_14px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.15)] backdrop-blur-sm"
                 animate={{ left: blobStyle.left, width: blobStyle.width }}
                 transition={{ type: "spring", stiffness: 400, damping: 30 }}
               >
                 <div className="absolute inset-0 bg-gradient-to-b from-white/90 to-white/40 dark:from-white/15 dark:to-white/5" />
                 <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/80 to-transparent dark:from-white/10 dark:to-transparent" />
-              </motion.div>
+              </m.div>
 
               {/* Nav items */}
               {navLinks.map((link, i) => (
@@ -247,13 +247,13 @@ export function Navbar() {
                       : "text-black/55 hover:text-black/80 dark:text-white/55 dark:hover:text-white/80"
                   }`}
                 >
-                  <motion.span
+                  <m.span
                     className="inline-block"
                     animate={{ y: indicatorIndex === i ? -0.5 : 0, scale: indicatorIndex === i ? 1.04 : 1 }}
                     transition={{ type: "spring", stiffness: 500, damping: 26 }}
                   >
                     {link.label}
-                  </motion.span>
+                  </m.span>
                 </button>
               ))}
             </nav>
@@ -291,14 +291,14 @@ export function Navbar() {
                 {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </button>
             </div>
-          </motion.nav>
+          </m.nav>
         </div>
       </header>
 
       {/* Mobile fullscreen menu */}
       <AnimatePresence>
         {menuOpen && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -316,7 +316,7 @@ export function Navbar() {
             {/* soft brand glow */}
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(80%_50%_at_50%_0%,rgba(99,102,241,0.10),transparent_60%),radial-gradient(70%_50%_at_50%_100%,rgba(56,189,248,0.10),transparent_60%)] dark:bg-[radial-gradient(80%_50%_at_50%_0%,rgba(99,102,241,0.20),transparent_60%),radial-gradient(70%_50%_at_50%_100%,rgba(56,189,248,0.18),transparent_60%)]" />
 
-            <motion.nav
+            <m.nav
               initial={{ y: 8, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 8, opacity: 0 }}
@@ -326,7 +326,7 @@ export function Navbar() {
             >
               <ul className="flex flex-1 flex-col justify-center gap-1">
                 {navLinks.map((link, idx) => (
-                  <motion.li
+                  <m.li
                     key={link.href}
                     initial={{ opacity: 0, x: -16 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -347,11 +347,11 @@ export function Navbar() {
                         {link.label}
                       </span>
                     </button>
-                  </motion.li>
+                  </m.li>
                 ))}
               </ul>
 
-              <motion.a
+              <m.a
                 href="#contacto"
                 onClick={() => setMenuOpen(false)}
                 initial={{ opacity: 0, y: 12 }}
@@ -360,9 +360,9 @@ export function Navbar() {
                 className="flex items-center justify-center rounded-full bg-black px-6 py-4 text-sm font-medium text-white shadow-lg ring-1 ring-black/10 active:scale-95 dark:bg-white dark:text-black dark:ring-white/10"
               >
                 Primera consulta gratis
-              </motion.a>
-            </motion.nav>
-          </motion.div>
+              </m.a>
+            </m.nav>
+          </m.div>
         )}
       </AnimatePresence>
     </>

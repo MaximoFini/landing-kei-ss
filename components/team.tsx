@@ -1,6 +1,6 @@
 "use client"
 
-import { motion, useInView } from "framer-motion"
+import { m, useInView } from "@/lib/motion"
 import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
 import { Linkedin } from "lucide-react"
@@ -43,7 +43,7 @@ function MemberCard({
   const inView = useInView(ref, { once: true, margin: "-80px" })
 
   return (
-    <motion.div
+    <m.div
       ref={ref}
       data-member-card
       initial={{ opacity: 0, y: 36 }}
@@ -95,7 +95,7 @@ function MemberCard({
           </div>
         </div>
       </TiltCard>
-    </motion.div>
+    </m.div>
   )
 }
 

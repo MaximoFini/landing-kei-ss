@@ -1,6 +1,6 @@
 "use client"
 
-import { motion, useInView } from "framer-motion"
+import { m, useInView } from "@/lib/motion"
 import { useRef } from "react"
 import { SectionHeading } from "@/components/ui/section-heading"
 import { LightAurora } from "@/components/ui/light-aurora"
@@ -127,7 +127,7 @@ export function Portfolio() {
           subtitleClassName="mt-4 sm:mt-5"
         />
 
-        <motion.div
+        <m.div
           ref={ref}
           initial={{ opacity: 0, y: 28 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -141,7 +141,7 @@ export function Portfolio() {
             duration={0.38}
             trigger="hover"
           />
-        </motion.div>
+        </m.div>
       </div>
     </section>
   )
