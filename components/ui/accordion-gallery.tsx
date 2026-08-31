@@ -148,13 +148,18 @@ function AccordionPanel({
         position: "absolute",
         left: 0,
         right: 0,
-        top: `${stackedTop}px`,
+        top: 0,
+        // Position via `transform` (compositor-only) rather than animating
+        // `top`, and keep the layer hot + layout-isolated so the height tween
+        // never reflows its neighbours. The accordion's total height never
+        // changes (see stackedTops in the parent), so opening a card never
+        // shifts the page's scroll position under the user.
+        transform: `translate3d(0, ${stackedTop}px, 0)`,
         height: isActive ? STACKED_EXPANDED_HEIGHT : STACKED_COLLAPSED_HEIGHT,
         borderRadius: `${radius}px`,
-        // Only the position and size animate — the accordion's total height
-        // never changes (see stackedTops in the parent), so expanding one
-        // card never shifts the page's scroll position under the user.
-        transition: `top ${duration}s cubic-bezier(0.16, 1, 0.3, 1), height ${duration}s cubic-bezier(0.16, 1, 0.3, 1)`,
+        willChange: "transform, height",
+        contain: "layout",
+        transition: `transform ${duration}s cubic-bezier(0.16, 1, 0.3, 1), height ${duration}s cubic-bezier(0.16, 1, 0.3, 1)`,
         boxShadow: isActive
           ? `0 24px 60px -24px ${accentColor}66`
           : "0 10px 30px -20px rgba(5,11,28,0.6)",
@@ -223,9 +228,14 @@ function AccordionPanel({
       {/* Media + image */}
       <div className="absolute inset-0 block h-full w-full overflow-hidden [border-radius:inherit]">
         <div
-          className="absolute inset-0 block h-full w-full transition-[filter] duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+          className="absolute inset-0 block h-full w-full sm:transition-[filter] sm:duration-[600ms] sm:ease-[cubic-bezier(0.22,1,0.36,1)]"
           style={{
             filter: grayscale && !isActive ? "grayscale(0.85)" : "grayscale(0)",
+            // On mobile the desaturation resolves in lock-step with the panel
+            // open instead of trailing it by ~200ms.
+            transition: isStacked
+              ? `filter ${duration}s cubic-bezier(0.16, 1, 0.3, 1)`
+              : undefined,
           }}
         >
           <Image
