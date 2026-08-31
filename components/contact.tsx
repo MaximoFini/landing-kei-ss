@@ -99,45 +99,12 @@ export function Contact() {
         />
 
         <div className="grid grid-cols-1 gap-10 sm:gap-12 lg:grid-cols-2 lg:gap-16">
-          {/* Left — info */}
+          {/* Left — form */}
           <motion.div
             ref={ref}
             initial={{ opacity: 0, x: -24 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="flex flex-col gap-8 sm:gap-10"
-          >
-            <p className="max-w-sm text-sm leading-relaxed text-muted-foreground sm:text-base">
-              Queremos entender tu problema y resolverlo. Contanos qué necesitás y
-              te respondemos en menos de 24 horas.
-            </p>
-
-            <div className="flex flex-col gap-4">
-              {contactMethods.map(({ icon: Icon, label, value, href }) => (
-                <a
-                  key={label}
-                  href={href}
-                  className="group flex items-center gap-4 transition-transform duration-300 hover:translate-x-1"
-                >
-                  <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl border border-[#3f7dff]/20 bg-[#3f7dff]/10 transition-all duration-300 group-hover:scale-105 group-hover:bg-[#3f7dff]/15">
-                    <Icon className="h-5 w-5 text-[#3f7dff]" />
-                  </div>
-                  <div>
-                    <p className={`${stepLabelClass} mb-0.5`}>{label}</p>
-                    <p className="break-all text-sm font-medium text-foreground transition-colors group-hover:text-[#3f7dff] sm:text-base">
-                      {value}
-                    </p>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Right — form */}
-          <motion.div
-            initial={{ opacity: 0, x: 24 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.2 }}
           >
             {sent ? (
               <div className="flex min-h-[350px] flex-col items-center justify-center gap-5 rounded-2xl border border-[#3f7dff]/25 bg-card p-8 text-center shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] dark:shadow-[0_2px_16px_-8px_rgba(0,0,0,0.5)] sm:min-h-[400px] sm:p-12">
@@ -309,6 +276,39 @@ export function Contact() {
                 </div>
               </form>
             )}
+          </motion.div>
+
+          {/* Right — info */}
+          <motion.div
+            initial={{ opacity: 0, x: 24 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="flex flex-col gap-8 sm:gap-10"
+          >
+            <p className="max-w-sm text-sm leading-relaxed text-muted-foreground sm:text-base">
+              Queremos entender tu problema y resolverlo. Contanos qué necesitás y
+              te respondemos en menos de 24 horas.
+            </p>
+
+            <div className="flex flex-col gap-4">
+              {contactMethods.map(({ icon: Icon, label, value, href }) => (
+                <a
+                  key={label}
+                  href={href}
+                  className="group flex items-center gap-4 transition-transform duration-300 hover:translate-x-1"
+                >
+                  <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl border border-[#3f7dff]/20 bg-[#3f7dff]/10 transition-all duration-300 group-hover:scale-105 group-hover:bg-[#3f7dff]/15">
+                    <Icon className="h-5 w-5 text-[#3f7dff]" />
+                  </div>
+                  <div>
+                    <p className={`${stepLabelClass} mb-0.5`}>{label}</p>
+                    <p className="break-all text-sm font-medium text-foreground transition-colors group-hover:text-[#3f7dff] sm:text-base">
+                      {value}
+                    </p>
+                  </div>
+                </a>
+              ))}
+            </div>
           </motion.div>
         </div>
       </div>
