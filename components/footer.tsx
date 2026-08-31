@@ -1,5 +1,26 @@
 import Image from "next/image"
-import { Linkedin } from "lucide-react"
+import { Linkedin, Instagram, Mail } from "lucide-react"
+
+const socialLinks = [
+  {
+    label: "Enviar un email a KEI Software",
+    href: "mailto:contacto@keisoftware.dev",
+    icon: Mail,
+    external: false,
+  },
+  {
+    label: "Instagram de KEI Software",
+    href: "https://instagram.com/keisoftware",
+    icon: Instagram,
+    external: true,
+  },
+  {
+    label: "LinkedIn de KEI Software",
+    href: "https://www.linkedin.com/company/keii-solutions",
+    icon: Linkedin,
+    external: true,
+  },
+]
 
 const navLinks = [
   { label: "Servicios", href: "#servicios" },
@@ -27,26 +48,27 @@ export function Footer() {
 
       {/* ─── Detail bar ─── */}
       <div className="mt-10 sm:mt-14 border-t border-white/10 px-4 sm:px-6 py-8 sm:py-10">
-        <div className="max-w-[1600px] mx-auto flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+        <div className="max-w-[1600px] mx-auto flex flex-col items-center gap-8 text-center">
           {/* Logo */}
-          <div className="flex flex-col gap-2">
-            <a href="#" className="flex items-center gap-2.5">
-              <Image
-                src="/kei-logo-nuevo.png"
-                alt="KEI Software logo"
-                width={32}
-                height={32}
-                loading="lazy"
-                className="w-7 h-7 sm:w-8 sm:h-8"
-              />
-              <span className="font-google-sans text-sm sm:text-base text-white tracking-tight">
-                KEI Software
-              </span>
-            </a>
-          </div>
+          <a href="#" className="flex items-center gap-2.5">
+            <Image
+              src="/kei-logo-nuevo.png"
+              alt="KEI Software logo"
+              width={32}
+              height={32}
+              loading="lazy"
+              className="w-7 h-7 sm:w-8 sm:h-8"
+            />
+            <span className="font-google-sans text-sm sm:text-base text-white tracking-tight">
+              KEI Software
+            </span>
+          </a>
 
           {/* Nav */}
-          <nav className="flex flex-wrap gap-x-6 gap-y-2" aria-label="Footer navigation">
+          <nav
+            className="flex flex-wrap justify-center gap-x-6 gap-y-2"
+            aria-label="Footer navigation"
+          >
             {navLinks.map((link) => (
               <a
                 key={link.label}
@@ -59,26 +81,24 @@ export function Footer() {
           </nav>
 
           {/* Contact + social */}
-          <div className="flex items-center gap-4">
-            <a
-              href="mailto:contacto@keisoftware.dev"
-              className="text-xs text-white/50 hover:text-white transition-colors font-mono break-all"
-            >
-              contacto@keisoftware.dev
-            </a>
-            <a
-              href="https://www.linkedin.com/company/keii-solutions"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="LinkedIn de KEI Software"
-              className="w-8 h-8 rounded-sm border border-white/15 flex items-center justify-center text-white/50 hover:text-white hover:border-white/30 transition-colors"
-            >
-              <Linkedin className="w-3.5 h-3.5" />
-            </a>
+          <div className="flex items-center justify-center gap-3">
+            {socialLinks.map(({ label, href, icon: Icon, external }) => (
+              <a
+                key={label}
+                href={href}
+                aria-label={label}
+                {...(external
+                  ? { target: "_blank", rel: "noopener noreferrer" }
+                  : {})}
+                className="w-9 h-9 rounded-sm border border-white/15 flex items-center justify-center text-white/50 hover:text-white hover:border-white/30 transition-colors"
+              >
+                <Icon className="w-4 h-4" />
+              </a>
+            ))}
           </div>
         </div>
 
-        <div className="max-w-[1600px] mx-auto mt-8 pt-6 border-t border-white/[0.06] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+        <div className="max-w-[1600px] mx-auto mt-8 pt-6 border-t border-white/[0.06] flex flex-col items-center justify-center gap-2 text-center sm:flex-row sm:gap-4">
           <p className="text-[11px] text-white/35">
             &copy; {new Date().getFullYear()} KEI Software. Todos los derechos reservados.
           </p>
