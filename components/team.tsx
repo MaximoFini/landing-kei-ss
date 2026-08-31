@@ -157,7 +157,7 @@ export function Team() {
         <SectionHeading
           eyebrow="El equipo"
           title="KEI Software"
-          subtitle="Quiénes escriben el código"
+          subtitle="Quienes implementan la solución"
         />
 
         <div
