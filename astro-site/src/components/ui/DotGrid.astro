@@ -1,0 +1,46 @@
+---
+// Static port of components/ui/dot-grid.tsx.
+//
+// The source is a Canvas 2D grid where dots brighten within `proximity` px of
+// the cursor and scatter on a click shockwave, springing back. On touch /
+// reduced-motion it already renders a single static frame of plain `baseColor`
+// dots — that static frame is exactly what we reproduce here with a CSS
+// radial-gradient tile (zero JS, zero canvas).
+//
+// DROPPED: cursor-proximity highlight (activeColor) + click shockwave. These are
+// pointer-interaction only, never scroll, and purely decorative.
+interface Props {
+  class?: string;
+  dotSize?: number;
+  gap?: number;
+  baseColor?: string;
+}
+
+const {
+  class: className = "",
+  dotSize = 3,
+  gap = 34,
+  baseColor = "#d3ddf2",
+} = Astro.props;
+
+const cell = dotSize + gap;
+---
+
+<div
+  class:list={["pointer-events-none absolute inset-0", className]}
+  aria-hidden="true"
+  style={`--dot-color:${baseColor}; --dot-size:${dotSize}px; --dot-cell:${cell}px`}
+>
+  <div class="dotgrid h-full w-full"></div>
+</div>
+
+<style>
+  .dotgrid {
+    background-image: radial-gradient(
+      var(--dot-color) calc(var(--dot-size) / 2),
+      transparent calc(var(--dot-size) / 2 + 0.5px)
+    );
+    background-size: var(--dot-cell) var(--dot-cell);
+    background-position: center;
+  }
+</style>

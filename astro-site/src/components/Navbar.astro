@@ -1,0 +1,699 @@
+---
+// Port of components/navbar.tsx — split into a static Astro shell + one
+// co-located vanilla client script (bundled by Astro) for the interactivity, plus
+// the vanilla <ThemeToggler /> (.astro + inline script) where
+// AnimatedThemeToggler was.
+//
+// WHY vanilla script (not a Preact island): the navbar is mostly imperative DOM
+// work — scrollspy geometry caching, a spring-driven indicator blob, body scroll
+// lock — none of it benefits from a VDOM. Everything else is CSS transitions
+// toggled by data-attributes so there's no per-frame JS.
+//
+// Framer → here:
+//  - navSurface (4 light/dark × scrolled combos) → `.kei-nav` + `[data-scrolled]`
+//    + `.dark` CSS rules, crossfaded by the source's own `transition-all`.
+//  - PillNav indicator/glow springs (400/30, 380/32) + label lift (500/26) →
+//    a ~15-line hand-rolled spring (mass=1 semi-implicit Euler — the exact model
+//    Framer's `type:"spring"` uses). Tried `motion` and `@motionone/dom` first;
+//    neither reliably animated `left`/`width` here, and a lib is overkill for
+//    four values. Reduced-motion degrades every spring to an instant set.
+//  - Mobile menu AnimatePresence → `.is-open` class + CSS transitions/keyframes
+//    with a matched exit delay.
+//
+// NOTE: the page scrolls on <body> (globals.css `body{overflow-x:hidden}` makes
+// overflow-y compute to auto), so scroll position is read from whichever of
+// window / documentElement / body actually moved, and the scroll listener is on
+// both window and document.
+import ThemeToggler from "@/components/ThemeToggler.astro";
+
+const navLinks = [
+  { label: "Servicios", href: "#servicios" },
+  { label: "Proceso", href: "#proceso" },
+  { label: "Portfolio", href: "#proyectos" },
+  { label: "Clientes", href: "#clientes" },
+  { label: "Equipo", href: "#equipo" },
+  { label: "Contacto", href: "#contacto" },
+];
+
+const ITEM_ACTIVE =
+  "relative z-10 px-4 py-1.5 rounded-full text-sm font-medium transition-colors duration-300 whitespace-nowrap text-black dark:text-white";
+const ITEM_INACTIVE =
+  "relative z-10 px-4 py-1.5 rounded-full text-sm font-medium transition-colors duration-300 whitespace-nowrap text-black/55 hover:text-black/80 dark:text-white/55 dark:hover:text-white/80";
+---
+
+<header
+  class="fixed top-0 left-0 right-0 z-[60] pt-4 px-4 sm:px-6 pointer-events-none"
+>
+  <div class="font-google-sans max-w-5xl mx-auto pointer-events-auto">
+    <nav
+      data-kei-nav
+      class="kei-nav relative h-14 sm:h-16 px-2 flex items-center justify-between rounded-full border backdrop-blur-lg sm:backdrop-blur-2xl backdrop-saturate-[1.8] transition-all duration-[350ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform overflow-hidden isolate"
+    >
+      {/* ── Glass layers ─────────────────────────────── */}
+      <div
+        class="pointer-events-none absolute inset-x-0 top-0 h-1/2 rounded-t-full bg-gradient-to-b from-white/70 via-white/20 to-transparent dark:from-white/10 dark:via-white/[0.03] dark:to-transparent"
+      >
+      </div>
+      <div
+        class="pointer-events-none absolute inset-0 rounded-full bg-[linear-gradient(115deg,rgba(255,255,255,0.55)_0%,rgba(255,255,255,0)_28%,rgba(255,255,255,0)_60%,rgba(255,255,255,0.30)_100%)] dark:bg-[linear-gradient(115deg,rgba(255,255,255,0.08)_0%,rgba(255,255,255,0)_28%,rgba(255,255,255,0)_60%,rgba(255,255,255,0.05)_100%)]"
+      >
+      </div>
+      <div
+        class="pointer-events-none absolute -inset-8 rounded-full bg-[radial-gradient(60%_120%_at_15%_0%,rgba(99,102,241,0.14),transparent_60%),radial-gradient(60%_120%_at_85%_100%,rgba(56,189,248,0.12),transparent_60%)] dark:bg-[radial-gradient(60%_120%_at_15%_0%,rgba(99,102,241,0.22),transparent_60%),radial-gradient(60%_120%_at_85%_100%,rgba(56,189,248,0.18),transparent_60%)]"
+      >
+      </div>
+      <div
+        class="pointer-events-none absolute inset-0 rounded-full ring-1 ring-inset ring-white/40 dark:ring-white/10"
+      >
+      </div>
+
+      {/* Logo */}
+      <div class="relative z-10 flex-1 flex items-center pl-2 sm:pl-3">
+        <a href="#" data-kei-logo class="flex items-center gap-2.5">
+          <img
+            src="/kei-logo-nuevo.png"
+            alt="KEI Software"
+            width="32"
+            height="32"
+            class="w-8 h-8 object-contain"
+          />
+          <span
+            class="text-sm sm:text-base tracking-tight text-black dark:text-white"
+          >
+            KEI Software
+          </span>
+        </a>
+      </div>
+
+      {/* PillNav — glassy indicator that follows hover + active */}
+      <nav
+        data-kei-pill
+        class="relative z-10 hidden lg:flex items-center bg-white/25 dark:bg-white/[0.04] rounded-full p-1 border border-white/40 dark:border-white/10 shadow-[inset_0_1px_2px_rgba(255,255,255,0.6),inset_0_-1px_2px_rgba(15,23,42,0.04)] dark:shadow-[inset_0_1px_2px_rgba(255,255,255,0.06),inset_0_-1px_2px_rgba(0,0,0,0.2)] backdrop-blur-md overflow-hidden"
+        aria-label="Navegación principal"
+      >
+        <div
+          data-kei-glow
+          class="absolute top-0 bottom-0 rounded-full bg-gradient-to-r from-indigo-400/35 via-sky-400/35 to-violet-400/35 blur-sm pointer-events-none"
+          style="left:4px;width:90px"
+        >
+        </div>
+
+        <div
+          data-kei-blob
+          class="absolute top-1 bottom-1 rounded-full pointer-events-none overflow-hidden bg-white/70 dark:bg-white/10 ring-1 ring-white/70 dark:ring-white/15 shadow-[0_4px_14px_rgba(15,23,42,0.12),inset_0_1px_1px_rgba(255,255,255,0.9)] dark:shadow-[0_4px_14px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.15)] backdrop-blur-sm"
+          style="left:4px;width:90px"
+        >
+          <div
+            class="absolute inset-0 bg-gradient-to-b from-white/90 to-white/40 dark:from-white/15 dark:to-white/5"
+          >
+          </div>
+          <div
+            class="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/80 to-transparent dark:from-white/10 dark:to-transparent"
+          >
+          </div>
+        </div>
+
+        {
+          navLinks.map((link, i) => (
+            <button
+              data-kei-item
+              data-index={i}
+              data-active={i === 0 ? "" : null}
+              class={i === 0 ? ITEM_ACTIVE : ITEM_INACTIVE}
+            >
+              <span class="inline-block" data-kei-label>
+                {link.label}
+              </span>
+            </button>
+          ))
+        }
+      </nav>
+
+      {/* CTA */}
+      <div
+        class="relative z-10 flex-1 flex items-center justify-end gap-2 pr-1 sm:pr-2"
+      >
+        <audio data-kei-audio src="/audio/hero-theme.mp3" loop preload="none"
+        ></audio>
+        <ThemeToggler
+          class="grid place-items-center w-9 h-9 rounded-full text-black/60 ring-1 ring-black/10 bg-white/40 backdrop-blur-md transition-all hover:text-black hover:bg-white/70 active:scale-95 dark:text-white/60 dark:ring-white/10 dark:bg-white/[0.06] dark:hover:text-white dark:hover:bg-white/[0.12]"
+        />
+        <button
+          type="button"
+          data-kei-sound
+          class="grid place-items-center w-9 h-9 rounded-full text-black ring-1 ring-black/10 bg-white/40 backdrop-blur-md transition-all hover:bg-white/70 active:scale-95 dark:text-white dark:ring-white/10 dark:bg-white/[0.06] dark:hover:bg-white/[0.12]"
+          aria-pressed="false"
+          aria-label="Reproducir música"
+          title="Reproducir música"
+        >
+          <svg
+            data-kei-sound-off
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="w-4 h-4"
+          >
+            <path
+              d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"
+            ></path>
+            <line x1="22" x2="16" y1="9" y2="15"></line>
+            <line x1="16" x2="22" y1="9" y2="15"></line>
+          </svg>
+          <svg
+            data-kei-sound-on
+            style="display:none"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="w-4 h-4"
+          >
+            <path
+              d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"
+            ></path>
+            <path d="M16 9a5 5 0 0 1 0 6"></path>
+            <path d="M19.364 18.364a9 9 0 0 0 0-12.728"></path>
+          </svg>
+        </button>
+        <a
+          href="#contacto"
+          class="hidden lg:inline-flex items-center justify-center px-5 py-2 rounded-full bg-black text-white text-sm font-medium hover:bg-gray-800 transition-all shadow-sm ring-1 ring-black/10 hover:scale-[1.03] active:scale-95 dark:bg-white dark:text-black dark:hover:bg-white/85 dark:ring-white/10"
+        >
+          Consultar
+        </a>
+        <button
+          data-kei-burger
+          class="lg:hidden relative grid place-items-center w-9 h-9 rounded-full transition-colors text-black/70 hover:text-black dark:text-white/70 dark:hover:text-white"
+          aria-label="Abrir menú"
+          aria-expanded="false"
+        >
+          <svg
+            data-kei-burger-open
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="w-5 h-5"
+          >
+            <line x1="4" x2="20" y1="12" y2="12"></line>
+            <line x1="4" x2="20" y1="6" y2="6"></line>
+            <line x1="4" x2="20" y1="18" y2="18"></line>
+          </svg>
+          <svg
+            data-kei-burger-close
+            style="display:none"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="w-5 h-5"
+          >
+            <path d="M18 6 6 18"></path>
+            <path d="m6 6 12 12"></path>
+          </svg>
+        </button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+{/* Mobile fullscreen menu */}
+<div
+  data-kei-mm
+  hidden
+  class="kei-mm lg:hidden fixed inset-0 z-[55]"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Menú"
+>
+  <div data-kei-mm-backdrop
+    class="absolute inset-0 bg-white/70 dark:bg-zinc-950/85 backdrop-blur-2xl backdrop-saturate-[1.8]"
+  >
+  </div>
+  <div
+    class="pointer-events-none absolute inset-0 bg-[radial-gradient(80%_50%_at_50%_0%,rgba(99,102,241,0.10),transparent_60%),radial-gradient(70%_50%_at_50%_100%,rgba(56,189,248,0.10),transparent_60%)] dark:bg-[radial-gradient(80%_50%_at_50%_0%,rgba(99,102,241,0.20),transparent_60%),radial-gradient(70%_50%_at_50%_100%,rgba(56,189,248,0.18),transparent_60%)]"
+  >
+  </div>
+
+  <nav
+    class="kei-mm-panel relative flex h-full flex-col px-6 pb-[calc(env(safe-area-inset-bottom,0px)+2rem)] pt-[calc(env(safe-area-inset-top,0px)+6rem)]"
+    aria-label="Navegación principal"
+  >
+    <ul class="flex flex-1 flex-col justify-center gap-1">
+      {
+        navLinks.map((link, idx) => (
+          <li class="kei-mm-item" style={`--kei-mm-delay:${(0.06 + idx * 0.05).toFixed(2)}s`}>
+            <button
+              data-kei-mm-link
+              data-index={idx}
+              data-href={link.href}
+              class={
+                idx === 0
+                  ? "flex w-full items-baseline gap-3 py-3 text-left transition-colors text-black dark:text-white"
+                  : "flex w-full items-baseline gap-3 py-3 text-left transition-colors text-black/45 active:text-black dark:text-white/45 dark:active:text-white"
+              }
+            >
+              <span class="font-mono text-xs tabular-nums text-black/30 dark:text-white/30">
+                {String(idx + 1).padStart(2, "0")}
+              </span>
+              <span class="text-3xl font-semibold tracking-tight">{link.label}</span>
+            </button>
+          </li>
+        ))
+      }
+    </ul>
+
+    <a
+      href="#contacto"
+      data-kei-mm-cta
+      class="kei-mm-cta flex items-center justify-center rounded-full bg-black px-6 py-4 text-sm font-medium text-white shadow-lg ring-1 ring-black/10 active:scale-95 dark:bg-white dark:text-black dark:ring-white/10"
+    >
+      Primera consulta gratis
+    </a>
+  </nav>
+</div>
+
+<style is:global>
+  /* nav surface — the 4 combos from navbar.tsx's navSurface object.
+     Crossfade comes from the nav's own `transition-all duration-[350ms]`. */
+  .kei-nav {
+    box-shadow:
+      0 10px 34px -10px rgba(15, 23, 42, 0.14),
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.7),
+      inset 0 -1px 2px 0 rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.35);
+    background-color: rgba(255, 255, 255, 0.34);
+  }
+  .kei-nav[data-scrolled] {
+    box-shadow:
+      0 20px 50px -12px rgba(15, 23, 42, 0.22),
+      0 2px 8px -2px rgba(15, 23, 42, 0.1),
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.9),
+      inset 0 -1px 2px 0 rgba(255, 255, 255, 0.35);
+    border-color: rgba(255, 255, 255, 0.55);
+    background-color: rgba(255, 255, 255, 0.55);
+  }
+  .dark .kei-nav {
+    box-shadow:
+      0 10px 34px -10px rgba(0, 0, 0, 0.4),
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.06),
+      inset 0 -1px 2px 0 rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(18, 18, 22, 0.5);
+  }
+  .dark .kei-nav[data-scrolled] {
+    box-shadow:
+      0 20px 50px -12px rgba(0, 0, 0, 0.55),
+      0 2px 8px -2px rgba(0, 0, 0, 0.35),
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.08),
+      inset 0 -1px 2px 0 rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.16);
+    background-color: rgba(18, 18, 22, 0.72);
+  }
+
+  /* Mobile menu enter/exit — mirrors the AnimatePresence timings. */
+  .kei-mm {
+    opacity: 0;
+    transition: opacity 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .kei-mm.is-open {
+    opacity: 1;
+  }
+  .kei-mm .kei-mm-panel {
+    opacity: 0;
+    transform: translateY(8px);
+    transition:
+      opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .kei-mm.is-open .kei-mm-panel {
+    opacity: 1;
+    transform: none;
+  }
+  /* Items/CTA rest visible; the enter animation only overrides the opening
+     frames (`backwards` fill during the stagger delay). If anything interrupts
+     the animation the element stays visible rather than stuck hidden. */
+  .kei-mm.is-open .kei-mm-item {
+    animation: kei-mm-item-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: var(--kei-mm-delay, 0s);
+  }
+  .kei-mm.is-open .kei-mm-cta {
+    animation: kei-mm-cta-in 0.3s ease 0.4s both;
+  }
+  @keyframes kei-mm-item-in {
+    from {
+      opacity: 0;
+      transform: translateX(-16px);
+    }
+  }
+  @keyframes kei-mm-cta-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .kei-mm,
+    .kei-mm .kei-mm-panel,
+    .kei-mm .kei-mm-item,
+    .kei-mm .kei-mm-cta {
+      transition: none;
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  const RM = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* Hand-rolled Framer-parity spring (mass = 1, semi-implicit Euler). Framer's
+   * `transition={{ type: "spring", stiffness, damping }}` uses exactly this
+   * model; reproducing it in ~15 lines is smaller and more reliable here than
+   * pulling a physics lib for four values. Reduced-motion → instant set. */
+  const spring1 = (
+    stiffness: number,
+    damping: number,
+    initial: number,
+    apply: (v: number) => void
+  ) => {
+    let x = initial;
+    let v = 0;
+    let target = initial;
+    let active = false;
+    const step = () => {
+      const dt = 1 / 60;
+      const a = -stiffness * (x - target) - damping * v;
+      v += a * dt;
+      x += v * dt;
+      if (Math.abs(x - target) < 0.03 && Math.abs(v) < 0.03) {
+        x = target;
+        v = 0;
+        apply(x);
+        active = false;
+        return;
+      }
+      apply(x);
+      requestAnimationFrame(step);
+    };
+    return (t: number) => {
+      target = t;
+      if (RM) {
+        x = t;
+        v = 0;
+        apply(t);
+        return;
+      }
+      if (!active) {
+        active = true;
+        requestAnimationFrame(step);
+      }
+    };
+  };
+
+  const ITEM_ACTIVE =
+    "relative z-10 px-4 py-1.5 rounded-full text-sm font-medium transition-colors duration-300 whitespace-nowrap text-black dark:text-white";
+  const ITEM_INACTIVE =
+    "relative z-10 px-4 py-1.5 rounded-full text-sm font-medium transition-colors duration-300 whitespace-nowrap text-black/55 hover:text-black/80 dark:text-white/55 dark:hover:text-white/80";
+  const BURGER_CLOSED =
+    "lg:hidden relative grid place-items-center w-9 h-9 rounded-full transition-colors text-black/70 hover:text-black dark:text-white/70 dark:hover:text-white";
+  const BURGER_OPEN =
+    "lg:hidden relative grid place-items-center w-9 h-9 rounded-full transition-colors bg-white text-black ring-1 ring-black/10 shadow-sm dark:bg-zinc-800 dark:text-white dark:ring-white/10";
+
+  const NAV_HREFS = [
+    "#servicios",
+    "#proceso",
+    "#proyectos",
+    "#clientes",
+    "#equipo",
+    "#contacto",
+  ];
+
+  function init() {
+    const nav = document.querySelector<HTMLElement>("[data-kei-nav]");
+    const pill = document.querySelector<HTMLElement>("[data-kei-pill]");
+    const glow = document.querySelector<HTMLElement>("[data-kei-glow]");
+    const blob = document.querySelector<HTMLElement>("[data-kei-blob]");
+    const items = Array.from(
+      document.querySelectorAll<HTMLButtonElement>("[data-kei-item]")
+    );
+    const logo = document.querySelector<HTMLElement>("[data-kei-logo]");
+    if (!nav) return;
+
+    let activeIndex = 0;
+    let hoverIndex: number | null = null;
+    let clickLock = 0;
+
+    /* ---- scroll position (body is the scroll container here) ---- */
+    const getScroll = () =>
+      Math.max(
+        window.scrollY || 0,
+        document.documentElement.scrollTop || 0,
+        document.body.scrollTop || 0
+      );
+
+    /* ---- PillNav indicator blob + glow + label lift ---- */
+    const indicator = () => hoverIndex ?? activeIndex;
+
+    // Framer springs: glass indicator 400/30, coloured glow 380/32, label 500/26.
+    const blobLeft = spring1(400, 30, 4, (n) => blob && (blob.style.left = `${n}px`));
+    const blobWidth = spring1(400, 30, 90, (n) => blob && (blob.style.width = `${n}px`));
+    const glowLeft = spring1(380, 32, 4, (n) => glow && (glow.style.left = `${n}px`));
+    const glowWidth = spring1(380, 32, 90, (n) => glow && (glow.style.width = `${n}px`));
+    const labelSprings = items.map((el) => {
+      const label = el.querySelector<HTMLElement>("[data-kei-label]");
+      return spring1(500, 26, 0, (n) => {
+        if (label)
+          label.style.transform = `translateY(${(-0.5 * n).toFixed(3)}px) scale(${(
+            1 +
+            0.04 * n
+          ).toFixed(4)})`;
+      });
+    });
+
+    const updateBlob = (index: number) => {
+      const el = items[index];
+      if (!el || !pill) return;
+      const cr = pill.getBoundingClientRect();
+      const er = el.getBoundingClientRect();
+      const width = er.width;
+      if (!width) return;
+      const left = er.left - cr.left;
+      blobLeft(left);
+      blobWidth(width);
+      glowLeft(left);
+      glowWidth(width);
+    };
+
+    const paintItems = () => {
+      const ind = indicator();
+      items.forEach((el, i) => {
+        el.className = i === ind ? ITEM_ACTIVE : ITEM_INACTIVE;
+        if (i === ind) el.setAttribute("data-active", "");
+        else el.removeAttribute("data-active");
+        labelSprings[i](i === ind ? 1 : 0);
+      });
+      requestAnimationFrame(() => updateBlob(indicator()));
+    };
+
+    items.forEach((el, i) => {
+      el.addEventListener("mouseenter", () => {
+        hoverIndex = i;
+        paintItems();
+      });
+      el.addEventListener("focus", () => {
+        hoverIndex = i;
+        paintItems();
+      });
+      el.addEventListener("blur", () => {
+        hoverIndex = null;
+        paintItems();
+      });
+      el.addEventListener("click", () => navTo(i, NAV_HREFS[i]));
+    });
+    pill?.addEventListener("mouseleave", () => {
+      hoverIndex = null;
+      paintItems();
+    });
+
+    const navTo = (index: number, href: string) => {
+      activeIndex = index;
+      paintItems();
+      closeMenu();
+      if (href.startsWith("/")) {
+        window.location.href = href;
+      } else {
+        clickLock = Date.now();
+        document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
+      }
+    };
+    logo?.addEventListener("click", () => {
+      activeIndex = 0;
+      paintItems();
+    });
+
+    /* ---- scrollspy + scrolled state ---- */
+    let offsets: { i: number; top: number }[] = [];
+    let maxScroll = 0;
+
+    const measure = () => {
+      offsets = NAV_HREFS.map((h, i) =>
+        h.startsWith("#") ? { i, el: document.getElementById(h.slice(1)) } : null
+      )
+        .filter((s): s is { i: number; el: HTMLElement } => !!s && !!s.el)
+        .map((s) => ({ i: s.i, top: s.el.offsetTop }));
+      maxScroll =
+        document.documentElement.scrollHeight - window.innerHeight;
+    };
+
+    const onScroll = () => {
+      const y = getScroll();
+      nav.toggleAttribute("data-scrolled", y > 12);
+
+      if (Date.now() - clickLock < 700 || offsets.length === 0) return;
+      if (offsets.length > 1 && offsets[offsets.length - 1].top === 0) measure();
+
+      const probe = y + window.innerHeight * 0.32;
+      let current = offsets[0].i;
+      for (const o of offsets) {
+        if (o.top <= probe) current = o.i;
+      }
+      if (maxScroll > 200 && y >= maxScroll - 4) {
+        current = offsets[offsets.length - 1].i;
+      }
+      if (current !== activeIndex && hoverIndex === null) {
+        activeIndex = current;
+        paintItems();
+      } else if (current !== activeIndex) {
+        activeIndex = current;
+      }
+    };
+
+    const remeasure = () => {
+      measure();
+      onScroll();
+    };
+
+    remeasure();
+    setTimeout(remeasure, 300);
+    setTimeout(remeasure, 1200);
+    const ro = new ResizeObserver(remeasure);
+    ro.observe(document.documentElement);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    document.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", remeasure);
+    window.addEventListener("load", remeasure);
+
+    setTimeout(() => updateBlob(0), 80);
+
+    /* ---- mobile menu ---- */
+    const burger = document.querySelector<HTMLButtonElement>("[data-kei-burger]");
+    const burgerOpen = document.querySelector<SVGElement>("[data-kei-burger-open]");
+    const burgerClose = document.querySelector<SVGElement>("[data-kei-burger-close]");
+    const mm = document.querySelector<HTMLElement>("[data-kei-mm]");
+    const mmBackdrop = document.querySelector<HTMLElement>("[data-kei-mm-backdrop]");
+    let menuOpen = false;
+    let closeTimer = 0;
+    let prevOverflow = "";
+
+    const openMenu = () => {
+      if (menuOpen || !mm || !burger) return;
+      menuOpen = true;
+      window.clearTimeout(closeTimer);
+      mm.hidden = false;
+      // force reflow so the transition runs from the hidden state
+      void mm.offsetHeight;
+      mm.classList.add("is-open");
+      prevOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      burger.className = BURGER_OPEN;
+      burger.setAttribute("aria-label", "Cerrar menú");
+      burger.setAttribute("aria-expanded", "true");
+      if (burgerOpen) burgerOpen.style.display = "none";
+      if (burgerClose) burgerClose.style.display = "";
+    };
+
+    const closeMenu = () => {
+      if (!menuOpen || !mm || !burger) return;
+      menuOpen = false;
+      mm.classList.remove("is-open");
+      document.body.style.overflow = prevOverflow;
+      burger.className = BURGER_CLOSED;
+      burger.setAttribute("aria-label", "Abrir menú");
+      burger.setAttribute("aria-expanded", "false");
+      if (burgerOpen) burgerOpen.style.display = "";
+      if (burgerClose) burgerClose.style.display = "none";
+      closeTimer = window.setTimeout(() => {
+        if (!menuOpen) mm.hidden = true;
+      }, 320);
+    };
+
+    burger?.addEventListener("click", () => (menuOpen ? closeMenu() : openMenu()));
+    mmBackdrop?.addEventListener("click", closeMenu);
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeMenu();
+    });
+    document.querySelectorAll<HTMLButtonElement>("[data-kei-mm-link]").forEach((b) => {
+      b.addEventListener("click", () => {
+        const idx = Number(b.dataset.index);
+        navTo(idx, b.dataset.href || "#");
+      });
+    });
+    document.querySelector("[data-kei-mm-cta]")?.addEventListener("click", closeMenu);
+
+    /* ---- sound toggle ---- */
+    const soundBtn = document.querySelector<HTMLButtonElement>("[data-kei-sound]");
+    const audio = document.querySelector<HTMLAudioElement>("[data-kei-audio]");
+    const soundOnIcon = document.querySelector<SVGElement>("[data-kei-sound-on]");
+    const soundOffIcon = document.querySelector<SVGElement>("[data-kei-sound-off]");
+    let soundOn = false;
+    const setSound = (on: boolean) => {
+      soundOn = on;
+      soundBtn?.setAttribute("aria-pressed", String(on));
+      soundBtn?.setAttribute("aria-label", on ? "Silenciar música" : "Reproducir música");
+      soundBtn?.setAttribute("title", on ? "Silenciar música" : "Reproducir música");
+      if (soundOnIcon) soundOnIcon.style.display = on ? "" : "none";
+      if (soundOffIcon) soundOffIcon.style.display = on ? "none" : "";
+    };
+    soundBtn?.addEventListener("click", () => {
+      if (!audio) return;
+      if (soundOn) {
+        audio.pause();
+        setSound(false);
+      } else {
+        audio.volume = 0.35;
+        void audio.play().then(() => setSound(true)).catch(() => setSound(false));
+      }
+    });
+
+    /* keep pill in sync with live theme changes */
+    new MutationObserver(() => requestAnimationFrame(() => updateBlob(indicator()))).observe(
+      document.documentElement,
+      { attributes: true, attributeFilter: ["class"] }
+    );
+  }
+
+  if (document.readyState === "loading")
+    document.addEventListener("DOMContentLoaded", init, { once: true });
+  else init();
+</script>

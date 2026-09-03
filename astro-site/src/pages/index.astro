@@ -1,0 +1,39 @@
+---
+// Phase 6: the real homepage. Section order mirrors `app/page.tsx` exactly:
+// Navbar, Hero, Services, Process, Portfolio, Clients, Testimonials, Team,
+// Contact, Footer, WhatsAppButton — all inside a single <main>.
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Navbar from "@/components/Navbar.astro";
+import Hero from "@/components/Hero.astro";
+import Services from "@/components/Services.astro";
+import Process from "@/components/Process.astro";
+import Portfolio from "@/components/Portfolio.astro";
+import Clients from "@/components/Clients.astro";
+import Testimonials from "@/components/Testimonials.astro";
+import Team from "@/components/Team.astro";
+import Contact from "@/components/Contact.astro";
+import Footer from "@/components/Footer.astro";
+import WhatsAppButton from "@/components/WhatsAppButton.astro";
+---
+
+<BaseLayout
+  titleIsDefault
+  canonical="https://keisoftware.dev"
+  ogTitle="KEI Software — Software a Medida | Desarrollo Web & IA"
+  ogDescription="Desarrollamos software a medida, soluciones IA y automatización con transparencia total. Córdoba, Argentina."
+  ogUrl="https://keisoftware.dev"
+>
+  <main class="min-h-screen bg-background text-foreground">
+    <Navbar />
+    <Hero />
+    <Services />
+    <Process />
+    <Portfolio />
+    <Clients />
+    <Testimonials />
+    <Team />
+    <Contact />
+    <Footer />
+    <WhatsAppButton />
+  </main>
+</BaseLayout>

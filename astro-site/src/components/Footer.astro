@@ -1,0 +1,132 @@
+---
+// Port of components/footer.tsx — no animations in the source, markup is 1:1.
+// `next/image` → plain <img>; lucide icons → inline SVG (same 24-box paths,
+// sized by the `w-4 h-4` class).
+const socialLinks = [
+  {
+    label: "Enviar un email a KEI Software",
+    href: "mailto:contacto@keisoftware.dev",
+    icon: "mail",
+    external: false,
+  },
+  {
+    label: "Instagram de KEI Software",
+    href: "https://instagram.com/keisoftware",
+    icon: "instagram",
+    external: true,
+  },
+  {
+    label: "LinkedIn de KEI Software",
+    href: "https://www.linkedin.com/company/keii-solutions",
+    icon: "linkedin",
+    external: true,
+  },
+];
+
+const navLinks = [
+  { label: "Servicios", href: "#servicios" },
+  { label: "Proceso", href: "#proceso" },
+  { label: "Proyectos", href: "#proyectos" },
+  { label: "Contacto", href: "#contacto" },
+];
+
+const year = new Date().getFullYear();
+---
+
+<footer
+  class="dark relative overflow-hidden border-t border-white/10 bg-background pt-14 sm:pt-20"
+>
+  {/* ─── Giant wordmark — same typeface as the hero headline ─── */}
+  <div class="px-4 sm:px-6">
+    <div class="max-w-[1600px] mx-auto">
+      <p
+        class="font-google-sans font-[450] leading-[0.8] tracking-[-0.04em] whitespace-nowrap text-[clamp(3.25rem,15.5vw,14rem)] select-none"
+        style="line-height:0.8"
+        aria-hidden="true"
+      >
+        <span class="text-white">KEI</span>{" "}
+        <span class="text-[#3f7dff]">Software</span>
+      </p>
+    </div>
+  </div>
+
+  {/* ─── Detail bar ─── */}
+  <div
+    class="mt-10 sm:mt-14 border-t border-white/10 px-4 sm:px-6 py-8 sm:py-10"
+  >
+    <div
+      class="max-w-[1600px] mx-auto flex flex-col items-center gap-8 text-center"
+    >
+      {/* Logo */}
+      <a href="#" class="flex items-center gap-2.5">
+        <img
+          src="/kei-logo-nuevo.png"
+          alt="KEI Software logo"
+          width="32"
+          height="32"
+          loading="lazy"
+          class="w-7 h-7 sm:w-8 sm:h-8"
+        />
+        <span
+          class="font-google-sans text-sm sm:text-base text-white tracking-tight"
+        >
+          KEI Software
+        </span>
+      </a>
+
+      {/* Nav */}
+      <nav
+        class="flex flex-wrap justify-center gap-x-6 gap-y-2"
+        aria-label="Footer navigation"
+      >
+        {
+          navLinks.map((link) => (
+            <a
+              href={link.href}
+              class="text-sm text-white/50 hover:text-white transition-colors"
+            >
+              {link.label}
+            </a>
+          ))
+        }
+      </nav>
+
+      {/* Contact + social */}
+      <div class="flex items-center justify-center gap-3">
+        {
+          socialLinks.map(({ label, href, icon, external }) => (
+            <a
+              href={href}
+              aria-label={label}
+              target={external ? "_blank" : undefined}
+              rel={external ? "noopener noreferrer" : undefined}
+              class="w-9 h-9 rounded-sm border border-white/15 flex items-center justify-center text-white/50 hover:text-white hover:border-white/30 transition-colors"
+            >
+              {icon === "mail" && (
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              )}
+              {icon === "instagram" && (
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+              )}
+              {icon === "linkedin" && (
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+              )}
+            </a>
+          ))
+        }
+      </div>
+    </div>
+
+    <div
+      class="max-w-[1600px] mx-auto mt-8 pt-6 border-t border-white/[0.06] flex flex-col items-center justify-center gap-2 text-center sm:flex-row sm:gap-4"
+    >
+      <p class="text-[11px] text-white/35">
+        &copy; {year} KEI Software. Todos los derechos reservados.
+      </p>
+      <p class="text-[11px] text-white/35">
+        Primera consulta sin cargo
+        <span class="text-[#3f7dff] ml-1">— siempre.</span>
+      </p>
+    </div>
+  </div>
+</footer>

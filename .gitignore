@@ -15,5 +15,13 @@ node_modules
 .next/
 .DS_Store
 *.tsbuildinfo
+
+# Astro migration experiment (astro-site/)
+astro-site/node_modules
+astro-site/dist
+astro-site/.astro
+astro-site/.vercel
+astro-site/.env
+astro-site/.env.production
 .claude/*
 !.claude/settings.json

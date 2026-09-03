@@ -1,0 +1,301 @@
+---
+// Port of components/services.tsx — static Astro + one co-located vanilla
+// client script for the mobile scroll-linked lamp.
+//
+// Framer → here:
+//  - section header m.div (opacity/y:20, 0.5s) + card reveals (opacity/y:24,
+//    0.5s, delay i*0.08) + whileHover y:-4 → the shared `.reveal` mechanism
+//    (reveal.css / reveal.ts) + `hover:-translate-y-1`.
+//  - BorderBeam / DiaTextReveal → the already-ported components.
+//  - desktop hover "light wash" + lamp → untouched (pure CSS in the source).
+//  - the mobile lamp (line scaleY = scroll progress, bulb translateY 0→gridH,
+//    per-card wash opacity peaking while the bulb is inside the card) → one
+//    rAF-throttled scroll handler reading only scrollY, with grid + card
+//    geometry measured once per resize (ResizeObserver). This mirrors the
+//    source exactly (it too rebuilt progress from scrollY + one-time geometry);
+//    CSS scroll-driven animation would work on Chromium but not Safari/Firefox,
+//    so JS keeps parity everywhere. Reduced-motion → positioned once, no listener.
+import DiaTextReveal from "@/components/ui/DiaTextReveal.astro";
+import BorderBeam from "@/components/ui/BorderBeam.astro";
+
+const HEADER_REVEAL_DURATION = 1.3;
+
+const WASH_BG =
+  "linear-gradient(to bottom, rgba(63,125,255,0.28) 0%, rgba(63,125,255,0.16) 50%, rgba(63,125,255,0.1) 100%)";
+const BULB_SHADOW = "drop-shadow(0 0 8px rgba(63,125,255,0.85))";
+
+const services = [
+  {
+    num: "01",
+    icon: "globe",
+    title: "Desarrollo Web",
+    description:
+      "Aplicaciones modernas, escalables y de alto rendimiento. De 0 a 100.",
+  },
+  {
+    num: "02",
+    icon: "brain",
+    title: "Soluciones IA",
+    description:
+      "Modelos de lenguaje y visión artificial integrados a tus procesos. Automatizamos lo complejo y añadimos inteligencia real a tus productos.",
+  },
+  {
+    num: "03",
+    icon: "zap",
+    title: "Automatización",
+    description:
+      "Flujos que eliminan trabajo repetitivo y conectan tus herramientas. Más tiempo para lo que importa.",
+  },
+  {
+    num: "04",
+    icon: "database",
+    title: "Sistemas a Medida",
+    description:
+      "ERPs, CRMs, dashboards y plataformas internas diseñadas exactamente para tu negocio, sin soluciones genéricas.",
+  },
+];
+
+const ICONS: Record<string, string> = {
+  globe:
+    '<circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>',
+  brain:
+    '<path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"/><path d="M17.599 6.5a3 3 0 0 0 .399-1.375"/><path d="M6.003 5.125A3 3 0 0 0 6.401 6.5"/><path d="M3.477 10.896a4 4 0 0 1 .585-.396"/><path d="M19.938 10.5a4 4 0 0 1 .585.396"/><path d="M6 18a4 4 0 0 1-1.967-.516"/><path d="M19.967 17.484A4 4 0 0 1 18 18"/>',
+  zap: '<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>',
+  database:
+    '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/>',
+};
+const LIGHTBULB =
+  '<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/>';
+---
+
+<section
+  id="servicios"
+  class="relative pt-12 pb-20 sm:pt-16 sm:pb-28 lg:pt-20 lg:pb-32 px-4 sm:px-6 overflow-hidden bg-background"
+>
+  <div class="relative z-10 max-w-7xl mx-auto">
+    {/* Section header */}
+    <div
+      class="reveal mb-12 sm:mb-16 text-center"
+      style="--reveal-y:20px;--reveal-dur:.5s"
+    >
+      <h2
+        class="font-google-sans text-4xl sm:text-5xl lg:text-6xl font-[450] text-foreground tracking-normal"
+      >
+        <DiaTextReveal
+          text="Servicios"
+          colors={["#0b1a42", "#1a4fc0", "#3f7dff", "#bcdcff"]}
+          duration={HEADER_REVEAL_DURATION}
+        />
+      </h2>
+      <DiaTextReveal
+        text="Lo que hacemos"
+        colors={["#0b1a42", "#1a4fc0", "#3f7dff", "#bcdcff"]}
+        duration={HEADER_REVEAL_DURATION}
+        class="font-google-sans mt-2 block text-sm sm:text-base font-[450] tracking-normal"
+      />
+    </div>
+
+    {/* Cards grid */}
+    <div
+      data-services-grid
+      class="relative grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6"
+    >
+      {
+        services.map((service, i) => (
+          <div
+            class="reveal"
+            style={`--reveal-y:24px;--reveal-dur:.5s;--reveal-delay:${(i * 0.08).toFixed(2)}s`}
+          >
+            <div
+              data-service-card
+              class="group relative overflow-hidden rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] dark:shadow-[0_2px_16px_-8px_rgba(0,0,0,0.5)] transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-1 hover:border-[#3f7dff]/35 hover:shadow-[0_24px_60px_-20px_rgba(63,125,255,0.35)]"
+            >
+              <BorderBeam
+                size={70}
+                duration={7 + i}
+                delay={i * 1.2}
+                colorFrom="#bcdcff"
+                colorTo="#3f7dff"
+                borderWidth={1.5}
+              />
+
+              {/* Light wash — desktop hover */}
+              <div
+                class="hidden sm:block absolute inset-0 [clip-path:circle(0%_at_50%_0%)] group-hover:[clip-path:circle(150%_at_50%_0%)] transition-[clip-path] duration-700 ease-out pointer-events-none"
+                style={`background:${WASH_BG}`}
+              />
+
+              {/* Light wash — mobile: driven by the lamp's scroll position */}
+              <div
+                data-service-wash
+                class="absolute inset-0 pointer-events-none sm:hidden"
+                style={`background:${WASH_BG};opacity:0;will-change:opacity`}
+              />
+
+              {/* Lamp — desktop hover only */}
+              <div class="absolute top-0 left-1/2 -translate-x-1/2 z-20 h-0 opacity-0 sm:group-hover:h-14 sm:group-hover:opacity-100 transition-[height,opacity] duration-500 ease-out overflow-visible pointer-events-none hidden sm:flex sm:flex-col sm:items-center">
+                <div class="w-px flex-1 bg-[#3f7dff]/50" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="w-4 h-4 sm:w-5 sm:h-5 text-[#3f7dff] shrink-0"
+                  style={`filter:${BULB_SHADOW}`}
+                  set:html={LIGHTBULB}
+                />
+              </div>
+
+              {/* Icon */}
+              <div class="relative z-10 w-11 h-11 rounded-xl bg-[#3f7dff]/10 border border-[#3f7dff]/20 flex items-center justify-center mb-5 group-hover:bg-[#3f7dff]/15 group-hover:border-[#3f7dff]/40 group-hover:shadow-[0_0_20px_rgba(63,125,255,0.35)] transition-all duration-300">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="w-5 h-5 text-[#3f7dff]"
+                  set:html={ICONS[service.icon]}
+                />
+              </div>
+
+              {/* Content */}
+              <h3 class="relative z-10 font-google-sans text-lg sm:text-xl font-[450] text-foreground mb-2">
+                {service.title}
+              </h3>
+              <p class="relative z-10 text-sm text-muted-foreground leading-relaxed">
+                {service.description}
+              </p>
+            </div>
+          </div>
+        ))
+      }
+
+      {/* Mobile — single lamp travels down through the stacked cards */}
+      <div
+        aria-hidden="true"
+        data-lamp-line
+        class="pointer-events-none absolute left-1/2 top-0 z-20 h-full w-px origin-top bg-[#3f7dff]/50 sm:hidden"
+        style="transform:translateX(-50%) scaleY(0)"
+      >
+      </div>
+      <div
+        aria-hidden="true"
+        data-lamp-bulb
+        class="pointer-events-none absolute left-1/2 top-0 z-20 sm:hidden"
+        style="transform:translate(-50%,0)"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="w-4 h-4 shrink-0 text-[#3f7dff]"
+          style={`filter:${BULB_SHADOW}`}
+          set:html={LIGHTBULB}
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const RM = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function init() {
+    const grid = document.querySelector<HTMLElement>("[data-services-grid]");
+    const line = document.querySelector<HTMLElement>("[data-lamp-line]");
+    const bulb = document.querySelector<HTMLElement>("[data-lamp-bulb]");
+    if (!grid || !line || !bulb) return;
+
+    const cards = Array.from(
+      grid.querySelectorAll<HTMLElement>("[data-service-card]")
+    );
+    const washes = Array.from(
+      grid.querySelectorAll<HTMLElement>("[data-service-wash]")
+    );
+
+    let gridHeight = 0;
+    let range: [number, number] = [0, 1];
+    let cardRanges: { start: number; end: number }[] = [];
+
+    const getScroll = () =>
+      Math.max(
+        window.scrollY || 0,
+        document.documentElement.scrollTop || 0,
+        document.body.scrollTop || 0
+      );
+
+    const measure = () => {
+      const height = grid.offsetHeight;
+      if (!height) return;
+      const gridTop = grid.getBoundingClientRect().top + getScroll();
+      const vh = window.innerHeight;
+      gridHeight = height;
+      range = [gridTop - vh, gridTop + height];
+      cardRanges = cards.map((el) => ({
+        start: el.offsetTop / height,
+        end: (el.offsetTop + el.offsetHeight) / height,
+      }));
+      apply();
+    };
+
+    const clamp01 = (n: number) => (n < 0 ? 0 : n > 1 ? 1 : n);
+
+    const washOpacity = (p: number, r?: { start: number; end: number }) => {
+      if (!r) return p >= 0 && p <= 1 ? 1 : 0;
+      const edge = Math.min(0.015, (r.end - r.start) / 2);
+      if (p <= r.start || p >= r.end) return 0;
+      if (p < r.start + edge) return (p - r.start) / edge;
+      if (p > r.end - edge) return (r.end - p) / edge;
+      return 1;
+    };
+
+    const apply = () => {
+      const span = range[1] - range[0] || 1;
+      const p = clamp01((getScroll() - range[0]) / span);
+      line.style.transform = `translateX(-50%) scaleY(${p})`;
+      bulb.style.transform = `translate(-50%, ${p * gridHeight}px)`;
+      washes.forEach((w, i) => {
+        w.style.opacity = String(washOpacity(p, cardRanges[i]));
+      });
+    };
+
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        apply();
+        ticking = false;
+      });
+    };
+
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(grid);
+    window.addEventListener("resize", measure);
+    if (!RM) {
+      window.addEventListener("scroll", onScroll, { passive: true });
+      document.addEventListener("scroll", onScroll, { passive: true });
+    }
+  }
+
+  if (document.readyState === "loading")
+    document.addEventListener("DOMContentLoaded", init, { once: true });
+  else init();
+</script>

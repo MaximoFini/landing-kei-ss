@@ -1,0 +1,16 @@
+---
+// Port of components/StarField.tsx (11 lines, markup-only).
+//
+// Pure CSS: five drifting dot layers. All styling + keyframes + the
+// prefers-reduced-motion freeze already live in globals.css
+// (`.star-field`, `.star-field__layer--a..e`, `@keyframes star-field-*`).
+// 1:1 copy of the source JSX.
+---
+
+<div class="star-field" aria-hidden="true">
+  <div class="star-field__layer star-field__layer--a"></div>
+  <div class="star-field__layer star-field__layer--b"></div>
+  <div class="star-field__layer star-field__layer--c"></div>
+  <div class="star-field__layer star-field__layer--d"></div>
+  <div class="star-field__layer star-field__layer--e"></div>
+</div>

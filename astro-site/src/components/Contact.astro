@@ -1,0 +1,520 @@
+---
+// Port of components/contact.tsx.
+//
+// Framer (11 occurrences) → CSS / vanilla, per the established convention:
+//   Left  <m.div> initial {opacity:0,x:-24} / animate x:0 / transition {dur:.5, delay:.1}
+//     → `.reveal` with --reveal-x:-24px; --reveal-dur:.5s; --reveal-delay:.1s
+//   Right <m.div> initial {opacity:0,x:24} / animate x:0 / transition {dur:.5, delay:.2}
+//     → `.reveal` with --reveal-x:24px; --reveal-dur:.5s; --reveal-delay:.2s
+//   useInView(ref,{ once:true, margin:"-60px" }) → shared IntersectionObserver
+//   Per-step <m.div> initial {opacity:0,x:20} / animate x:0 / transition {dur:.3}
+//     → `step-in` keyframe, re-triggered by the client script on step change
+//   Progress <m.div> width 0 → `${progress}%` / transition {dur:.4, easeOut}
+//     → inline width + CSS width transition (.4s ease-out)
+//   Success check <m.div> initial {scale:0} / animate scale:1 / spring dur .6
+//     → `success-pop` keyframe (slight overshoot)
+//   Buttons whileHover {scale:1.045} / whileTap {scale:0.96}
+//     → enabled:hover / enabled:active scale utilities
+// prefers-reduced-motion → step-in / progress / success-pop disabled.
+//
+// lucide icons (Mail / Phone / CheckCircle / ArrowRight / ArrowLeft) → inline
+// SVG, same 24-box paths as lucide-react. The 3-step wizard + form-state
+// machine (idle / loading / success / error, client-side validation via
+// canProceed) is driven by the co-located client script; step 1 renders
+// server-side.
+import SectionHeading from "@/components/ui/SectionHeading.astro";
+import LightAurora from "@/components/ui/LightAurora.astro";
+import BorderBeam from "@/components/ui/BorderBeam.astro";
+
+const contactMethods = [
+  {
+    icon: "mail",
+    label: "Email",
+    value: "contacto@keisoftware.dev",
+    href: "mailto:contacto@keisoftware.dev",
+  },
+  {
+    icon: "phone",
+    label: "Teléfono / WhatsApp",
+    value: "+54 351 361-4462",
+    href: "tel:+543513614462",
+  },
+];
+
+const totalSteps = 3;
+
+const fieldClass =
+  "w-full rounded-xl border border-border bg-muted/50 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground transition-all duration-300 focus:border-[#3f7dff]/50 focus:outline-none focus:ring-2 focus:ring-[#3f7dff]/25";
+
+const stepLabelClass =
+  "font-mono text-[10px] uppercase tracking-[0.3em] text-[#3f7dff]";
+
+const questionClass =
+  "font-google-sans text-lg sm:text-xl font-[450] text-foreground";
+
+const ctaClass =
+  "cta group inline-flex items-center gap-2.5 rounded-full bg-[#3f7dff] px-7 py-3.5 text-[15px] font-semibold text-white transition-colors duration-200 hover:bg-[#2f6bec] disabled:cursor-not-allowed disabled:opacity-50";
+---
+
+<section
+  id="contacto"
+  class="relative overflow-hidden bg-background px-4 py-20 sm:px-6 sm:py-28 lg:py-32"
+>
+  <LightAurora intensity={0.7} />
+
+  <div class="relative z-10 mx-auto max-w-7xl">
+    <SectionHeading
+      eyebrow="Hablemos"
+      title="Empezá hoy"
+      subtitle="Primera consulta sin cargo"
+    />
+
+    <div
+      class="grid grid-cols-1 gap-10 sm:gap-12 lg:grid-cols-2 lg:gap-16"
+    >
+      {/* Left — form */}
+      <div
+        class="reveal"
+        style="--reveal-x:-24px; --reveal-y:0; --reveal-dur:.5s; --reveal-delay:.1s"
+      >
+        <div data-success hidden>
+          <div
+            class="flex min-h-[350px] flex-col items-center justify-center gap-5 rounded-2xl border border-[#3f7dff]/25 bg-card p-8 text-center shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] dark:shadow-[0_2px_16px_-8px_rgba(0,0,0,0.5)] sm:min-h-[400px] sm:p-12"
+          >
+            <div
+              class="success-pop flex h-14 w-14 items-center justify-center rounded-2xl border border-[#3f7dff]/30 bg-[#3f7dff]/10"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-6 w-6 text-[#3f7dff]"
+              >
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <path d="m9 11 3 3L22 4"></path>
+              </svg>
+            </div>
+            <div>
+              <h3
+                class="font-google-sans text-xl font-[450] text-foreground"
+              >
+                Mensaje recibido
+              </h3>
+              <p class="mt-2 text-sm text-muted-foreground">
+                Te contactamos en menos de 24 horas.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <form
+          data-contact-form
+          class="relative flex flex-col gap-6 overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] dark:shadow-[0_2px_16px_-8px_rgba(0,0,0,0.5)] sm:p-8"
+        >
+          <BorderBeam
+            size={80}
+            duration={9}
+            colorFrom="#bcdcff"
+            colorTo="#3f7dff"
+            borderWidth={1.5}
+          />
+
+          {/* Progress */}
+          <div class="flex flex-col gap-2">
+            <span class={stepLabelClass}>
+              Paso <span data-step-current>1</span> de {totalSteps}
+            </span>
+            <div class="h-1 overflow-hidden rounded-full bg-muted">
+              <div
+                data-progress
+                class="h-full bg-[#3f7dff]"
+                style={`width:${(1 / totalSteps) * 100}%`}
+              >
+              </div>
+            </div>
+          </div>
+
+          <div data-step="1" class="flex flex-col gap-2.5">
+            <label for="name" class={questionClass}>¿Cómo te llamás?</label>
+            <input
+              id="name"
+              type="text"
+              placeholder="Tu nombre"
+              class={fieldClass}
+            />
+          </div>
+
+          <div data-step="2" class="flex flex-col gap-2.5" hidden>
+            <label for="email" class={questionClass}>¿Cuál es tu email?</label>
+            <input
+              id="email"
+              type="email"
+              placeholder="tu@empresa.com"
+              class={fieldClass}
+            />
+          </div>
+
+          <div data-step="3" class="flex flex-col gap-2.5" hidden>
+            <label for="message" class={questionClass}>¿Qué necesitás?</label>
+            <textarea
+              id="message"
+              rows="5"
+              placeholder="Describí tu proyecto o problema..."
+              class={`${fieldClass} resize-none`}></textarea>
+          </div>
+
+          <p
+            data-error
+            id="form-error"
+            role="alert"
+            aria-live="assertive"
+            class="rounded-xl border border-red-300/60 bg-red-50 px-3 py-2 text-xs text-red-600 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-400"
+            hidden
+          >
+          </p>
+
+          <div class="flex items-center justify-between pt-1">
+            <button
+              type="button"
+              data-back
+              class="inline-flex items-center gap-2 px-2 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+              hidden
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-4 w-4"
+              >
+                <path d="m12 19-7-7 7-7"></path>
+                <path d="M19 12H5"></path>
+              </svg>
+              Atrás
+            </button>
+            <div data-back-spacer></div>
+
+            <button type="button" data-next disabled class={ctaClass}>
+              Siguiente
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1"
+              >
+                <path d="M5 12h14"></path>
+                <path d="m12 5 7 7-7 7"></path>
+              </svg>
+            </button>
+
+            <button type="submit" data-submit disabled class={ctaClass} hidden>
+              <span data-submit-label>Enviar mensaje</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1"
+              >
+                <path d="M5 12h14"></path>
+                <path d="m12 5 7 7-7 7"></path>
+              </svg>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      {/* Right — info */}
+      <div
+        class="reveal flex flex-col gap-8 sm:gap-10"
+        style="--reveal-x:24px; --reveal-y:0; --reveal-dur:.5s; --reveal-delay:.2s"
+      >
+        <p
+          class="max-w-sm text-sm leading-relaxed text-muted-foreground sm:text-base"
+        >
+          Queremos entender tu problema y resolverlo. Contanos qué necesitás y
+          te respondemos en menos de 24 horas.
+        </p>
+
+        <div class="flex flex-col gap-4">
+          {
+            contactMethods.map(({ icon, label, value, href }) => (
+              <a
+                href={href}
+                class="group flex items-center gap-4 transition-transform duration-300 hover:translate-x-1"
+              >
+                <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl border border-[#3f7dff]/20 bg-[#3f7dff]/10 transition-all duration-300 group-hover:scale-105 group-hover:bg-[#3f7dff]/15">
+                  {icon === "mail" ? (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="h-5 w-5 text-[#3f7dff]"
+                    >
+                      <rect width="20" height="16" x="2" y="4" rx="2" />
+                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                    </svg>
+                  ) : (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="h-5 w-5 text-[#3f7dff]"
+                    >
+                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                    </svg>
+                  )}
+                </div>
+                <div>
+                  <p class:list={[stepLabelClass, "mb-0.5"]}>{label}</p>
+                  <p class="break-all text-sm font-medium text-foreground transition-colors group-hover:text-[#3f7dff] sm:text-base">
+                    {value}
+                  </p>
+                </div>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  [data-step]:not([hidden]) {
+    animation: step-in 0.3s ease-out both;
+  }
+
+  @keyframes step-in {
+    from {
+      opacity: 0;
+      transform: translate3d(20px, 0, 0);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  [data-progress] {
+    transition: width 0.4s ease-out;
+  }
+
+  /* whileHover {scale:1.045} / whileTap {scale:0.96} on the CTA buttons. */
+  .cta {
+    transition:
+      background-color 0.2s,
+      transform 0.15s ease-out;
+  }
+  .cta:not(:disabled):hover {
+    transform: scale(1.045);
+  }
+  .cta:not(:disabled):active {
+    transform: scale(0.96);
+  }
+
+  .success-pop {
+    animation: success-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  @keyframes success-pop {
+    from {
+      transform: scale(0);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-step]:not([hidden]),
+    .success-pop {
+      animation: none;
+    }
+    [data-progress],
+    .cta {
+      transition: none;
+    }
+    .cta:not(:disabled):hover,
+    .cta:not(:disabled):active {
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  function initContact() {
+    const form = document.querySelector<HTMLFormElement>("[data-contact-form]");
+    if (!form || form.dataset.ready) return;
+    form.dataset.ready = "true";
+
+    const root = form.closest("section");
+    if (!root) return;
+
+    const totalSteps = 3;
+    let step = 1;
+    let loading = false;
+
+    const successPanel = root.querySelector<HTMLElement>("[data-success]");
+    const steps = Array.from(
+      form.querySelectorAll<HTMLElement>("[data-step]"),
+    );
+    const nameInput = form.querySelector<HTMLInputElement>("#name")!;
+    const emailInput = form.querySelector<HTMLInputElement>("#email")!;
+    const messageInput = form.querySelector<HTMLTextAreaElement>("#message")!;
+    const progress = form.querySelector<HTMLElement>("[data-progress]")!;
+    const stepCurrent = form.querySelector<HTMLElement>("[data-step-current]")!;
+    const backBtn = form.querySelector<HTMLButtonElement>("[data-back]")!;
+    const backSpacer = form.querySelector<HTMLElement>("[data-back-spacer]")!;
+    const nextBtn = form.querySelector<HTMLButtonElement>("[data-next]")!;
+    const submitBtn = form.querySelector<HTMLButtonElement>("[data-submit]")!;
+    const submitLabel = form.querySelector<HTMLElement>("[data-submit-label]")!;
+    const errorEl = form.querySelector<HTMLElement>("[data-error]")!;
+
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    function canProceed() {
+      if (step === 1) return nameInput.value.trim().length > 0;
+      if (step === 2) return emailRe.test(emailInput.value);
+      return messageInput.value.trim().length > 0;
+    }
+
+    function setError(msg: string | null) {
+      if (msg) {
+        errorEl.textContent = msg;
+        errorEl.hidden = false;
+        [nameInput, emailInput, messageInput].forEach((el) => {
+          el.setAttribute("aria-describedby", "form-error");
+          el.setAttribute("aria-invalid", "true");
+        });
+      } else {
+        errorEl.hidden = true;
+        [nameInput, emailInput, messageInput].forEach((el) => {
+          el.removeAttribute("aria-describedby");
+          el.removeAttribute("aria-invalid");
+        });
+      }
+    }
+
+    function render() {
+      steps.forEach((el) => {
+        const show = Number(el.dataset.step) === step;
+        if (show && el.hidden) {
+          el.hidden = false;
+          el.style.animation = "none";
+          void el.offsetWidth;
+          el.style.animation = "";
+        } else if (!show) {
+          el.hidden = true;
+        }
+      });
+
+      stepCurrent.textContent = String(step);
+      progress.style.width = `${(step / totalSteps) * 100}%`;
+
+      backBtn.hidden = step <= 1;
+      backSpacer.hidden = step > 1;
+
+      const last = step === totalSteps;
+      nextBtn.hidden = last;
+      submitBtn.hidden = !last;
+
+      const ok = canProceed();
+      nextBtn.disabled = !ok;
+      submitBtn.disabled = loading || !ok;
+      submitLabel.textContent = loading ? "Enviando..." : "Enviar mensaje";
+    }
+
+    [nameInput, emailInput, messageInput].forEach((el) =>
+      el.addEventListener("input", render),
+    );
+
+    nextBtn.addEventListener("click", () => {
+      if (step < totalSteps && canProceed()) {
+        step += 1;
+        render();
+      }
+    });
+
+    backBtn.addEventListener("click", () => {
+      if (step > 1) {
+        step -= 1;
+        render();
+      }
+    });
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (loading || !canProceed()) return;
+      loading = true;
+      setError(null);
+      render();
+
+      try {
+        const res = await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: nameInput.value,
+            email: emailInput.value,
+            message: messageInput.value,
+          }),
+        });
+
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data.error || "Error al enviar.");
+        }
+
+        form.hidden = true;
+        if (successPanel) successPanel.hidden = false;
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "Error al enviar el mensaje.",
+        );
+      } finally {
+        loading = false;
+        render();
+      }
+    });
+
+    render();
+  }
+
+  initContact();
+  document.addEventListener("astro:page-load", initContact);
+</script>

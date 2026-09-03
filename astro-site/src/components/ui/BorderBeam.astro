@@ -1,0 +1,68 @@
+---
+// Port of components/ui/border-beam.tsx.
+//
+// The source already runs the beam as a CSS motion-path loop; Framer was only
+// used to animate `offsetDistance` 0%→100% (repeat Infinity, ease "linear",
+// duration, delay: -delay) and to pause it while off-screen via
+// useInView({ margin: "200px" }).
+//
+// Replaced with a plain CSS keyframe on `offset-distance` (zero JS). Same
+// duration, `linear`, `infinite`; `delay: -delay` → negative `animation-delay`
+// so each beam starts partway round. DROPPED: the off-screen pause optimisation
+// (perf-only, not visual — the animation is compositor-cheap and there are only
+// 4 cards).
+interface Props {
+  class?: string;
+  size?: number;
+  duration?: number;
+  delay?: number;
+  colorFrom?: string;
+  colorTo?: string;
+  borderWidth?: number;
+}
+
+const {
+  class: className,
+  size = 50,
+  duration = 6,
+  delay = 0,
+  colorFrom = "#ffaa40",
+  colorTo = "#9c40ff",
+  borderWidth = 1,
+} = Astro.props;
+---
+
+<div
+  class="pointer-events-none absolute inset-0 rounded-[inherit] border-(length:--border-beam-width) border-transparent mask-[linear-gradient(transparent,transparent),linear-gradient(#000,#000)] mask-intersect [mask-clip:padding-box,border-box]"
+  style={`--border-beam-width:${borderWidth}px`}
+>
+  <div
+    class:list={[
+      "border-beam absolute aspect-square bg-linear-to-l from-(--color-from) via-(--color-to) to-transparent",
+      className,
+    ]}
+    style={`width:${size}px;offset-path:rect(0 auto auto 0 round ${size}px);--color-from:${colorFrom};--color-to:${colorTo};animation-duration:${duration}s;animation-delay:${-delay}s`}
+  >
+  </div>
+</div>
+
+<style>
+  .border-beam {
+    offset-distance: 0%;
+    animation-name: border-beam-move;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+
+  @keyframes border-beam-move {
+    to {
+      offset-distance: 100%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .border-beam {
+      animation: none;
+    }
+  }
+</style>

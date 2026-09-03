@@ -1,0 +1,63 @@
+---
+// Port of components/ui/tilt-card.tsx. Markup is 1:1: a
+// `group/tilt relative` wrapper + an optional pointer-following spotlight layer.
+// The tilt/spotlight interaction is driven by src/scripts/tilt.ts (see that file
+// for the Framer-spring → CSS-transition note).
+interface Props {
+  class?: string;
+  max?: number;
+  spotlight?: boolean;
+  spotlightColor?: string;
+}
+
+const {
+  class: className,
+  max = 7,
+  spotlight = true,
+  spotlightColor = "rgba(63,125,255,0.14)",
+} = Astro.props;
+---
+
+<div
+  class:list={["tiltcard group/tilt relative", className]}
+  data-tilt
+  data-tilt-max={max}
+  style="transform-style:preserve-3d"
+>
+  {
+    spotlight && (
+      <div
+        aria-hidden="true"
+        class="tiltcard-spot pointer-events-none absolute inset-0 z-10 rounded-[inherit] opacity-0 transition-opacity duration-300 group-hover/tilt:opacity-100"
+        style={`--spot-color:${spotlightColor}`}
+      />
+    )
+  }
+  <slot />
+</div>
+
+<style>
+  .tiltcard {
+    --tilt-rx: 0deg;
+    --tilt-ry: 0deg;
+    --tilt-px: 50%;
+    --tilt-py: 50%;
+    transform: perspective(900px) rotateX(var(--tilt-rx)) rotateY(var(--tilt-ry));
+    transition: transform 0.18s ease-out;
+  }
+
+  .tiltcard-spot {
+    background: radial-gradient(
+      220px circle at var(--tilt-px) var(--tilt-py),
+      var(--spot-color),
+      transparent 65%
+    );
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tiltcard {
+      transform: none;
+      transition: none;
+    }
+  }
+</style>

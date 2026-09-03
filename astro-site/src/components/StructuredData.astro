@@ -1,0 +1,220 @@
+---
+/**
+ * JSON-LD Structured Data for SEO — verbatim port of
+ * `components/structured-data.tsx` (WebSite, Organization, ProfessionalService,
+ * Service, FAQPage). Zero JS: the objects are serialised to
+ * <script type="application/ld+json"> exactly as the Next component did
+ * (JSON.stringify, no whitespace). Rendered once from BaseLayout's <head>.
+ */
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "KEI Software",
+  url: "https://keisoftware.dev",
+  description:
+    "Desarrollamos software a medida, soluciones IA y automatización",
+  potentialAction: {
+    "@type": "SearchAction",
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate: "https://keisoftware.dev/?s={search_term_string}",
+    },
+    "query-input": "required name=search_term_string",
+  },
+};
+
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "KEI Software",
+  url: "https://keisoftware.dev",
+  logo: "https://keisoftware.dev/kei-logo-nuevo.png",
+  description:
+    "Desarrollamos software a medida, soluciones IA y automatización con transparencia y calidad garantizada.",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Córdoba",
+    addressCountry: "AR",
+  },
+  contactPoint: {
+    "@type": "ContactPoint",
+    email: "contacto@keisoftware.dev",
+    contactType: "customer service",
+    availableLanguage: ["Spanish", "English"],
+  },
+  sameAs: [
+    "https://github.com/keiisolutions",
+    "https://linkedin.com/company/keiisolutions",
+  ],
+};
+
+const localBusinessSchema = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  name: "KEI Software",
+  description:
+    "Desarrollo de software a medida, inteligencia artificial y automatización",
+  url: "https://keisoftware.dev",
+  telephone: "+54-351-361-4462",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Córdoba",
+    addressRegion: "Córdoba",
+    addressCountry: "AR",
+  },
+  geo: {
+    "@type": "GeoCoordinates",
+    latitude: -31.4201,
+    longitude: -64.1888,
+  },
+  openingHoursSpecification: {
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+    opens: "09:00",
+    closes: "18:00",
+  },
+  priceRange: "$$",
+};
+
+const serviceSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  serviceType: "Software Development",
+  provider: {
+    "@type": "Organization",
+    name: "KEI Software",
+  },
+  areaServed: {
+    "@type": "Country",
+    name: "Argentina",
+  },
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "Servicios de Desarrollo",
+    itemListElement: [
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Desarrollo Web",
+          description:
+            "Aplicaciones modernas, escalables y de alto rendimiento",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Soluciones IA",
+          description: "Modelos de lenguaje y visión artificial integrados",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Automatización",
+          description: "Flujos que eliminan trabajo repetitivo",
+        },
+      },
+    ],
+  },
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "¿Cuánto tiempo toma desarrollar un proyecto de software?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "El tiempo varía según la complejidad. Proyectos simples pueden tomar 2-4 semanas, mientras que sistemas complejos pueden requerir 2-6 meses. Trabajamos con sprints ágiles para entregar valor incremental.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "¿Trabajan de forma remota?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Sí, trabajamos 100% remoto con clientes de toda Argentina y el mundo. Tenemos nuestra base en Córdoba, Argentina.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "¿Qué tecnologías utilizan?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Utilizamos tecnologías modernas como Next.js, React, Node.js, Python, PostgreSQL, y servicios cloud. Seleccionamos la mejor stack según las necesidades de cada proyecto.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "¿Ofrecen soporte después del lanzamiento?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Sí, todos nuestros proyectos incluyen soporte post-lanzamiento. Ofrecemos mantenimiento continuo, actualizaciones y mejoras según lo necesites.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "¿Pueden integrar IA en mi producto?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Sí, desarrollamos soluciones con modelos de lenguaje (LLMs), visión artificial, y automatización inteligente. Podemos integrar IA en productos nuevos o existentes.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "¿Qué tipo de proyectos desarrolla KEI Software?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Desarrollamos software a medida, aplicaciones web y móviles, plataformas e-commerce, CRMs y ERPs personalizados, soluciones con inteligencia artificial y sistemas de automatización para empresas de distintos tamaños e industrias.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "¿Cómo puedo contactar a KEI Software?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Podés escribirnos por WhatsApp al +54 351 361-4462, completar el formulario de contacto en keisoftware.dev, o enviarnos un email. Respondemos en menos de 24 horas hábiles y la primera consulta es sin cargo.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "¿En qué se diferencian de otras consultoras de software?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Nos enfocamos en transparencia total durante el proyecto, comunicación constante con el cliente, entregas incrementales con sprints cortos, y calidad garantizada con testing desde el día uno, en lugar de entregas cerradas sin visibilidad del proceso.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "¿Dónde está ubicada KEI Software?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Tenemos nuestra base en Córdoba, Argentina, y trabajamos 100% remoto con clientes de toda Argentina y el mundo.",
+      },
+    },
+  ],
+};
+
+const schemas = [
+  websiteSchema,
+  organizationSchema,
+  localBusinessSchema,
+  serviceSchema,
+  faqSchema,
+];
+---
+
+{
+  schemas.map((schema) => (
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify(schema)}
+    />
+  ))
+}

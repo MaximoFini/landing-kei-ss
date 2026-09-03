@@ -1,0 +1,63 @@
+---
+// Port of components/clients.tsx.
+//
+// Framer → CSS reveal (the eyebrow <m.p>):
+//   initial={{ opacity: 0, y: 10 }} / animate {opacity:1,y:0}
+//   transition={{ duration: 0.5 }}  (no ease → Framer default ~ease-out)
+//   useInView(ref, { once: true, margin: "-100px" })
+// → `.reveal` with --reveal-y:10px, --reveal-dur:.5s (shared observer, -80px).
+//
+// LogoLoop marquee is already CSS (see LogoLoop.astro) — no JS.
+//
+// DROPPED: the per-logo `onError` fallback to the 2-letter monogram. Every
+// client has a real webp, so the <img> is rendered directly.
+import LogoLoop from "@/components/ui/LogoLoop.astro";
+
+const clients = [
+  { name: "VeGroup", logo: "VG", image: "/testimonials/vegroup.webp" },
+  { name: "Stability", logo: "ST", image: "/testimonials/stability.webp" },
+  { name: "Alfa Club", logo: "AC", image: "/testimonials/alfa-club.webp" },
+  { name: "OG Circle", logo: "OG", image: "/testimonials/ogcircle.webp" },
+  {
+    name: "Centro Automotores",
+    logo: "CA",
+    image: "/testimonials/centro-autos.webp",
+  },
+];
+---
+
+<section
+  class="border-y border-border bg-background px-4 py-14 sm:px-6 sm:py-16"
+>
+  <div class="mx-auto max-w-7xl">
+    <p
+      class="reveal mb-9 text-center font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground sm:text-[11px]"
+      style="--reveal-y:10px; --reveal-dur:.5s"
+    >
+      Confían en nosotros
+    </p>
+
+    <LogoLoop duration={26} gap={64} repeat={3}>
+      {
+        clients.map((c) => (
+          <li class="shrink-0">
+            <div class="group flex items-center gap-3">
+              <div class="relative flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl border border-border bg-card transition-all duration-300 group-hover:-translate-y-0.5 group-hover:border-[#3f7dff]/35 group-hover:shadow-[0_12px_30px_-12px_rgba(63,125,255,0.4)]">
+                <img
+                  src={c.image}
+                  alt={`Logo ${c.name}`}
+                  loading="lazy"
+                  style="position:absolute;inset:0;width:100%;height:100%"
+                  class="object-contain p-2 opacity-70 grayscale transition-all duration-300 group-hover:opacity-100 group-hover:grayscale-0"
+                />
+              </div>
+              <span class="font-google-sans text-sm font-[450] text-muted-foreground transition-colors group-hover:text-foreground">
+                {c.name}
+              </span>
+            </div>
+          </li>
+        ))
+      }
+    </LogoLoop>
+  </div>
+</section>

@@ -1,0 +1,150 @@
+---
+// Port of components/team.tsx.
+//
+// Framer → CSS reveal (MemberCard <m.div>):
+//   initial={{ opacity: 0, y: 36 }} / animate {opacity:1,y:0}
+//   transition={{ duration: 0.6, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
+//   useInView(ref, { once: true, margin: "-80px" })
+// → outer `.reveal` wrapper with
+//   --reveal-y:36px; --reveal-dur:.6s; --reveal-ease:cubic-bezier(.22,1,.36,1);
+//   --reveal-delay: 0 / .12s / .24s
+//
+// TiltCard → TiltCard.astro (+ src/scripts/tilt.ts). DotGrid → static CSS dots.
+// SectionHeading → SectionHeading.astro.
+//
+// RESTORED (mobile only, < sm): the touch "active card follows scroll centre"
+// behaviour. Original was a rAF scroll listener picking the card nearest the
+// viewport centre (within 0.4*vh) and toggling `grayscale-0` + the `#3f7dff`/10
+// wash + the lifted shadow `0 28px 70px -24px rgba(63,125,255,0.32)`. This port
+// uses one IntersectionObserver with a centred band (`rootMargin -45%/-45%`)
+// adding `.is-active`; desktop hover (`group-hover/tilt:*`) is untouched.
+import SectionHeading from "@/components/ui/SectionHeading.astro";
+import DotGrid from "@/components/ui/DotGrid.astro";
+import TiltCard from "@/components/ui/TiltCard.astro";
+
+const coreMembers = [
+  {
+    name: "Jerónimo Zallocco",
+    role: "Co-founder / Full Stack Developer",
+    image: "/team/jeronimo-zallocco.webp",
+    linkedin: "https://www.linkedin.com/in/jer%C3%B3nimo-zallocco-036090417/",
+  },
+  {
+    name: "Máximo Fini",
+    role: "Co-founder / Project Manager",
+    image: "/team/maximo-fini.webp",
+    linkedin: "https://www.linkedin.com/in/maximo-fini-560742201/",
+  },
+  {
+    name: "Ramiro Celada",
+    role: "Co-founder / Product Manager",
+    image: "/team/ramiro-celada.webp",
+    linkedin: "https://www.linkedin.com/in/ramiro-celada/",
+  },
+];
+
+const revealEase = "cubic-bezier(0.22,1,0.36,1)";
+---
+
+<section
+  id="equipo"
+  class="relative overflow-hidden bg-[#fafbff] dark:bg-background px-4 py-20 sm:px-6 sm:py-28 lg:py-32"
+>
+  <DotGrid class="opacity-60" gap={38} baseColor="#dbe4f7" />
+
+  <div class="relative z-10 mx-auto max-w-7xl">
+    <SectionHeading
+      eyebrow="El equipo"
+      title="KEI Software"
+      subtitle="Quienes implementan la solución"
+    />
+
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        coreMembers.map((member, index) => (
+          <div
+            data-member-card
+            class="reveal"
+            style={`--reveal-y:36px; --reveal-dur:.6s; --reveal-ease:${revealEase}; --reveal-delay:${(index * 0.12).toFixed(2)}s`}
+          >
+            <TiltCard max={6} class="rounded-2xl">
+              <div class="team-card relative overflow-hidden rounded-2xl border border-border bg-card shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] dark:shadow-[0_2px_16px_-8px_rgba(0,0,0,0.5)] transition-shadow duration-300 group-hover/tilt:shadow-[0_28px_70px_-24px_rgba(63,125,255,0.32)]">
+                <div class="relative aspect-square overflow-hidden">
+                  <img
+                    src={member.image}
+                    alt={`Foto de ${member.name}`}
+                    loading="lazy"
+                    style="position:absolute;inset:0;width:100%;height:100%"
+                    class="team-photo object-cover object-top grayscale transition-all duration-500 group-hover/tilt:grayscale-0"
+                  />
+                  <div class="absolute inset-0 bg-gradient-to-t from-[#050b1c]/50 via-transparent to-transparent" />
+                  <div class="team-wash absolute inset-0 bg-[#3f7dff]/10 opacity-0 transition-opacity duration-500 group-hover/tilt:opacity-100" />
+                  <a
+                    href={member.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`LinkedIn de ${member.name}`}
+                    class="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-md transition-all duration-300 hover:border-white/40 hover:bg-white/20"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+                  </a>
+                  <div class="absolute inset-x-0 bottom-0 p-5">
+                    <h3 class="font-google-sans text-base font-[450] leading-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
+                      {member.name}
+                    </h3>
+                    <p class="mt-1 font-mono text-[11px] tracking-wide text-[#bcdcff] drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
+                      {member.role}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </TiltCard>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Mobile-only (< sm): scroll-centred active card. Desktop hover is handled by
+     the `group-hover/tilt:*` utilities and is untouched. Values matched to
+     components/team.tsx. */
+  @media (max-width: 639px) {
+    [data-member-card].is-active .team-photo {
+      filter: grayscale(0);
+    }
+    [data-member-card].is-active .team-wash {
+      opacity: 1;
+    }
+    [data-member-card].is-active .team-card {
+      box-shadow: 0 28px 70px -24px rgba(63, 125, 255, 0.32);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .team-photo,
+    .team-wash {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  import "@/scripts/tilt.ts";
+
+  // Mobile: light the card nearest the viewport centre (touch has no hover).
+  const mq = window.matchMedia("(max-width: 639px)");
+  if (mq.matches && "IntersectionObserver" in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          e.target.classList.toggle("is-active", e.isIntersecting);
+        }
+      },
+      { rootMargin: "-45% 0px -45% 0px", threshold: 0 },
+    );
+    document
+      .querySelectorAll("[data-member-card]")
+      .forEach((el) => io.observe(el));
+  }
+</script>

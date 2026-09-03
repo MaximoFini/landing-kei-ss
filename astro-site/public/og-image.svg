@@ -1,0 +1,53 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#0a0a0a"/>
+  
+  <!-- Gradient glow top-left -->
+  <circle cx="200" cy="150" r="300" fill="url(#glow1)" opacity="0.15"/>
+  
+  <!-- Gradient glow bottom-right -->
+  <circle cx="1000" cy="500" r="250" fill="url(#glow2)" opacity="0.1"/>
+  
+  <!-- Main Text -->
+  <text x="100" y="200" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="80" font-weight="900" letter-spacing="-2">
+    KEI SOFTWARE
+  </text>
+  
+  <text x="100" y="280" fill="#60a5fa" font-family="system-ui, -apple-system, sans-serif" font-size="56" font-weight="900" letter-spacing="-1">
+    Software a Medida
+  </text>
+  
+  <!-- Description -->
+  <text x="100" y="360" fill="#94a3b8" font-family="system-ui, -apple-system, sans-serif" font-size="28" font-weight="400">
+    Desarrollo web, IA y automatización
+  </text>
+  
+  <text x="100" y="405" fill="#94a3b8" font-family="system-ui, -apple-system, sans-serif" font-size="28" font-weight="400">
+    con transparencia total.
+  </text>
+  
+  <!-- Location -->
+  <text x="100" y="520" fill="#64748b" font-family="system-ui, -apple-system, monospace" font-size="18" font-weight="500" letter-spacing="2">
+    CÓRDOBA, ARGENTINA — REMOTO GLOBAL
+  </text>
+  
+  <!-- URL -->
+  <text x="100" y="560" fill="#60a5fa" font-family="system-ui, -apple-system, monospace" font-size="20" font-weight="600">
+    keisoftware.dev
+  </text>
+  
+  <!-- Decorative line -->
+  <line x1="100" y1="480" x2="500" y2="480" stroke="#60a5fa" stroke-width="2" opacity="0.5"/>
+  
+  <!-- Gradients -->
+  <defs>
+    <radialGradient id="glow1">
+      <stop offset="0%" stop-color="#60a5fa"/>
+      <stop offset="100%" stop-color="#60a5fa" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2">
+      <stop offset="0%" stop-color="#60a5fa"/>
+      <stop offset="100%" stop-color="#60a5fa" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+</svg>

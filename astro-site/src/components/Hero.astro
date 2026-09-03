@@ -1,0 +1,361 @@
+---
+// Port of components/hero.tsx.
+//
+// Layered backgrounds (deep-space radial gradient, HeroRibbons, StarField,
+// LiquidEther, bottom vignette, top rule) + centered content (brand lockup,
+// typewriter H1, two CTAs, bottom stats bar). All wrapper classes, inline
+// `radial-gradient(...)` strings, `clamp()` sizes, translate offsets and
+// z-layers are kept byte-identical to the source.
+//
+// ENTRANCE ORCHESTRATION — the source hides the lockup / CTAs / stats behind
+// Framer `initial`/`animate` gated on the typewriter's `onComplete`, then
+// fades + slides + de-blurs them in. Reproduced here with CSS transitions on
+// three `.hero-group` elements (exact Framer values):
+//   lockup : y -10px, blur(6px)  -> 0.85s, delay 0.1s, ease [0.16,1,0.3,1]
+//   ctas   : y  18px, blur(6px)  -> 0.85s, delay 0.1s, ease [0.16,1,0.3,1]
+//   stats  : y  14px, blur(4px)  -> 0.95s, delay 0.25s, ease [0.16,1,0.3,1]
+// A self-contained vanilla client script runs the typewriter and adds
+// `.is-entered` to the three groups on completion. `prefers-reduced-motion`
+// -> everything shown immediately, no typewriter (matches the source
+// `matchMedia("(prefers-reduced-motion: reduce)")` check).
+//
+// The `translate-y-*` Tailwind classes on the lockup/H1 use the CSS `translate`
+// property (Tailwind v4), which composes with the `transform: translateY()` the
+// entrance transition animates — exactly how Framer's `y` layered over the
+// class in the source.
+//
+// TYPEWRITER — vanilla, not an island. The H1's final text is in the server
+// HTML (real LCP text, correct size, no CLS thanks to the reserved
+// `min-height: 1.1em` per line); on hydrate the script blanks the visible
+// spans and types them back out. The `sr-only` copy always holds the full
+// text. Params: startDelay 80, typingSpeed 22, linePause 100, cursor #3f7dff.
+import StarField from "./StarField.astro";
+import HeroRibbons from "./HeroRibbons.astro";
+import SpecularButton from "./SpecularButton.astro";
+import LiquidEther from "./LiquidEther.tsx";
+
+const HEADLINE_LINES = [
+  {
+    text: "Software a medida.",
+    className:
+      "text-white justify-center text-[clamp(2.6rem,8.55vw,4.75rem)]",
+  },
+  {
+    text: "Resultados reales.",
+    className:
+      "text-[#3f7dff] justify-center text-[clamp(2.6rem,8.55vw,4.75rem)] mt-4 sm:mt-0",
+  },
+];
+const ACCESSIBLE_TEXT = HEADLINE_LINES.map((l) => l.text).join(" ");
+---
+
+<section
+  class="dark relative min-h-screen px-4 sm:px-6 pt-28 sm:pt-40 pb-24 sm:pb-32 flex flex-col justify-center overflow-hidden bg-background"
+>
+  {/* 1. Deep space gradient base */}
+  <div
+    class="absolute inset-0"
+    style="background:radial-gradient(120% 90% at 50% -10%, #0f2678 0%, #091c50 35%, #050f28 68%, #030816 100%)"
+  >
+  </div>
+
+  {/* 2. Ribbons — diagonal flowing gradient waves, weighted toward the bottom */}
+  <HeroRibbons />
+
+  {/* 3. Stars — above gradient, below fluid */}
+  <StarField />
+
+  {/* 4. Liquid Ether WebGL fluid — gated + deferred inside the island */}
+  <LiquidEther client:idle />
+
+  {/* 5. Bottom vignette */}
+  <div
+    class="absolute inset-0 pointer-events-none"
+    style="background:radial-gradient(ellipse 80% 55% at 50% 110%, rgba(2,6,18,0.65) 0%, transparent 65%)"
+  >
+  </div>
+
+  {/* Top rule */}
+  <div
+    class="absolute top-20 sm:top-24 left-4 sm:left-6 right-4 sm:right-6 h-px bg-white/[0.08]"
+  >
+  </div>
+
+  {/* ─── Main content ─── */}
+  <div
+    class="relative z-10 max-w-7xl mx-auto w-full flex flex-col items-center text-center my-auto"
+  >
+    {/* Brand lockup — logo + wordmark above the headline (enters with the CTAs) */}
+    <div
+      data-hero-group
+      class="hero-group hero-lockup -translate-y-20 sm:-translate-y-4 mb-6 sm:mb-8 flex items-center justify-center gap-2.5 sm:gap-3"
+    >
+      <img
+        src="/kei-logo-nuevo.png"
+        alt="KEI Software"
+        width="36"
+        height="36"
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+        class="w-[1.85rem] h-[1.85rem] sm:w-[2.1rem] sm:h-[2.1rem] rounded-full"
+      />
+      <span
+        class="font-google-sans text-[18.9px] sm:text-[21px] font-[450] tracking-tight text-white"
+        style="text-shadow: 0 1px 6px rgba(0,0,0,0.6)"
+      >
+        KEI Software
+      </span>
+    </div>
+
+    {/* Headline — Antigravity Typewriter Effect */}
+    <h1
+      class="-translate-y-6 sm:-translate-y-7 font-google-sans text-[clamp(2.6rem,8.55vw,4.75rem)] font-[450] tracking-normal mb-8 sm:mb-10 text-center mx-auto max-w-[1100px]"
+      style="line-height: 1.1; text-shadow: 0 2px 10px rgba(0,0,0,0.85), 0 8px 30px rgba(2,6,18,0.6)"
+    >
+      <div
+        class="relative inline-block w-full will-change-contents"
+        data-typewriter
+        data-start-delay="80"
+        data-typing-speed="22"
+        data-line-pause="100"
+      >
+        <span class="sr-only">{ACCESSIBLE_TEXT}</span>
+
+        <div
+          aria-hidden="true"
+          class="flex flex-col items-center select-none text-center"
+        >
+          {
+            HEADLINE_LINES.map((line, idx) => (
+              <div
+                class={`flex items-baseline justify-center flex-wrap relative ${line.className}`}
+                style="min-height: 1.1em"
+              >
+                <span data-tw-line={idx}>{line.text}</span>
+                <span
+                  data-tw-cursor
+                  hidden
+                  class="inline-block w-[3px] sm:w-[5px] h-[0.82em] ml-1.5 sm:ml-2.5 self-center rounded-xs hero-cursor"
+                />
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </h1>
+
+    {/* CTAs — Side-by-side row (Smooth entrance on text completion) */}
+    <div
+      data-hero-group
+      class="hero-group hero-ctas flex flex-col sm:flex-row items-center justify-center gap-3 mx-auto -mt-3 sm:-mt-11"
+    >
+      <div class="scale-90">
+        <SpecularButton href="#contacto">Empezá tu proyecto</SpecularButton>
+      </div>
+
+      <a
+        href="#proyectos"
+        class="scale-90 inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full font-semibold text-[15px] text-white/85 bg-white/[0.06] border border-white/[0.14] backdrop-blur-sm hover:bg-white/[0.1] hover:text-white hover:border-white/[0.22] transition-all duration-200 group select-none"
+      >
+        Ver proyectos
+        <svg
+          class="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2.5"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  {/* ─── Stats bar — pinned to bottom ─── */}
+  <div
+    data-hero-group
+    class="hero-group hero-stats absolute inset-x-0 bottom-20 sm:bottom-12 z-10 px-4 sm:px-6 pointer-events-none"
+  >
+    <div class="max-w-7xl mx-auto">
+      <div class="flex items-center justify-center gap-0">
+        <div class="flex items-center">
+          <div class="flex flex-col items-center gap-1.5 px-8 sm:px-12">
+            <svg class="w-3.5 h-3.5 text-white/25 mb-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 16 4-4-4-4"></path><path d="m6 8-4 4 4 4"></path><path d="m14.5 4-5 16"></path></svg>
+            <span class="font-google-sans text-2xl sm:text-[2rem] font-[450] text-white leading-none tracking-tight">7</span>
+            <span class="text-[9px] sm:text-[10px] text-white/30 tracking-[0.2em] uppercase font-mono">Proyectos</span>
+          </div>
+          <div class="h-8 w-px bg-white/[0.08]"></div>
+        </div>
+        <div class="flex items-center">
+          <div class="flex flex-col items-center gap-1.5 px-8 sm:px-12">
+            <svg class="w-3.5 h-3.5 text-white/25 mb-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            <span class="font-google-sans text-2xl sm:text-[2rem] font-[450] text-white leading-none tracking-tight">100%</span>
+            <span class="text-[9px] sm:text-[10px] text-white/30 tracking-[0.2em] uppercase font-mono">Satisfacción</span>
+          </div>
+          <div class="h-8 w-px bg-white/[0.08]"></div>
+        </div>
+        <div class="flex items-center">
+          <div class="flex flex-col items-center gap-1.5 px-8 sm:px-12">
+            <svg class="w-3.5 h-3.5 text-white/25 mb-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            <span class="font-google-sans text-2xl sm:text-[2rem] font-[450] text-white leading-none tracking-tight">2 años</span>
+            <span class="text-[9px] sm:text-[10px] text-white/30 tracking-[0.2em] uppercase font-mono">Experiencia</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ── Entrance groups (Framer initial/animate -> CSS transition) ── */
+  .hero-group {
+    opacity: 0;
+    transition-property: opacity, transform, filter;
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .hero-lockup {
+    transform: translateY(-10px);
+    filter: blur(6px);
+    transition-duration: 0.85s;
+    transition-delay: 0.1s;
+  }
+  .hero-ctas {
+    transform: translateY(18px);
+    filter: blur(6px);
+    transition-duration: 0.85s;
+    transition-delay: 0.1s;
+  }
+  .hero-stats {
+    transform: translateY(14px);
+    filter: blur(4px);
+    transition-duration: 0.95s;
+    transition-delay: 0.25s;
+  }
+  .hero-group.is-entered {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+
+  /* ── Blinking antigravity cursor (was <style jsx global> in the source) ── */
+  .hero-cursor {
+    background-color: #3f7dff;
+    box-shadow: 0 0 10px #3f7dff, 0 0 20px #3f7dff60;
+    animation: antigravity-blink 0.65s infinite ease-in-out;
+    transform: translateY(2%);
+    will-change: opacity;
+  }
+  @keyframes antigravity-blink {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.1;
+    }
+  }
+
+  /* Reduced motion: show every group instantly, no blur/transition. */
+  @media (prefers-reduced-motion: reduce) {
+    .hero-group {
+      opacity: 1;
+      transform: none;
+      filter: none;
+      transition: none;
+    }
+    .hero-cursor {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  function initHero() {
+    const groups = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-hero-group]"),
+    );
+    const reveal = () => groups.forEach((g) => g.classList.add("is-entered"));
+
+    const reduce = window.matchMedia?.(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    const root = document.querySelector<HTMLElement>("[data-typewriter]");
+    if (reduce || !root) {
+      reveal();
+      return;
+    }
+
+    const startDelay = Number(root.dataset.startDelay || 80);
+    const typingSpeed = Number(root.dataset.typingSpeed || 22);
+    const linePause = Number(root.dataset.linePause || 100);
+
+    // Failsafe: if the typewriter is delayed or throws, reveal the hero content
+    // anyway (~3500ms from script start). `reveal()` is idempotent — just adds a
+    // class. `finish()` clears this once it runs.
+    const failsafe = window.setTimeout(reveal, 3500);
+
+    const lineEls = Array.from(
+      root.querySelectorAll<HTMLElement>("[data-tw-line]"),
+    );
+    const cursorEls = Array.from(
+      root.querySelectorAll<HTMLElement>("[data-tw-cursor]"),
+    );
+    const fullText = lineEls.map((el) => el.textContent || "");
+
+    // Blank the visible lines (SSR rendered them full for LCP / no CLS).
+    lineEls.forEach((el) => (el.textContent = ""));
+
+    let currentLine = 0;
+    let currentChar = 0;
+    let done = false;
+
+    const showCursor = (idx: number) => {
+      cursorEls.forEach((c, i) => (c.hidden = done ? true : i !== idx));
+    };
+
+    const finish = () => {
+      if (done) return;
+      done = true;
+      window.clearTimeout(failsafe);
+      cursorEls.forEach((c) => (c.hidden = true));
+      reveal();
+    };
+
+    const typeNextChar = () => {
+      if (currentLine >= fullText.length) {
+        finish();
+        return;
+      }
+      const target = fullText[currentLine];
+      if (currentChar < target.length) {
+        currentChar++;
+        lineEls[currentLine].textContent = target.slice(0, currentChar);
+        showCursor(currentLine);
+        const char = target[currentChar - 1];
+        let delay = typingSpeed;
+        if (char === "." || char === ",") delay += 35;
+        else if (char === " ") delay -= 6;
+        window.setTimeout(typeNextChar, Math.max(delay, 12));
+      } else {
+        currentLine++;
+        currentChar = 0;
+        if (currentLine < fullText.length) {
+          showCursor(currentLine);
+          window.setTimeout(typeNextChar, linePause);
+        } else {
+          finish();
+        }
+      }
+    };
+
+    window.setTimeout(typeNextChar, startDelay);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initHero, { once: true });
+  } else {
+    initHero();
+  }
+</script>

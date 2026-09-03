@@ -1,0 +1,95 @@
+---
+// Port of components/portfolio.tsx.
+//
+// Framer → CSS reveal (the <m.div> wrapping the gallery):
+//   initial={{ opacity: 0, y: 28 }} / animate {opacity:1,y:0}
+//   transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+//   useInView(ref, { once: true, margin: "-60px" })
+// → `.reveal` with --reveal-y:28px; --reveal-dur:.6s; --reveal-ease:cubic-bezier(.22,1,.36,1)
+//
+// SectionHeading → SectionHeading.astro. LightAurora → CSS-keyframe blobs
+// (LightAurora.astro). AccordionGallery → CSS-only accordion (AccordionGallery.astro).
+//
+// DROPPED: the `cover()` SVG placeholder covers — every project has a real webp,
+// so `galleryItems` maps straight from `p.image`.
+import SectionHeading from "@/components/ui/SectionHeading.astro";
+import LightAurora from "@/components/ui/LightAurora.astro";
+import AccordionGallery from "@/components/ui/AccordionGallery.astro";
+
+const projects = [
+  {
+    num: "01",
+    title: "Stability",
+    category: "Salud & Fitness · Plataforma Web",
+    year: "2024",
+    image: "/proyectos/proyecto-stability.webp",
+    position: "left center",
+    link: "https://stabilityar.com/?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAcGRvZgJleHRuA2FlbQIxMQBzcnRjBmFwcF9pZA85MzY2MTk3NDMzOTI0NTkAAaceaWnFnfCoqVO76BfBRKMwlMO89rbSQLEgolV77Z21tOHTH14LBxkeRENugQ_aem_1hd5xYp3UMkRlP21J1zNNQ",
+  },
+  {
+    num: "02",
+    title: "OG Circle",
+    category: "Plataforma Web · Digital Experience",
+    year: "2024",
+    image: "/proyectos/proyecto-og-circle-1.webp",
+    position: "center center",
+    link: "https://ogcircle.vercel.app/#top",
+  },
+  {
+    num: "03",
+    title: "Alfa Club",
+    category: "Gestión Deportiva · Sistema Web",
+    year: "2024",
+    image: "/proyectos/proyecto-alfa-club-1.webp",
+    position: "center center",
+    link: "https://www.instagram.com/alfa.mma.team/",
+  },
+  {
+    num: "04",
+    title: "Centro Automotores",
+    category: "Automotriz · Plataforma Web",
+    year: "2024",
+    image: "/proyectos/proyecto-centro-automotores.webp",
+    position: "center center",
+    link: "https://www.instagram.com/centro_automotores/",
+  },
+];
+
+const galleryItems = projects.map((p) => ({
+  image: p.image,
+  label: p.title,
+  meta: p.category,
+  alt: `${p.title} — ${p.category}`,
+  position: p.position,
+  link: p.link,
+}));
+---
+
+<section
+  id="proyectos"
+  class="relative overflow-hidden bg-background px-4 pt-10 pb-16 sm:px-6 sm:pt-14 sm:pb-24 lg:pt-16 lg:pb-28"
+>
+  <LightAurora intensity={0.7} />
+
+  <div class="relative z-10 mx-auto max-w-7xl">
+    <SectionHeading
+      eyebrow="Proyectos"
+      title="Portfolio"
+      subtitle="Lo que construimos"
+      subtitleClass="mt-4 sm:mt-5"
+    />
+
+    <div
+      class="reveal"
+      style="--reveal-y:28px; --reveal-dur:.6s; --reveal-ease:cubic-bezier(0.22,1,0.36,1)"
+    >
+      <AccordionGallery
+        items={galleryItems}
+        defaultIndex={1}
+        accentColor="#3f7dff"
+        height={480}
+        duration={0.38}
+      />
+    </div>
+  </div>
+</section>

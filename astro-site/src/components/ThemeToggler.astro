@@ -1,0 +1,170 @@
+---
+// Vanilla port of components/ui/animated-theme-toggler.tsx (was a Preact island).
+//
+// Zero framework runtime — a static button + one co-located client script.
+// Toggles
+// `.dark` on <html> via the View Transitions API with a circular-reveal
+// clip-path that shrinks the OLD snapshot from full coverage to nothing at the
+// button's centre, uncovering the new theme. Falls back to a plain class flip
+// when `startViewTransition` is missing / the device is low-end / reduced-motion.
+// Persists to `localStorage["theme"]` — matches the anti-flash script in
+// BaseLayout. The ::view-transition-old/new(root) rules live in globals.css;
+// the `.theme-toggler-icon` swap keyframe too (sun rotates +25deg, moon -25deg
+// via `--tti-rot`).
+interface Props {
+  class?: string;
+}
+const { class: className = "" } = Astro.props;
+
+// Server render is always the moon (light default; the client syncs on load —
+// same as the original's `useState(false)`). The client script carries both.
+const MOON = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>`;
+---
+
+<button
+  data-theme-toggler
+  aria-label="Cambiar tema"
+  type="button"
+  class:list={[
+    "flex items-center justify-center p-2 rounded-full outline-none focus:outline-none active:outline-none focus:ring-0 cursor-pointer",
+    className,
+  ]}
+>
+  <span class="theme-toggler-icon text-black" set:html={MOON} />
+</button>
+
+<script>
+  const SUN = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>`;
+  const MOON = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>`;
+
+  const TIMED_OUT = Symbol("timed-out");
+  function withTimeout<T>(promise: Promise<T>, ms: number) {
+    return Promise.race([
+      promise,
+      new Promise<typeof TIMED_OUT>((resolve) =>
+        setTimeout(() => resolve(TIMED_OUT), ms),
+      ),
+    ]);
+  }
+
+  // Mirrors hero.tsx's capability gate: skip the flourish on reduced-motion,
+  // Data Saver, `deviceMemory <= 2`, or slow connections.
+  function shouldSkipReveal() {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return true;
+    const nav = window.navigator as Navigator & {
+      deviceMemory?: number;
+      connection?: { saveData?: boolean; effectiveType?: string };
+    };
+    if (nav.connection?.saveData === true) return true;
+    if (typeof nav.deviceMemory === "number" && nav.deviceMemory <= 2) return true;
+    const slow = nav.connection?.effectiveType;
+    if (slow === "slow-2g" || slow === "2g") return true;
+    return false;
+  }
+
+  function initThemeTogglers() {
+    const btns = document.querySelectorAll<HTMLButtonElement>("[data-theme-toggler]");
+    btns.forEach((btn) => {
+      if (btn.dataset.ttBound) return;
+      btn.dataset.ttBound = "1";
+      const icon = btn.querySelector<HTMLElement>(".theme-toggler-icon");
+      let isTransitioning = false;
+
+      const paint = () => {
+        const dark = document.documentElement.classList.contains("dark");
+        if (!icon) return;
+        icon.innerHTML = dark ? SUN : MOON;
+        icon.classList.toggle("text-white", dark);
+        icon.classList.toggle("text-black", !dark);
+        // Next alternates the entrance rotate: +25deg for the sun, -25deg moon.
+        icon.style.setProperty("--tti-rot", dark ? "25deg" : "-25deg");
+        // restart the swap keyframe
+        icon.style.animation = "none";
+        void icon.offsetWidth;
+        icon.style.animation = "";
+      };
+      paint();
+
+      const flip = () => {
+        const toggled = !document.documentElement.classList.contains("dark");
+        document.documentElement.classList.toggle("dark", toggled);
+        try {
+          localStorage.setItem("theme", toggled ? "dark" : "light");
+        } catch {
+          /* Safari private mode / quota — the class flip is what matters. */
+        }
+        paint();
+      };
+
+      btn.addEventListener("click", () => {
+        if (isTransitioning) return;
+
+        if (
+          typeof document.startViewTransition !== "function" ||
+          shouldSkipReveal()
+        ) {
+          flip();
+          return;
+        }
+
+        const { left, top, width, height } = btn.getBoundingClientRect();
+        const x = left + width / 2;
+        const y = top + height / 2;
+        const maxRadius = Math.hypot(
+          Math.max(x, window.innerWidth - x),
+          Math.max(y, window.innerHeight - y),
+        );
+
+        isTransitioning = true;
+        let transition;
+        try {
+          transition = document.startViewTransition(() => flip());
+        } catch {
+          flip();
+          isTransitioning = false;
+          return;
+        }
+
+        withTimeout(transition.ready, 1500)
+          .then((result) => {
+            if (result === TIMED_OUT) return;
+            return withTimeout(
+              document.documentElement.animate(
+                {
+                  clipPath: [
+                    `circle(${maxRadius}px at ${x}px ${y}px)`,
+                    `circle(0px at ${x}px ${y}px)`,
+                  ],
+                },
+                {
+                  duration: 500,
+                  easing: "ease-in-out",
+                  pseudoElement: "::view-transition-old(root)",
+                },
+              ).finished,
+              1500,
+            );
+          })
+          .catch(() => {
+            /* theme already applied; only the reveal didn't play */
+          })
+          .finally(() => {
+            isTransitioning = false;
+          });
+      });
+
+      // keep the icon in sync if the class is flipped elsewhere
+      new MutationObserver(paint).observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["class"],
+      });
+    });
+  }
+
+  if (document.readyState === "loading")
+    document.addEventListener("DOMContentLoaded", initThemeTogglers, {
+      once: true,
+    });
+  else initThemeTogglers();
+  document.addEventListener("astro:page-load", initThemeTogglers);
+</script>

@@ -1,0 +1,94 @@
+/*
+ * Shared scroll-reveal mechanism — replaces Framer Motion's
+ * `initial`/`whileInView`/`animate` + `useInView` across the ported sections.
+ *
+ * An element with `.reveal` starts hidden (opacity 0 + offset transform) and
+ * gets `.is-visible` added by src/scripts/reveal.ts the first time it enters
+ * the viewport (IntersectionObserver, once-only → unobserved after firing).
+ *
+ * Per-element tuning via inline custom properties, e.g.
+ *   style="--reveal-y:28px; --reveal-dur:.6s; --reveal-ease:cubic-bezier(.22,1,.36,1); --reveal-delay:.12s"
+ * mapping straight from each source component's
+ *   transition={{ duration, delay, ease: [a,b,c,d] }}
+ */
+
+.reveal {
+  opacity: 0;
+  transform: translate3d(var(--reveal-x, 0), var(--reveal-y, 24px), 0);
+  will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity var(--reveal-dur, 0.5s) var(--reveal-ease, ease-out),
+    transform var(--reveal-dur, 0.5s) var(--reveal-ease, ease-out);
+  transition-delay: var(--reveal-delay, 0s);
+}
+
+/* Framer respects reduced motion by snapping to the resolved state. */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    will-change: auto;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * DiaTextReveal — 90deg horizontal gradient shimmer sweep on section headings.
+ * See src/components/ui/DiaTextReveal.astro. Triggered by the same reveal
+ * IntersectionObserver: `.dia-text` gets `.is-visible` on first in-view.
+ * ------------------------------------------------------------------------- */
+.dia-text {
+  display: inline-block;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  background-repeat: no-repeat;
+  background-size: 300% 100%;
+  background-position: 100% 0;
+  background-image: linear-gradient(
+    90deg,
+    var(--dia-fg, currentColor) 0%,
+    var(--dia-fg, currentColor) 39%,
+    var(--dia-c1, #0b1a42) 40%,
+    var(--dia-c2, #1a4fc0) 43.7%,
+    var(--dia-c3, #3f7dff) 47.4%,
+    var(--dia-c4, #bcdcff) 51%,
+    transparent 52%,
+    transparent 100%
+  );
+  transform: translateY(-2px);
+}
+
+.dia-text.is-visible {
+  /* easeInOutCubic — matches the original `sweepEase`. */
+  animation: dia-sweep var(--dia-dur, 1.3s) cubic-bezier(0.645, 0.045, 0.355, 1)
+    both;
+}
+
+@keyframes dia-sweep {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0% 0;
+  }
+}
+
+/* Coarse pointers + reduced motion: original jumps straight to the end state. */
+.dia-text.dia-static {
+  animation: none;
+  background-image: none;
+  color: var(--dia-fg, currentColor);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dia-text {
+    animation: none;
+    background-image: none;
+    color: var(--dia-fg, currentColor);
+  }
+}

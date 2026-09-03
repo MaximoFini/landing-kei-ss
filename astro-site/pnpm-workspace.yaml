@@ -1,0 +1,3 @@
+# Isolated workspace root for the Astro migration experiment.
+# Keeps `pnpm install` here from touching the Next app at the repo root.
+packages: []

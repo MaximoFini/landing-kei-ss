@@ -1,0 +1,92 @@
+---
+// Port of components/ui/light-aurora.tsx.
+//
+// Source: 3 blurred radial blobs that Framer drifts on a compositor-only
+// transform — animate={{ x: [0, dx, 0], y: [0, dy, 0] }},
+// transition={{ duration, repeat: Infinity, ease: "easeInOut" }} — where dx/dy
+// were `viewport.w * delta.x` / `viewport.h * delta.y` resolved once on mount.
+//
+// Replaced with a pure-CSS keyframe per blob (no JS). The JS resolved the drift
+// against the viewport, so `delta` fractions map to viewport units:
+//   delta.x 0.25 → translateX(25vw), delta.y 0.20 → translateY(20vh), etc.
+// ease "easeInOut" → `ease-in-out`, `repeat: Infinity` → `infinite`, same
+// durations (18s / 22s / 26s). Reduced motion disables the drift (matches the
+// source's `useReducedMotion` early return).
+interface Props {
+  class?: string;
+  intensity?: number;
+}
+
+const { class: className = "", intensity = 1 } = Astro.props;
+
+const blobs = [
+  {
+    color: "rgba(63,125,255,0.20)",
+    size: "46rem",
+    left: "-20%",
+    top: "-30%",
+    dx: "25vw",
+    dy: "20vh",
+    duration: "18s",
+  },
+  {
+    color: "rgba(188,220,255,0.35)",
+    size: "38rem",
+    left: "70%",
+    top: "0%",
+    dx: "-15vw",
+    dy: "25vh",
+    duration: "22s",
+  },
+  {
+    color: "rgba(26,79,192,0.14)",
+    size: "42rem",
+    left: "20%",
+    top: "60%",
+    dx: "20vw",
+    dy: "-15vh",
+    duration: "26s",
+  },
+];
+---
+
+<div
+  class:list={["pointer-events-none absolute inset-0 overflow-hidden", className]}
+  style={`opacity:${intensity}`}
+  aria-hidden="true"
+>
+  {
+    blobs.map((b) => (
+      <div
+        class="aurora-blob absolute rounded-full"
+        style={`width:${b.size};height:${b.size};left:${b.left};top:${b.top};background:radial-gradient(circle at center, ${b.color} 0%, transparent 70%);filter:blur(40px);--aur-dx:${b.dx};--aur-dy:${b.dy};animation-duration:${b.duration}`}
+      />
+    ))
+  }
+</div>
+
+<style>
+  .aurora-blob {
+    will-change: transform;
+    animation-name: aurora-drift;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+  }
+
+  @keyframes aurora-drift {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(var(--aur-dx), var(--aur-dy), 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .aurora-blob {
+      animation: none;
+      will-change: auto;
+    }
+  }
+</style>

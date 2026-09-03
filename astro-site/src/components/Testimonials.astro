@@ -1,0 +1,313 @@
+---
+// Port of components/testimonials.tsx.
+//
+// Framer → CSS:
+//   TestimonialCard <m.div> initial={{opacity:0,y:24}} / animate {opacity:1,y:0}
+//   transition={{ duration: 0.5, delay: index*0.08, ease: [0.22,1,0.36,1] }}
+//   useInView(ref,{ once:true, margin:"-60px" })
+//   → `.reveal` wrapper: --reveal-y:24px; --reveal-dur:.5s;
+//     --reveal-ease:cubic-bezier(.22,1,.36,1); --reveal-delay:(i*0.08)s
+//
+// embla-carousel-react → embla-carousel core (framework-agnostic, v8.6.0, no
+// plugins — the source has NO autoplay). Same options: align "start",
+// loop true, slidesToScroll 1. Imperative init in a co-located client script on
+// the viewport ref; prev/next + dots wired to the api; dot count comes from
+// scrollSnapList() (source renders dots only when length > 1). Re-inits on
+// astro:page-load. prefers-reduced-motion changes nothing here (no autoplay).
+//
+// next/image (logo, `fill`) → plain <img> with an inline onerror that swaps to
+// the initials fallback (source: onError → setImageError(true)).
+// lucide icons (Quote / ChevronLeft / ChevronRight) → inline SVG, same 24-box
+// paths as lucide-react v0.564.0.
+import SectionHeading from "@/components/ui/SectionHeading.astro";
+import LightAurora from "@/components/ui/LightAurora.astro";
+import TiltCard from "@/components/ui/TiltCard.astro";
+import BorderBeam from "@/components/ui/BorderBeam.astro";
+
+type Testimonial = {
+  name: string;
+  role: string;
+  company: string;
+  companyInitials: string;
+  companyLogo?: string;
+  comment: string;
+};
+
+const testimonials: Testimonial[] = [
+  {
+    name: "Juan Borrego",
+    role: "Co-founder",
+    company: "Stability",
+    companyInitials: "ST",
+    companyLogo: "/testimonials/stability.webp",
+    comment:
+      "Si lo tuviera que describir con una palabra a KEI, sería con “soluciones” ya que nos dio respuestas a muchas de las problemáticas que teníamos que solucionar con nuestro proyecto pero no sabíamos cómo.",
+  },
+  {
+    name: "Agustín",
+    role: "Co-founder",
+    company: "Stability",
+    companyInitials: "ST",
+    companyLogo: "/testimonials/stability.webp",
+    comment:
+      "Trabajar con KEI fue clave para llevar Stability al siguiente nivel. Desarrollaron una plataforma ágil, moderna y totalmente a medida que nos facilitó la gestión integral de nuestros clientes y entrenamientos.",
+  },
+  {
+    name: "Gabriel Alvarez",
+    role: "Dueño",
+    company: "Centro Automotores",
+    companyInitials: "CA",
+    companyLogo: "/testimonials/centro-autos.webp",
+    comment:
+      "Excelente experiencia con KEI SOFTWARE. Me desarrollaron una aplicación a medida para la concesionaria que me permite organizar clientes, vehículos, movimientos de dinero y tener toda la información del negocio mucho más ordenada y accesible. Muy buena atención, predisposición y, sobre todo, entendieron perfectamente lo que necesitaba. ¡Totalmente recomendados!",
+  },
+  {
+    name: "Joaquin Vera",
+    role: "Co-founder",
+    company: "VeGroup",
+    companyInitials: "VG",
+    companyLogo: "/testimonials/vegroup.webp",
+    comment:
+      "La verdad que tremendo trabajo y sobre todo el entendimiento sobre nuestro proyecto para seguir sumando y mejorando funciones del sistema. Una atención espectacular y muy cercana con las necesidades que hemos tenido. Muchas gracias por toda la gestión y compromiso 🙌🏻",
+  },
+  {
+    name: "Ruben Fini",
+    role: "Dueño",
+    company: "Alfa Club",
+    companyInitials: "AC",
+    companyLogo: "/testimonials/alfa-club.webp",
+    comment:
+      "Estamos contentos con el trabajo de los chicos de KEI, hace un tiempo usábamos Mis Actividades para la administración del gimnasio, pero estábamos necesitando una solución más a medida. Los chicos entendieron nuestra necesidad y solucionaron nuestros problemas.",
+  },
+];
+---
+
+<section
+  class="relative overflow-hidden bg-background px-4 py-20 sm:px-6 sm:py-28 lg:py-32"
+>
+  <LightAurora intensity={0.6} />
+
+  <div class="relative z-10 mx-auto max-w-7xl">
+    <div class="relative mb-8 sm:mb-12">
+      <SectionHeading
+        eyebrow="Clientes"
+        title="Lo que dicen"
+        subtitle="Experiencias reales"
+      />
+
+      {/* Navigation Arrows */}
+      <div
+        class="flex items-center justify-center gap-2.5 sm:absolute sm:right-0 sm:bottom-0 sm:justify-end"
+      >
+        <button
+          type="button"
+          data-embla-prev
+          disabled
+          class="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-card/90 text-foreground shadow-sm backdrop-blur-md transition-all duration-200 hover:bg-[#3f7dff] hover:text-white hover:border-[#3f7dff] active:scale-95 disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
+          aria-label="Testimonio anterior"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="h-5 w-5 stroke-[2.2]"><path d="m15 18-6-6 6-6"></path></svg>
+        </button>
+        <button
+          type="button"
+          data-embla-next
+          class="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-card/90 text-foreground shadow-sm backdrop-blur-md transition-all duration-200 hover:bg-[#3f7dff] hover:text-white hover:border-[#3f7dff] active:scale-95 disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
+          aria-label="Siguiente testimonio"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="h-5 w-5 stroke-[2.2]"><path d="m9 18 6-6-6-6"></path></svg>
+        </button>
+      </div>
+    </div>
+
+    {/* Carousel Container (3 items visible on desktop, 2 on tablet, 1 on mobile) */}
+    <div
+      class="overflow-hidden -mx-4 px-4 sm:-mx-6 sm:px-6"
+      data-embla-viewport
+    >
+      <div class="flex -ml-4 sm:-ml-5 items-stretch">
+        {
+          testimonials.map((t, i) => (
+            <div
+              class="min-w-0 flex-[0_0_100%] pl-4 sm:pl-5 sm:flex-[0_0_50%] lg:flex-[0_0_33.333333%]"
+            >
+              <div
+                class="reveal h-full"
+                style={`--reveal-y:24px; --reveal-dur:.5s; --reveal-ease:cubic-bezier(0.22,1,0.36,1); --reveal-delay:${(i * 0.08).toFixed(2)}s`}
+              >
+                <TiltCard max={5} class="h-full rounded-2xl">
+                  <div class="relative flex h-full min-h-[320px] flex-col justify-between gap-5 overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] dark:shadow-[0_2px_16px_-8px_rgba(0,0,0,0.5)] transition-shadow duration-300 group-hover/tilt:shadow-[0_28px_70px_-24px_rgba(63,125,255,0.32)] sm:p-7">
+                    <BorderBeam
+                      size={64}
+                      duration={8 + (i % 4)}
+                      delay={(i % 4) * 1.4}
+                      colorFrom="#bcdcff"
+                      colorTo="#3f7dff"
+                      borderWidth={1.5}
+                    />
+
+                    <div class="flex flex-col gap-4">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="h-7 w-7 text-[#3f7dff]/30"
+                      >
+                        <path d="M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z" />
+                        <path d="M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z" />
+                      </svg>
+                      <p class="text-sm leading-relaxed text-muted-foreground">
+                        {t.comment}
+                      </p>
+                    </div>
+
+                    <div class="flex items-center gap-3.5 border-t border-border pt-4">
+                      <div class="relative flex h-11 w-11 flex-shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border bg-card p-1.5 shadow-sm">
+                        {t.companyLogo ? (
+                          <>
+                            <img
+                              src={t.companyLogo}
+                              alt={`Logo de ${t.company}`}
+                              loading="lazy"
+                              class="object-contain p-1"
+                              style="position:absolute;inset:0;width:100%;height:100%"
+                              onerror="this.style.display='none';this.nextElementSibling.style.display='inline'"
+                            />
+                            <span
+                              class="font-mono text-xs font-bold text-[#3f7dff]"
+                              style="display:none"
+                            >
+                              {t.companyInitials}
+                            </span>
+                          </>
+                        ) : (
+                          <span class="font-mono text-xs font-bold text-[#3f7dff]">
+                            {t.companyInitials}
+                          </span>
+                        )}
+                      </div>
+                      <div class="min-w-0 flex-1">
+                        <p class="truncate font-google-sans text-sm font-[450] text-foreground">
+                          {t.name}
+                        </p>
+                        <p class="mt-0.5 truncate font-mono text-[11px] text-muted-foreground">
+                          <span class="text-[#3f7dff]">{t.role}</span>
+                          <span class="mx-1 text-muted-foreground/60">·</span>
+                          <span class="text-muted-foreground">{t.company}</span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </TiltCard>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
+    {/* Pagination Dots (populated client-side from scrollSnapList) */}
+    <div
+      class="mt-8 flex justify-center items-center gap-2"
+      data-embla-dots
+      hidden
+    >
+    </div>
+  </div>
+</section>
+
+<script>
+  import EmblaCarousel from "embla-carousel";
+  import type { EmblaCarouselType } from "embla-carousel";
+
+  function initTestimonials() {
+    const viewport = document.querySelector<HTMLElement>("[data-embla-viewport]");
+    if (!viewport || viewport.dataset.emblaReady) return;
+    viewport.dataset.emblaReady = "";
+
+    const root = viewport.closest("section");
+    if (!root) return;
+
+    const prevBtn = root.querySelector<HTMLButtonElement>("[data-embla-prev]");
+    const nextBtn = root.querySelector<HTMLButtonElement>("[data-embla-next]");
+    const dotsEl = root.querySelector<HTMLElement>("[data-embla-dots]");
+
+    // Same options as the source's useEmblaCarousel({...}).
+    const embla: EmblaCarouselType = EmblaCarousel(viewport, {
+      align: "start",
+      loop: true,
+      slidesToScroll: 1,
+    });
+
+    let dotNodes: HTMLButtonElement[] = [];
+
+    function buildDots() {
+      if (!dotsEl) return;
+      const snaps = embla.scrollSnapList();
+      dotsEl.innerHTML = "";
+      // Source: dots render only when scrollSnaps.length > 1.
+      if (snaps.length <= 1) {
+        dotsEl.hidden = true;
+        dotNodes = [];
+        return;
+      }
+      dotsEl.hidden = false;
+      dotNodes = snaps.map((_, index) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.setAttribute("aria-label", `Ir al testimonio ${index + 1}`);
+        b.className =
+          "h-2 rounded-full transition-all duration-300 cursor-pointer w-2 bg-foreground/15 hover:bg-foreground/30";
+        b.addEventListener("click", () => embla.scrollTo(index));
+        dotsEl.appendChild(b);
+        return b;
+      });
+    }
+
+    function onSelect() {
+      const selected = embla.selectedScrollSnap();
+      if (prevBtn) prevBtn.disabled = !embla.canScrollPrev();
+      if (nextBtn) nextBtn.disabled = !embla.canScrollNext();
+      dotNodes.forEach((dot, i) => {
+        dot.className =
+          "h-2 rounded-full transition-all duration-300 cursor-pointer " +
+          (i === selected
+            ? "w-8 bg-[#3f7dff]"
+            : "w-2 bg-foreground/15 hover:bg-foreground/30");
+      });
+    }
+
+    prevBtn?.addEventListener("click", () => embla.scrollPrev());
+    nextBtn?.addEventListener("click", () => embla.scrollNext());
+
+    buildDots();
+    onSelect();
+    embla.on("select", onSelect);
+    embla.on("reInit", () => {
+      buildDots();
+      onSelect();
+    });
+  }
+
+  initTestimonials();
+  document.addEventListener("astro:page-load", initTestimonials);
+</script>

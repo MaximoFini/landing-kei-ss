@@ -7,6 +7,18 @@
       "runtimeArgs": ["run", "dev"],
       "port": 3000,
       "autoPort": true
+    },
+    {
+      "name": "astro",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--dir", "astro-site", "dev"],
+      "port": 4321
+    },
+    {
+      "name": "astro-preview",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--dir", "astro-site", "preview", "--port", "4322"],
+      "port": 4322
     }
   ]
 }

@@ -1,0 +1,619 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Font family CSS variables — replicate next/font/google output so the
+     existing Tailwind utilities (font-sans, font-mono, font-google-sans)
+     and any direct var() usage resolve to the same families. The woff2
+     files are self-hosted — see `src/styles/fonts.css` (@font-face rules,
+     imported from BaseLayout.astro before this file). */
+  --font-geist: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-geist-mono: "Geist Mono", "Geist Mono Fallback", ui-monospace,
+    "SFMono-Regular", monospace;
+  --font-google-sans-flex: "Google Sans Flex", "Google Sans", ui-sans-serif,
+    system-ui, sans-serif;
+}
+
+:root {
+  /* Kei Software — electric blue light theme */
+  --background: oklch(0.99 0.002 240);
+  --foreground: oklch(0.18 0.012 240);
+  --card: oklch(0.985 0.003 240);
+  --card-foreground: oklch(0.18 0.012 240);
+  --popover: oklch(0.985 0.003 240);
+  --popover-foreground: oklch(0.18 0.012 240);
+  /* electric blue accent */
+  --primary: oklch(0.55 0.25 264);
+  --primary-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.94 0.006 240);
+  --secondary-foreground: oklch(0.25 0.012 240);
+  --muted: oklch(0.94 0.006 240);
+  --muted-foreground: oklch(0.42 0.014 240);
+  --accent: oklch(0.55 0.25 264);
+  --accent-foreground: oklch(0.98 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.9 0.006 240);
+  --input: oklch(0.94 0.006 240);
+  --ring: oklch(0.55 0.25 264);
+  --chart-1: oklch(0.55 0.25 264);
+  --chart-2: oklch(0.5 0.18 240);
+  --chart-3: oklch(0.45 0.2 250);
+  --chart-4: oklch(0.55 0.15 260);
+  --chart-5: oklch(0.6 0.12 245);
+  --radius: 0.375rem;
+  --sidebar: oklch(0.985 0.003 240);
+  --sidebar-foreground: oklch(0.18 0.012 240);
+  --sidebar-primary: oklch(0.55 0.25 264);
+  --sidebar-primary-foreground: oklch(0.98 0 0);
+  --sidebar-accent: oklch(0.94 0.006 240);
+  --sidebar-accent-foreground: oklch(0.25 0.012 240);
+  --sidebar-border: oklch(0.9 0.006 240);
+  --sidebar-ring: oklch(0.55 0.25 264);
+  /* custom brand tokens */
+  --neon: oklch(0.55 0.25 264);
+  --neon-bright: oklch(0.48 0.26 264);
+  --neon-dim: oklch(0.55 0.25 264 / 0.1);
+  --surface: oklch(0.97 0.003 240);
+  --surface-elevated: oklch(0.94 0.006 240);
+}
+
+.dark {
+  --background: oklch(0.08 0.005 240);
+  --foreground: oklch(0.97 0 0);
+  --card: oklch(0.11 0.007 240);
+  --card-foreground: oklch(0.97 0 0);
+  --popover: oklch(0.11 0.007 240);
+  --popover-foreground: oklch(0.97 0 0);
+  --primary: oklch(0.55 0.25 264);
+  --primary-foreground: oklch(0.97 0 0);
+  --secondary: oklch(0.15 0.008 240);
+  --secondary-foreground: oklch(0.85 0 0);
+  --muted: oklch(0.15 0.008 240);
+  --muted-foreground: oklch(0.72 0.01 240);
+  --accent: oklch(0.55 0.25 264);
+  --accent-foreground: oklch(0.97 0 0);
+  --destructive: oklch(0.396 0.141 25.723);
+  --destructive-foreground: oklch(0.985 0 0);
+  --border: oklch(0.19 0.012 240);
+  --input: oklch(0.15 0.008 240);
+  --ring: oklch(0.55 0.25 264);
+  --sidebar: oklch(0.11 0.007 240);
+  --sidebar-foreground: oklch(0.97 0 0);
+  --sidebar-primary: oklch(0.55 0.25 264);
+  --sidebar-primary-foreground: oklch(0.97 0 0);
+  --sidebar-accent: oklch(0.15 0.008 240);
+  --sidebar-accent-foreground: oklch(0.85 0 0);
+  --sidebar-border: oklch(0.25 0.012 240);
+  --sidebar-ring: oklch(0.55 0.25 264);
+}
+
+@theme inline {
+  --color-neon: var(--neon);
+  --color-neon-bright: var(--neon-bright);
+  --color-neon-dim: var(--neon-dim);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --font-sans: "Geist", "Geist Fallback";
+  --font-mono: "Geist Mono", "Geist Mono Fallback";
+  --font-google-sans: var(--font-google-sans-flex), "Google Sans", sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+/* ========================================
+   MOBILE OPTIMIZATIONS
+   ======================================== */
+
+/* Smooth scrolling for all devices */
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Stop the rubber-band / overscroll bounce past the top and footer on mobile,
+   so the page feels anchored once you reach the footer edge. */
+html,
+body {
+  overscroll-behavior-y: none;
+}
+
+/* Prevent text size adjustment on orientation change in iOS */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Better touch targets for mobile - minimum 44x44 (Apple HIG) */
+button,
+a,
+input,
+textarea,
+select {
+  min-height: 44px;
+  min-width: 44px;
+  touch-action: manipulation;
+}
+
+/* Prevent horizontal scroll on mobile */
+body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Better focus states for accessibility */
+*:focus-visible {
+  outline: 2px solid var(--neon);
+  outline-offset: 2px;
+}
+
+/* Smoother animations on mobile devices */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Optimize images for mobile */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Better text rendering on mobile */
+body {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Prevent zoom on input focus in iOS */
+@supports (-webkit-touch-callout: none) {
+  input,
+  textarea,
+  select {
+    font-size: max(16px, 1em);
+  }
+}
+
+/* ========================================
+   BLOG CONTENT STYLES
+   ======================================== */
+
+.blog-content {
+  color: var(--foreground);
+  line-height: 1.75;
+}
+
+.blog-content h1,
+.blog-content h2,
+.blog-content h3,
+.blog-content h4 {
+  color: var(--foreground);
+  font-weight: 800;
+  margin-top: 2.5rem;
+  margin-bottom: 1.25rem;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.blog-content h1 {
+  font-size: 2.25rem;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 0.75rem;
+}
+
+.blog-content h2 {
+  font-size: 1.875rem;
+  color: var(--neon);
+}
+
+.blog-content h3 {
+  font-size: 1.5rem;
+}
+
+.blog-content h4 {
+  font-size: 1.25rem;
+}
+
+.blog-content p {
+  margin-bottom: 1.5rem;
+  color: var(--muted-foreground);
+}
+
+.blog-content strong {
+  color: var(--foreground);
+  font-weight: 700;
+}
+
+.blog-content ul,
+.blog-content ol {
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+  color: var(--muted-foreground);
+}
+
+.blog-content li {
+  margin-bottom: 0.5rem;
+}
+
+.blog-content li::marker {
+  color: var(--neon);
+}
+
+.blog-content code {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  color: var(--neon);
+}
+
+.blog-content pre {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 1.25rem;
+  border-radius: 0.375rem;
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+}
+
+.blog-content pre code {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: var(--foreground);
+}
+
+.blog-content blockquote {
+  border-left: 4px solid var(--neon);
+  padding-left: 1.25rem;
+  margin: 1.5rem 0;
+  font-style: italic;
+  color: var(--muted-foreground);
+}
+
+.blog-content a {
+  color: var(--neon);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.2s;
+}
+
+.blog-content a:hover {
+  color: var(--neon-bright);
+}
+
+.blog-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  display: block;
+}
+
+.blog-content th,
+.blog-content td {
+  border: 1px solid var(--border);
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.blog-content th {
+  background: var(--surface);
+  color: var(--foreground);
+  font-weight: 700;
+}
+
+.blog-content td {
+  color: var(--muted-foreground);
+}
+
+.blog-content hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2.5rem 0;
+}
+
+/* Responsive table */
+@media (max-width: 640px) {
+  .blog-content table {
+    font-size: 0.875rem;
+  }
+
+  .blog-content th,
+  .blog-content td {
+    padding: 0.5rem;
+  }
+}
+
+/* Safe area insets for notched devices */
+@supports (padding: max(0px)) {
+  body {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Micro-interacciones sutiles */
+@layer utilities {
+  /* Transiciones suaves para todos los botones */
+  button,
+  a[href] {
+    @apply transition-all duration-300 ease-out;
+  }
+
+  /* Efecto sutil de elevación en hover */
+  .hover-lift:hover {
+    transform: translateY(-2px);
+  }
+
+  /* Animación de pulso muy sutil */
+  @keyframes subtle-pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.85;
+    }
+  }
+
+  /* Marquee infinito para el carrusel de logos */
+  @keyframes logo-loop {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* Efecto de brillo sutil en foco */
+  input:focus,
+  textarea:focus {
+    @apply ring-2 ring-neon/30;
+  }
+
+  /* Cursor con feedback táctil */
+  button:active,
+  a:active {
+    transform: scale(0.98);
+  }
+
+  /* Campo de estrellas del hero — dos capas de puntos (radial-gradient)
+     que derivan hacia arriba en loop. Pura CSS, sin canvas ni JS. */
+  .star-field {
+    position: absolute;
+    inset: -4%;
+    pointer-events: none;
+    opacity: 0.8;
+    will-change: transform;
+  }
+
+  .star-field__layer {
+    position: absolute;
+    inset: -12%;
+    background-repeat: repeat;
+  }
+
+  .star-field__layer--a {
+    background-image:
+      radial-gradient(1.7px 1.7px at 18% 24%, rgba(255, 255, 255, 0.95), transparent 62%),
+      radial-gradient(1.3px 1.3px at 63% 57%, rgba(255, 255, 255, 0.80), transparent 62%),
+      radial-gradient(1.9px 1.9px at 87% 11%, rgba(255, 255, 255, 0.65), transparent 62%),
+      radial-gradient(1.3px 1.3px at 37% 81%, rgba(255, 255, 255, 0.85), transparent 62%),
+      radial-gradient(1.5px 1.5px at 8% 62%, rgba(255, 255, 255, 0.75), transparent 62%),
+      radial-gradient(1.3px 1.3px at 74% 88%, rgba(255, 255, 255, 0.60), transparent 62%),
+      radial-gradient(1.1px 1.1px at 45% 15%, rgba(255, 255, 255, 0.55), transparent 62%),
+      radial-gradient(1.1px 1.1px at 96% 43%, rgba(255, 255, 255, 0.50), transparent 62%),
+      radial-gradient(1.1px 1.1px at 26% 45%, rgba(255, 255, 255, 0.55), transparent 62%);
+    background-size: 300px 260px;
+    animation: star-field-a 52s linear infinite;
+  }
+
+  .star-field__layer--b {
+    background-image:
+      radial-gradient(1.4px 1.4px at 72% 18%, rgba(255, 255, 255, 0.75), transparent 62%),
+      radial-gradient(2.1px 2.1px at 28% 66%, rgba(255, 255, 255, 0.55), transparent 62%),
+      radial-gradient(1.3px 1.3px at 52% 38%, rgba(255, 255, 255, 0.68), transparent 62%),
+      radial-gradient(1.6px 1.6px at 91% 74%, rgba(255, 255, 255, 0.58), transparent 62%),
+      radial-gradient(1.3px 1.3px at 14% 6%, rgba(255, 255, 255, 0.62), transparent 62%),
+      radial-gradient(1.1px 1.1px at 61% 90%, rgba(255, 255, 255, 0.48), transparent 62%),
+      radial-gradient(1.1px 1.1px at 5% 32%, rgba(255, 255, 255, 0.50), transparent 62%);
+    background-size: 430px 380px;
+    animation: star-field-b 88s linear infinite;
+  }
+
+  .star-field__layer--c {
+    background-image:
+      radial-gradient(1.2px 1.2px at 10% 12%, rgba(255, 255, 255, 0.70), transparent 62%),
+      radial-gradient(1.8px 1.8px at 34% 48%, rgba(255, 255, 255, 0.85), transparent 62%),
+      radial-gradient(1.1px 1.1px at 58% 8%, rgba(255, 255, 255, 0.55), transparent 62%),
+      radial-gradient(1.4px 1.4px at 79% 33%, rgba(255, 255, 255, 0.65), transparent 62%),
+      radial-gradient(1.0px 1.0px at 92% 62%, rgba(255, 255, 255, 0.48), transparent 62%),
+      radial-gradient(1.6px 1.6px at 22% 75%, rgba(255, 255, 255, 0.60), transparent 62%),
+      radial-gradient(1.1px 1.1px at 46% 90%, rgba(255, 255, 255, 0.52), transparent 62%),
+      radial-gradient(1.3px 1.3px at 67% 84%, rgba(255, 255, 255, 0.58), transparent 62%),
+      radial-gradient(1.0px 1.0px at 4% 55%, rgba(255, 255, 255, 0.45), transparent 62%),
+      radial-gradient(1.9px 1.9px at 85% 95%, rgba(255, 255, 255, 0.70), transparent 62%),
+      radial-gradient(1.1px 1.1px at 40% 20%, rgba(255, 255, 255, 0.50), transparent 62%);
+    background-size: 220px 190px;
+    animation: star-field-c 68s linear infinite;
+  }
+
+  .star-field__layer--d {
+    background-image:
+      radial-gradient(1.0px 1.0px at 6% 30%, rgba(255, 255, 255, 0.55), transparent 62%),
+      radial-gradient(1.5px 1.5px at 20% 65%, rgba(255, 255, 255, 0.75), transparent 62%),
+      radial-gradient(1.1px 1.1px at 33% 10%, rgba(255, 255, 255, 0.50), transparent 62%),
+      radial-gradient(1.7px 1.7px at 48% 42%, rgba(255, 255, 255, 0.80), transparent 62%),
+      radial-gradient(1.0px 1.0px at 61% 78%, rgba(255, 255, 255, 0.45), transparent 62%),
+      radial-gradient(1.3px 1.3px at 74% 24%, rgba(255, 255, 255, 0.60), transparent 62%),
+      radial-gradient(1.1px 1.1px at 88% 55%, rgba(255, 255, 255, 0.50), transparent 62%),
+      radial-gradient(1.6px 1.6px at 12% 88%, rgba(255, 255, 255, 0.65), transparent 62%),
+      radial-gradient(1.0px 1.0px at 95% 15%, rgba(255, 255, 255, 0.48), transparent 62%),
+      radial-gradient(1.4px 1.4px at 42% 92%, rgba(255, 255, 255, 0.58), transparent 62%),
+      radial-gradient(1.1px 1.1px at 55% 5%, rgba(255, 255, 255, 0.50), transparent 62%),
+      radial-gradient(1.8px 1.8px at 27% 38%, rgba(255, 255, 255, 0.72), transparent 62%);
+    background-size: 170px 150px;
+    animation: star-field-d 40s linear infinite;
+  }
+
+  .star-field__layer--e {
+    background-image:
+      radial-gradient(1.1px 1.1px at 3% 8%, rgba(255, 255, 255, 0.55), transparent 62%),
+      radial-gradient(1.6px 1.6px at 15% 52%, rgba(255, 255, 255, 0.70), transparent 62%),
+      radial-gradient(1.0px 1.0px at 29% 88%, rgba(255, 255, 255, 0.45), transparent 62%),
+      radial-gradient(1.9px 1.9px at 41% 18%, rgba(255, 255, 255, 0.78), transparent 62%),
+      radial-gradient(1.1px 1.1px at 53% 65%, rgba(255, 255, 255, 0.50), transparent 62%),
+      radial-gradient(1.4px 1.4px at 66% 95%, rgba(255, 255, 255, 0.60), transparent 62%),
+      radial-gradient(1.0px 1.0px at 78% 35%, rgba(255, 255, 255, 0.46), transparent 62%),
+      radial-gradient(1.7px 1.7px at 90% 72%, rgba(255, 255, 255, 0.68), transparent 62%),
+      radial-gradient(1.1px 1.1px at 97% 5%, rgba(255, 255, 255, 0.50), transparent 62%),
+      radial-gradient(1.3px 1.3px at 8% 78%, rgba(255, 255, 255, 0.55), transparent 62%),
+      radial-gradient(1.0px 1.0px at 36% 45%, rgba(255, 255, 255, 0.42), transparent 62%),
+      radial-gradient(1.5px 1.5px at 62% 12%, rgba(255, 255, 255, 0.62), transparent 62%),
+      radial-gradient(1.1px 1.1px at 84% 58%, rgba(255, 255, 255, 0.48), transparent 62%);
+    background-size: 350px 300px;
+    animation: star-field-e 76s linear infinite;
+  }
+
+  @keyframes star-field-a {
+    to {
+      transform: translate3d(0, -260px, 0);
+    }
+  }
+
+  @keyframes star-field-b {
+    to {
+      transform: translate3d(0, -380px, 0);
+    }
+  }
+
+  @keyframes star-field-c {
+    to {
+      transform: translate3d(0, -190px, 0);
+    }
+  }
+
+  @keyframes star-field-d {
+    to {
+      transform: translate3d(0, -150px, 0);
+    }
+  }
+
+  @keyframes star-field-e {
+    to {
+      transform: translate3d(0, -300px, 0);
+    }
+  }
+}
+
+/* Respect reduced-motion: freeze the drifting starfield layers (they keep
+   compositing every frame otherwise, even on low-power devices). */
+@media (prefers-reduced-motion: reduce) {
+  .star-field__layer {
+    animation: none !important;
+  }
+}
+
+/* ========================================
+   THEME TOGGLE — circular reveal transition
+   ======================================== */
+
+/* Disable the browser's default cross-fade so the toggle's own clip-path
+   animation (see animated-theme-toggler.tsx) is the only thing visible.
+   The new state sits underneath, fully visible; the old state sits on top
+   and gets clipped with a shrinking circle, uncovering the new state as it
+   shrinks. This must NOT depend on light/dark direction. */
+::view-transition-group(root) {
+  animation: none;
+}
+
+::view-transition-new(root) {
+  animation: none;
+  z-index: 1;
+}
+
+::view-transition-old(root) {
+  animation: none;
+  z-index: 2147483646;
+}
+
+/* Icon swap inside ThemeToggler.astro — replaces the Framer AnimatePresence
+   (initial opacity 0 / scale .55 / rotate ±25 → 1/1/0 over 0.33s). The vanilla
+   script restarts this keyframe on each toggle; `--tti-rot` picks the sign
+   (+25deg sun, -25deg moon), matching animated-theme-toggler.tsx. */
+.theme-toggler-icon {
+  display: inline-flex;
+  animation: theme-toggler-icon-in 0.33s ease both;
+}
+
+@keyframes theme-toggler-icon-in {
+  from {
+    opacity: 0;
+    transform: scale(0.55) rotate(var(--tti-rot, 25deg));
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggler-icon {
+    animation: none;
+  }
+}

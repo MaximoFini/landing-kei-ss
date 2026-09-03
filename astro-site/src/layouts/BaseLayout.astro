@@ -1,0 +1,244 @@
+---
+import "@/styles/fonts.css";
+import "@/styles/globals.css";
+import "@/styles/reveal.css";
+import StructuredData from "@/components/StructuredData.astro";
+
+/*
+ * Phase 5: BaseLayout now emits the full metadata set that `app/layout.tsx`
+ * (+ each page's `metadata` / `generateMetadata`) produced in the Next app.
+ * Everything is driven by props with the root-layout metadata as defaults, so
+ * existing callers (`<BaseLayout title="…">`) keep working unchanged.
+ */
+
+interface Props {
+  /** Page title. Runs through the `%s | KEI Software` template unless
+   *  `titleIsDefault` is set (home page uses the bare default). */
+  title?: string;
+  titleIsDefault?: boolean;
+  description?: string;
+  /** Absolute canonical URL. Defaults to `Astro.site` + current pathname. */
+  canonical?: string;
+  /** <meta name="keywords">. Defaults to the root keyword list. */
+  keywords?: string[];
+  /** Open Graph. */
+  ogType?: "website" | "article";
+  ogTitle?: string;
+  ogDescription?: string;
+  ogUrl?: string;
+  image?: string;
+  /** <meta property="og:image:alt">. Defaults to the root OG image alt. */
+  ogImageAlt?: string;
+  /** Twitter card. Defaults to the root twitter title/description. */
+  twitterTitle?: string;
+  twitterDescription?: string;
+  /** <meta name="twitter:image"> — a dedicated twitter-image.png, not the OG one. */
+  twitterImage?: string;
+  /** <meta name="twitter:image:alt">. Defaults to the root OG image alt. */
+  twitterImageAlt?: string;
+  /** Article-only OG fields (blog posts). */
+  publishedTime?: string;
+  authors?: string[];
+}
+
+// --- Root-layout metadata defaults (app/layout.tsx) -------------------------
+const SITE_NAME = "KEI Software";
+const ROOT_DESCRIPTION =
+  "Desarrollamos software a medida, soluciones IA y automatización con transparencia y calidad garantizada. Córdoba, Argentina.";
+const ROOT_OG_TITLE =
+  "KEI Software — Software a Medida | Desarrollo Web & IA";
+const ROOT_OG_DESCRIPTION =
+  "Desarrollamos software a medida, soluciones IA y automatización con transparencia total. Córdoba, Argentina.";
+// `alt` export from app/opengraph-image.tsx (and app/twitter-image.tsx).
+const ROOT_OG_IMAGE_ALT =
+  "KEI Software — Software a Medida | Córdoba, Argentina";
+const ROOT_KEYWORDS = [
+  "desarrollo software",
+  "software a medida",
+  "inteligencia artificial",
+  "automatización",
+  "desarrollo web",
+  "Córdoba",
+  "desarrollo software Córdoba",
+  "programación Argentina",
+  "soluciones IA",
+  "chatbot IA",
+  "automatización empresarial",
+  "desarrollo aplicaciones web",
+  "Next.js",
+  "React",
+  "software empresarial",
+  "CRM a medida",
+  "ERP personalizado",
+  "desarrollo remoto",
+];
+
+const {
+  title,
+  titleIsDefault = false,
+  description = ROOT_DESCRIPTION,
+  canonical,
+  keywords = ROOT_KEYWORDS,
+  ogType = "website",
+  ogTitle,
+  ogDescription,
+  ogUrl,
+  image = "/opengraph-image.png",
+  ogImageAlt = ROOT_OG_IMAGE_ALT,
+  twitterTitle = ROOT_OG_TITLE,
+  twitterDescription = ROOT_OG_DESCRIPTION,
+  twitterImage = "/twitter-image.png",
+  twitterImageAlt = ROOT_OG_IMAGE_ALT,
+  publishedTime,
+  authors,
+} = Astro.props;
+
+// Title template `%s | KEI Software`, default `KEI Software`.
+const pageTitle =
+  titleIsDefault || !title ? SITE_NAME : `${title} | ${SITE_NAME}`;
+
+const canonicalUrl =
+  canonical ?? new URL(Astro.url.pathname, Astro.site).href.replace(/\/$/, "");
+const resolvedImage = new URL(image, Astro.site).href;
+const resolvedTwitterImage = new URL(twitterImage, Astro.site).href;
+const resolvedOgUrl = ogUrl ?? canonicalUrl;
+const resolvedOgTitle = ogTitle ?? pageTitle;
+const resolvedOgDescription = ogDescription ?? description;
+---
+
+<!doctype html>
+<html lang="es" class="bg-background scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    {/* Phase 5: keywords + authorship + misc name meta (app/layout.tsx). */}
+    <meta name="keywords" content={keywords.join(", ")} />
+    <meta name="author" content="KEI Software" />
+    <meta name="creator" content="KEI Software" />
+    <meta name="publisher" content="KEI Software" />
+    <meta name="application-name" content="KEI Software" />
+    <meta name="referrer" content="origin-when-cross-origin" />
+    <meta name="format-detection" content="telephone=no, email=no, address=no" />
+    <meta name="google-site-verification" content="google9f062801bafc9c55" />
+
+    {/* Phase 5: content classification (app/layout.tsx `category` / `classification`). */}
+    <meta name="category" content="Technology" />
+    <meta name="classification" content="Software Development Services" />
+
+    {/* Phase 5: robots directives (index/follow + googleBot max-* preview). */}
+    <meta name="robots" content="index, follow" />
+    <meta
+      name="googlebot"
+      content="index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"
+    />
+
+    {/* Open Graph */}
+    <meta property="og:type" content={ogType} />
+    <meta property="og:locale" content="es_AR" />
+    <meta property="og:site_name" content="KEI Software" />
+    <meta property="og:url" content={resolvedOgUrl} />
+    <meta property="og:title" content={resolvedOgTitle} />
+    <meta property="og:description" content={resolvedOgDescription} />
+    <meta property="og:image" content={resolvedImage} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={ogImageAlt} />
+    {
+      publishedTime && (
+        <meta property="article:published_time" content={publishedTime} />
+      )
+    }
+    {authors?.map((a) => <meta property="article:author" content={a} />)}
+
+    {/* Twitter */}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={twitterTitle} />
+    <meta name="twitter:description" content={twitterDescription} />
+    <meta name="twitter:image" content={resolvedTwitterImage} />
+    <meta name="twitter:image:type" content="image/png" />
+    <meta name="twitter:image:width" content="1200" />
+    <meta name="twitter:image:height" content="630" />
+    <meta name="twitter:image:alt" content={twitterImageAlt} />
+
+    {/* Icons + manifest (app/layout.tsx `icons` / `manifest`). */}
+    <link rel="icon" href="/icon-32.png" sizes="32x32" type="image/png" />
+    <link rel="icon" href="/icon-192.png" sizes="192x192" type="image/png" />
+    <link rel="icon" href="/icon-512.png" sizes="512x512" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Mobile Safari optimizations -->
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="apple-mobile-web-app-title" content="KEI Software" />
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: light)"
+      content="#ffffff"
+    />
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: dark)"
+      content="#0a0a0a"
+    />
+
+    {/* Phase 5: self-hosted fonts. @font-face lives in `src/styles/fonts.css`
+        (imported by this layout before globals.css); no third-party request.
+        Preload the two faces the hero needs immediately: the Google Sans Flex
+        variable used by the headline and the Geist variable used for body. */}
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/google-sans-flex-latin.woff2"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/geist-latin.woff2"
+      crossorigin="anonymous"
+    />
+
+    {/* Phase 5: hero LCP-adjacent logo (Next preloads it via <Image priority>). */}
+    <link rel="preload" as="image" href="/kei-logo-nuevo.png" />
+
+    {/* Phase 5: JSON-LD, rendered in <head> as in the Next root layout. */}
+    <StructuredData />
+    {/* Per-page <head> extras (e.g. blog BlogStructuredData). */}
+    <slot name="head" />
+
+    <!-- Blocking no-flash theme script. Mirrors next-themes with
+         attribute="class", defaultTheme="light", enableSystem={false}. -->
+    <script is:inline>
+      (function () {
+        try {
+          var t = localStorage.getItem("theme");
+          if (t === "dark") document.documentElement.classList.add("dark");
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body
+    class="font-sans antialiased bg-background text-foreground min-h-screen"
+  >
+    <slot />
+    <script>
+      import "@/scripts/reveal.ts";
+    </script>
+  </body>
+</html>

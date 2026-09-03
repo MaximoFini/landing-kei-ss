@@ -1,0 +1,453 @@
+---
+// CSS-only port of components/ui/accordion-gallery.tsx.
+//
+// Source behaviour:
+//  - Desktop (>768px): panels expand on hover via a `flex-grow` tween
+//    (duration 0.38s, cubic-bezier(0.16,1,0.3,1)); one panel is "active"
+//    (defaultIndex) until you hover another. React state `active`.
+//  - Mobile (<=768px): fixed-height card stack; the card near the viewport
+//    centre becomes active, tracked with an IntersectionObserver.
+//  - Desktop floating cursor tooltip driven by 2 Framer springs.
+//
+// This port (zero JS):
+//  - Desktop hover-expand is pure CSS: `.ag-panel` flex-grow 1 → var(--ag-grow)
+//    on `:hover`, with `[data-default]` expanded until the row is hovered
+//    (`.ag-root:hover .ag-panel` collapses all, `:hover` re-expands one).
+//    Breakpoint is Tailwind `sm` (640px) instead of the JS 768px.
+//  - Mobile: fixed-height stack; the card crossing a centred band becomes
+//    active (caption rises in, cover un-zooms from scale(1.06), overlay
+//    deepens, shadow lifts) — restored with a tiny IntersectionObserver
+//    (rootMargin "-44% 0px -50% 0px"), matching the source.
+//  - Desktop floating cursor tooltip restored as a single reused element
+//    positioned on `pointermove` over `.ag-root`, with `transition: translate
+//    .15s ease-out` approximating the source's useSpring(450/26). Shows the
+//    panel label (falls back to "CONOCÉ MÁS").
+//
+// `grow` = expandRatio→ (r*(count-1))/(1-r), same formula as the source.
+interface AccordionGalleryItem {
+  image: string;
+  label?: string;
+  meta?: string;
+  tags?: string[];
+  link?: string;
+  alt?: string;
+  position?: string;
+}
+
+interface Props {
+  items: AccordionGalleryItem[];
+  defaultIndex?: number;
+  accentColor?: string;
+  overlayColor?: string;
+  textColor?: string;
+  height?: number;
+  mobileCardHeight?: number;
+  gap?: number;
+  radius?: number;
+  expandRatio?: number;
+  duration?: number;
+  grayscale?: boolean;
+  class?: string;
+}
+
+const {
+  items,
+  defaultIndex = 0,
+  accentColor = "#3f7dff",
+  overlayColor = "#050b1c",
+  textColor = "#ffffff",
+  height = 460,
+  mobileCardHeight = 300,
+  gap = 10,
+  radius = 20,
+  expandRatio = 0.55,
+  duration = 0.38,
+  grayscale = true,
+  class: className = "",
+} = Astro.props;
+
+const count = items.length;
+const active = Math.min(Math.max(defaultIndex, 0), count - 1);
+const r = Math.min(Math.max(expandRatio, 0.2), 0.9);
+const grow = count > 1 ? (r * (count - 1)) / (1 - r) : 1;
+---
+
+<div
+  role="list"
+  aria-label="Galería de proyectos"
+  class:list={["ag-root flex w-full max-w-full flex-col sm:flex-row", className]}
+  style={`gap:${gap}px;--ag-grow:${grow};--ag-h:${height}px;--ag-dur:${duration}s;--ag-accent:${accentColor};--ag-radius:${radius}px;--ag-mh:${mobileCardHeight}px;--ag-overlay:${overlayColor}`}
+  data-grayscale={grayscale ? "" : undefined}
+>
+  <div class="ag-tip" aria-hidden="true">
+    <span class="ag-tip-label">CONOCÉ MÁS</span>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#1a4fc0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="h-3.5 w-3.5"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+  </div>
+  {
+    items.map((item, i) => {
+      const inner = (
+        <>
+          <div class="absolute inset-0 block h-full w-full overflow-hidden [border-radius:inherit]">
+            <img
+              src={item.image}
+              alt={item.alt || item.label || ""}
+              draggable={false}
+              loading="lazy"
+              class="ag-img select-none object-cover"
+              style={`position:absolute;inset:0;width:100%;height:100%;object-position:${item.position || "center center"}`}
+            />
+            <div class="ag-overlay pointer-events-none absolute inset-0 transition-opacity duration-500" aria-hidden="true" />
+          </div>
+
+          <span class="ag-caption pointer-events-none absolute bottom-4 left-4 right-4 sm:bottom-5 sm:left-5 sm:right-5 z-[2] flex flex-col gap-1">
+            {item.meta && (
+              <span class="font-mono text-[10px] uppercase tracking-[0.22em] text-white/60">
+                {item.meta}
+              </span>
+            )}
+            <span class="flex items-center justify-between gap-2.5">
+              <span class="flex items-center gap-2.5 min-w-0">
+                <span
+                  class="h-6 w-[3px] flex-none rounded-full"
+                  style={`background:${accentColor};box-shadow:0 0 12px ${accentColor}99`}
+                />
+                <span
+                  class="truncate font-google-sans text-[clamp(1rem,1.5vw,1.4rem)] font-[450]"
+                  style={`color:${textColor}`}
+                >
+                  {item.label}
+                </span>
+              </span>
+
+              {item.link && (
+                <span class="ag-pill inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-white/90 bg-white/10 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/20 transition-all duration-300">
+                  <span>CONOCÉ MÁS</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#3f7dff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="h-3.5 w-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                </span>
+              )}
+            </span>
+          </span>
+        </>
+      );
+
+      const cls =
+        "ag-panel group relative block min-h-0 min-w-0 cursor-pointer overflow-hidden bg-[#0a0713] no-underline outline-none focus-visible:ring-2 focus-visible:ring-[#3f7dff]";
+
+      return item.link ? (
+        <a
+          href={item.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          role="listitem"
+          tabindex="0"
+          aria-label={item.label}
+          data-index={i}
+          data-label={item.label}
+          data-default={i === active ? "" : undefined}
+          class={cls}
+        >
+          {inner}
+        </a>
+      ) : (
+        <div
+          role="listitem"
+          tabindex="0"
+          aria-label={item.label}
+          data-index={i}
+          data-default={i === active ? "" : undefined}
+          class={cls}
+        >
+          {inner}
+        </div>
+      );
+    })
+  }
+</div>
+
+<style>
+  .ag-root {
+    height: auto;
+    position: relative;
+  }
+
+  /* Floating cursor tooltip (desktop / fine pointer). Cursor tracking is the
+     CSS `translate` property (transitioned); base `transform` holds the
+     -50%/-135% offset. Source: useSpring({stiffness:450,damping:26}) +
+     `transition: opacity .2s ease, scale .2s ease`. */
+  .ag-tip {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 30;
+    display: none;
+    align-items: center;
+    gap: 0.375rem;
+    white-space: nowrap;
+    border-radius: 9999px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.95);
+    padding: 0.375rem 0.75rem;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #050b1c;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(12px);
+    pointer-events: none;
+    opacity: 0;
+    scale: 0.7;
+    transform: translate(-50%, -135%);
+    translate: 0 0;
+    transition:
+      translate 0.15s ease-out,
+      opacity 0.2s ease,
+      scale 0.2s ease;
+  }
+  .ag-tip.is-on {
+    opacity: 1;
+    scale: 1;
+  }
+  @media (min-width: 640px) and (pointer: fine) {
+    .ag-tip {
+      display: inline-flex;
+    }
+  }
+
+  .ag-panel {
+    border-radius: var(--ag-radius);
+    box-shadow: 0 12px 30px -20px rgba(5, 11, 28, 0.55);
+  }
+
+  .ag-panel[data-default] {
+    box-shadow: 0 22px 55px -26px color-mix(in srgb, var(--ag-accent) 40%, transparent);
+  }
+
+  .ag-overlay {
+    background: linear-gradient(
+      180deg,
+      transparent 65%,
+      color-mix(in srgb, var(--ag-overlay) 47%, transparent) 100%
+    );
+  }
+
+  .ag-caption {
+    opacity: 1;
+  }
+
+  /* --- Mobile stack (< sm) --- */
+  @media (max-width: 639px) {
+    .ag-panel {
+      position: relative;
+      height: var(--ag-mh);
+      box-shadow: 0 12px 30px -20px rgba(5, 11, 28, 0.55);
+    }
+    .ag-panel[data-default] {
+      box-shadow: 0 12px 30px -20px rgba(5, 11, 28, 0.55);
+    }
+    .ag-panel.is-active {
+      box-shadow: 0 22px 55px -26px color-mix(in srgb, var(--ag-accent) 40%, transparent);
+      transition: box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .ag-img {
+      transform: scale(1.06);
+      transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .ag-panel.is-active .ag-img {
+      transform: scale(1);
+    }
+
+    .ag-caption {
+      opacity: 0;
+      transform: translateY(0.5rem);
+      transition:
+        opacity 400ms cubic-bezier(0.16, 1, 0.3, 1),
+        transform 400ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .ag-panel.is-active .ag-caption {
+      opacity: 1;
+      transform: none;
+    }
+
+    .ag-panel.is-active .ag-overlay {
+      background: linear-gradient(
+        180deg,
+        transparent 40%,
+        color-mix(in srgb, var(--ag-overlay) 93%, transparent) 100%
+      );
+    }
+
+    .ag-pill {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    .ag-panel.is-active .ag-pill {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* --- Desktop row (>= sm) --- */
+  @media (min-width: 640px) {
+    .ag-root {
+      height: var(--ag-h);
+      perspective: 1600px;
+    }
+
+    .ag-panel {
+      flex-basis: 0;
+      flex-grow: 1;
+      will-change: flex-grow;
+      transform: translateZ(0);
+      transition:
+        flex-grow var(--ag-dur) cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 10px 30px -20px rgba(5, 11, 28, 0.6);
+    }
+
+    .ag-panel[data-default] {
+      flex-grow: var(--ag-grow);
+      box-shadow: 0 24px 60px -24px color-mix(in srgb, var(--ag-accent) 40%, transparent);
+    }
+
+    .ag-root:hover .ag-panel {
+      flex-grow: 1;
+      box-shadow: 0 10px 30px -20px rgba(5, 11, 28, 0.6);
+    }
+
+    .ag-root .ag-panel:hover,
+    .ag-root .ag-panel:focus-visible {
+      flex-grow: var(--ag-grow);
+      box-shadow: 0 24px 60px -24px color-mix(in srgb, var(--ag-accent) 40%, transparent);
+    }
+
+    /* grayscale: source is `grayscale && !isActive && !isMobile` */
+    .ag-root[data-grayscale] .ag-img {
+      filter: grayscale(0.85);
+      transition: filter 600ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .ag-root[data-grayscale] .ag-panel[data-default] .ag-img {
+      filter: grayscale(0);
+    }
+    .ag-root[data-grayscale]:hover .ag-panel .ag-img {
+      filter: grayscale(0.85);
+    }
+    .ag-root[data-grayscale] .ag-panel:hover .ag-img {
+      filter: grayscale(0);
+    }
+
+    /* caption: shown for the active/hovered panel only */
+    .ag-caption {
+      opacity: 0;
+      transform: translateX(-0.75rem);
+      transition: all 400ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .ag-panel[data-default] .ag-caption {
+      opacity: 1;
+      transform: none;
+    }
+    .ag-root:hover .ag-panel .ag-caption {
+      opacity: 0;
+      transform: translateX(-0.75rem);
+    }
+    .ag-root .ag-panel:hover .ag-caption {
+      opacity: 1;
+      transform: none;
+    }
+
+    .ag-pill {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    .ag-panel[data-default] .ag-pill {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .ag-root:hover .ag-panel .ag-pill {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    .ag-root .ag-panel:hover .ag-pill {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .ag-panel[data-default] .ag-overlay,
+    .ag-root .ag-panel:hover .ag-overlay {
+      background: linear-gradient(
+        180deg,
+        transparent 40%,
+        color-mix(in srgb, var(--ag-overlay) 93%, transparent) 100%
+      );
+    }
+    .ag-root:hover .ag-panel .ag-overlay {
+      background: linear-gradient(
+        180deg,
+        transparent 65%,
+        color-mix(in srgb, var(--ag-overlay) 47%, transparent) 100%
+      );
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ag-panel,
+    .ag-caption,
+    .ag-img,
+    .ag-tip {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const ROOTS = document.querySelectorAll<HTMLElement>(".ag-root");
+
+  ROOTS.forEach((root) => {
+    const panels = Array.from(
+      root.querySelectorAll<HTMLElement>(".ag-panel"),
+    );
+
+    // Mobile: card crossing the centred band becomes active.
+    if (
+      window.matchMedia("(max-width: 639px)").matches &&
+      "IntersectionObserver" in window
+    ) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            e.target.classList.toggle("is-active", e.isIntersecting);
+          }
+        },
+        { rootMargin: "-44% 0px -50% 0px", threshold: 0 },
+      );
+      panels.forEach((p) => io.observe(p));
+    }
+
+    // Desktop: floating cursor tooltip following the pointer.
+    if (window.matchMedia("(min-width: 640px) and (pointer: fine)").matches) {
+      const tip = root.querySelector<HTMLElement>(".ag-tip");
+      const label = tip?.querySelector<HTMLElement>(".ag-tip-label");
+      if (tip && label) {
+        root.addEventListener(
+          "pointermove",
+          (e) => {
+            const r = root.getBoundingClientRect();
+            tip.style.translate = `${e.clientX - r.left}px ${e.clientY - r.top}px`;
+          },
+          { passive: true },
+        );
+        panels.forEach((p) => {
+          if (p.tagName !== "A") return; // source: tooltip only when item.link
+          p.addEventListener("pointerenter", () => {
+            // Source tooltip text is always "CONOCÉ MÁS" (+ ArrowUpRight).
+            tip.classList.add("is-on");
+          });
+          p.addEventListener("pointerleave", () => {
+            tip.classList.remove("is-on");
+          });
+        });
+      }
+    }
+  });
+</script>

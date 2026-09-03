@@ -1,0 +1,50 @@
+---
+// Port of components/ui/logo-loop.tsx.
+//
+// Already CSS-driven in the source: `[animation:logo-loop_linear_infinite]` with
+// `group-hover:[animation-play-state:paused]` and `motion-reduce:[animation:none]`.
+// The `logo-loop` keyframe (translateX(-50%)) already lives in globals.css, so
+// this is a straight markup port — no JS.
+//
+// Slot contract: pass the <li> items once; they're rendered `repeat` times into
+// each of the two tracks (matches the source's `set` built from
+// `Array.from({ length: repeat })`).
+interface Props {
+  duration?: number;
+  gap?: number;
+  repeat?: number;
+  direction?: "left" | "right";
+  class?: string;
+}
+
+const {
+  duration = 28,
+  gap = 56,
+  repeat = 3,
+  direction = "left",
+  class: className = "",
+} = Astro.props;
+
+const copies = Array.from({ length: repeat });
+---
+
+<div
+  class:list={["group relative overflow-hidden", className]}
+  style="mask-image:linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);-webkit-mask-image:linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent)"
+>
+  <div
+    class="flex w-max [animation:logo-loop_linear_infinite] group-hover:[animation-play-state:paused] motion-reduce:[animation:none]"
+    style={`animation-duration:${duration}s;animation-direction:${direction === "right" ? "reverse" : "normal"}`}
+  >
+    <ul class="flex items-center" style={`gap:${gap}px;padding-right:${gap}px`}>
+      {copies.map(() => <slot />)}
+    </ul>
+    <ul
+      class="flex items-center"
+      style={`gap:${gap}px;padding-right:${gap}px`}
+      aria-hidden="true"
+    >
+      {copies.map(() => <slot />)}
+    </ul>
+  </div>
+</div>

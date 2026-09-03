@@ -1,0 +1,30 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Navbar from "@/components/Navbar.astro";
+import Services from "@/components/Services.astro";
+import Process from "@/components/Process.astro";
+import Portfolio from "@/components/Portfolio.astro";
+import Team from "@/components/Team.astro";
+---
+
+<BaseLayout title="Fase 3 — Navbar + Services portados">
+  <Navbar />
+  <main>
+    <Services />
+    <Process />
+    <Portfolio />
+    <section
+      id="clientes"
+      class="min-h-screen flex items-center justify-center bg-background text-foreground"
+    >
+      <p class="text-2xl font-[450]">Clientes (spacer)</p>
+    </section>
+    <Team />
+    <section
+      id="contacto"
+      class="min-h-screen flex items-center justify-center bg-background text-foreground"
+    >
+      <p class="text-2xl font-[450]">Contacto (spacer)</p>
+    </section>
+  </main>
+</BaseLayout>

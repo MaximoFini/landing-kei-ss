@@ -1,0 +1,102 @@
+---
+/**
+ * JSON-LD for the blog — verbatim port of `components/blog-structured-data.tsx`
+ * (BlogPosting, BreadcrumbList, Blog). Serialised identically to the Next
+ * component (JSON.stringify, no whitespace).
+ *
+ * `mode` selects which of the three the Next pages rendered:
+ *  - "post"  -> BlogPosting + BreadcrumbList (Inicio / Blog / <title>)
+ *  - "list"  -> Blog + BreadcrumbList (Inicio / Blog)
+ */
+import type { CollectionEntry } from "astro:content";
+
+type PostEntry = CollectionEntry<"blog">;
+
+interface Props {
+  mode: "post" | "list";
+  post?: PostEntry;
+  posts?: PostEntry[];
+}
+
+const { mode, post, posts = [] } = Astro.props;
+
+const PUBLISHER = {
+  "@type": "Organization",
+  name: "KEI Software",
+  url: "https://keisoftware.dev",
+  logo: {
+    "@type": "ImageObject",
+    url: "https://keisoftware.dev/kei-logo-nuevo.png",
+  },
+};
+
+const schemas: Record<string, unknown>[] = [];
+
+if (mode === "post" && post) {
+  const url = `https://keisoftware.dev/blog/${post.id}`;
+  schemas.push({
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.data.title,
+    description: post.data.excerpt,
+    datePublished: post.data.date,
+    dateModified: post.data.date,
+    author: {
+      "@type": "Organization",
+      name: "KEI Software",
+      url: "https://keisoftware.dev",
+    },
+    publisher: PUBLISHER,
+    mainEntityOfPage: url,
+    keywords: post.data.keywords.join(", "),
+    image: `https://keisoftware.dev/blog/${post.id}/opengraph-image`,
+  });
+  schemas.push(breadcrumb([
+    { name: "Inicio", url: "https://keisoftware.dev" },
+    { name: "Blog", url: "https://keisoftware.dev/blog" },
+    { name: post.data.title, url },
+  ]));
+}
+
+if (mode === "list") {
+  schemas.push({
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    name: "Blog | KEI Software",
+    url: "https://keisoftware.dev/blog",
+    blogPost: posts.map((p) => ({
+      "@type": "BlogPosting",
+      headline: p.data.title,
+      url: `https://keisoftware.dev/blog/${p.id}`,
+      datePublished: p.data.date,
+    })),
+  });
+  schemas.push(breadcrumb([
+    { name: "Inicio", url: "https://keisoftware.dev" },
+    { name: "Blog", url: "https://keisoftware.dev/blog" },
+  ]));
+}
+
+function breadcrumb(items: { name: string; url: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: item.url,
+    })),
+  };
+}
+---
+
+{
+  schemas.map((schema) => (
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify(schema)}
+    />
+  ))
+}

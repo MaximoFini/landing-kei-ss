@@ -1,0 +1,50 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+// Phase 5 scratch/index page — blog + SEO/metadata infrastructure.
+const posts = [
+  "como-integrar-ia-en-tu-negocio",
+  "nextjs-vs-react-que-elegir",
+  "automatizacion-procesos-empresariales",
+  "mejores-practicas-desarrollo-software",
+];
+const checks = [
+  ["/blog", "listing: Destacados (2) + Todos los artículos (2), newest first"],
+  ["/blog/como-integrar-ia-en-tu-negocio", "post render, .blog-content, JSON-LD, OG"],
+  ["/opengraph-image.png", "site default OG (1200x630 PNG)"],
+  ["/twitter-image.png", "twitter card PNG (same design)"],
+  ["/blog/opengraph-image.png", "blog index OG PNG"],
+  ["/blog/como-integrar-ia-en-tu-negocio/opengraph-image.png", "per-post OG PNG (title text)"],
+  ["/sitemap-index.xml", "sitemap index -> sitemap-0.xml (/, /blog, 4 posts)"],
+  ["/robots.txt", "UA rules + Host + Sitemap: /sitemap-index.xml"],
+];
+---
+
+<BaseLayout title="Fase 5 — Blog + SEO/metadata infrastructure">
+  <main class="mx-auto max-w-3xl p-8">
+    <h1 class="mb-6 text-3xl font-black text-foreground">Fase 5 — Blog + SEO</h1>
+
+    <h2 class="mb-2 mt-6 text-sm font-mono uppercase tracking-wider text-muted-foreground">
+      Posts
+    </h2>
+    <ul class="mb-6 list-disc pl-6 text-foreground">
+      {posts.map((s) => (
+        <li>
+          <a class="text-neon underline" href={`/blog/${s}`}>{`/blog/${s}`}</a>
+        </li>
+      ))}
+    </ul>
+
+    <h2 class="mb-2 mt-6 text-sm font-mono uppercase tracking-wider text-muted-foreground">
+      Qué revisar
+    </h2>
+    <ul class="list-disc pl-6 text-foreground">
+      {checks.map(([href, note]) => (
+        <li>
+          <a class="text-neon underline" href={href}>{href}</a>
+          <span class="text-muted-foreground"> — {note}</span>
+        </li>
+      ))}
+    </ul>
+  </main>
+</BaseLayout>

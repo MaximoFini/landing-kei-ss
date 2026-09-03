@@ -1,0 +1,44 @@
+---
+// CSS-only port of components/ui/dia-text-reveal.tsx (single-string case).
+//
+// Original (Framer/JS): a gradient band of `colors` (34%-wide, easeInOutCubic)
+// is swept across the text behind `background-clip:text` by animating
+// `background-image` every frame from pos -17 → 117 over `duration` seconds.
+// Region already swept renders in `textColor` (= --foreground); region not yet
+// swept is transparent; resting/end state is solid `textColor`. Starts on
+// in-view; coarse-pointer + reduced-motion jump straight to the end state.
+//
+// This port: one static gradient (foreground | colour band | transparent) at
+// `background-size:300% 100%`, and a single `@keyframes` moves
+// `background-position` 100% → 0% once (`animation-fill-mode: both`). Triggered
+// by the shared reveal IntersectionObserver adding `.is-visible` (see
+// src/scripts/reveal.ts). Matches the original: 90deg horizontal sweep L→R, a
+// ~34%-wide colour band, settles to solid `var(--foreground)`. Colour stops,
+// duration (1.3s) and ease-in-out-cubic easing are matched.
+interface Props {
+  text: string;
+  colors?: string[];
+  textColor?: string;
+  // One sweep pass, seconds. Matches the original `duration` prop.
+  duration?: number;
+  class?: string;
+}
+
+const {
+  text,
+  colors = ["#0b1a42", "#1a4fc0", "#3f7dff", "#bcdcff"],
+  textColor = "var(--foreground)",
+  duration = 1.3,
+  class: className = "",
+} = Astro.props;
+
+const pad = [...colors];
+while (pad.length < 4) pad.push(colors[colors.length - 1] ?? "#3f7dff");
+const [c1, c2, c3, c4] = pad;
+---
+
+<span
+  class:list={["dia-text align-bottom leading-[100%] text-inherit", className]}
+  style={`--dia-dur:${duration}s;--dia-fg:${textColor};--dia-c1:${c1};--dia-c2:${c2};--dia-c3:${c3};--dia-c4:${c4}`}
+  >{text}</span
+>

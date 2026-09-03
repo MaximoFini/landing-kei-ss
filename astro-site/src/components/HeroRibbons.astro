@@ -1,0 +1,120 @@
+---
+// Port of components/HeroRibbons.tsx.
+//
+// Source: on `(pointer: coarse)` or `(max-width: 767px)` it renders a plain CSS
+// radial-gradient (no SVG, no blur); otherwise a full-viewport SVG behind a
+// blur(46px) with two gradient-stroked paths that Framer morphs
+// `d: [A, B, A]` over 9s, `ease: "easeInOut"`, `repeat: Infinity` — the morph
+// only runs on non-touch, larger viewports and is disabled under reduced motion.
+//
+// Ported with ZERO JS: both variants are always in the DOM, CSS media queries
+// pick which is shown. The path morph is a CSS `@keyframes` animating the `d`
+// property (values A → B → A, `ease-in-out`, `infinite`, 9s) — the exact Framer
+// behaviour. `@media (prefers-reduced-motion: reduce)` freezes it to path A,
+// matching the source's `useReducedMotion` gate.
+const LEFT_A = "M 120,-100 C 0,250 260,420 160,620 C 80,760 260,850 140,1000";
+const LEFT_B = "M 260,-100 C -100,300 420,360 300,620 C 20,880 420,780 0,1000";
+const RIGHT_A = "M 1320,-100 C 1440,250 1180,420 1280,620 C 1360,760 1180,850 1300,1000";
+const RIGHT_B = "M 1180,-100 C 1540,300 1020,360 1140,620 C 1420,880 1020,780 1440,1000";
+---
+
+<div class="absolute inset-0 pointer-events-none">
+  {/* Mobile / coarse-pointer fallback — plain CSS gradient, no filter */}
+  <div
+    class="hero-ribbons-fallback absolute inset-0 pointer-events-none"
+    aria-hidden="true"
+    style="background:radial-gradient(60% 55% at -8% 42%, rgba(63,125,255,0.22) 0%, rgba(26,79,192,0.10) 45%, transparent 72%), radial-gradient(60% 55% at 108% 42%, rgba(63,125,255,0.22) 0%, rgba(26,79,192,0.10) 45%, transparent 72%)"
+  >
+  </div>
+
+  {/* Desktop — blurred morphing ribbons */}
+  <div class="hero-ribbons-svg absolute inset-0 pointer-events-none">
+    <svg
+      viewBox="0 0 1440 1000"
+      preserveAspectRatio="xMidYMid slice"
+      class="w-full h-full"
+      style="filter: blur(46px)"
+    >
+      <defs>
+        <linearGradient id="ribbonGradient" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#0b1a42" stop-opacity="0"></stop>
+          <stop offset="25%" stop-color="#1a4fc0" stop-opacity="0.55"></stop>
+          <stop offset="60%" stop-color="#3f7dff" stop-opacity="0.85"></stop>
+          <stop offset="78%" stop-color="#bcdcff" stop-opacity="0.9"></stop>
+          <stop offset="100%" stop-color="#1a4fc0" stop-opacity="0.35"></stop>
+        </linearGradient>
+      </defs>
+
+      <path
+        class="hero-ribbon-path hero-ribbon-path--left"
+        d={LEFT_A}
+        fill="none"
+        stroke="url(#ribbonGradient)"
+        stroke-width="150"
+        stroke-linecap="round"></path>
+      <path
+        class="hero-ribbon-path hero-ribbon-path--right"
+        d={RIGHT_A}
+        fill="none"
+        stroke="url(#ribbonGradient)"
+        stroke-width="150"
+        stroke-linecap="round"></path>
+    </svg>
+  </div>
+</div>
+
+<style
+  define:vars={{ leftA: `path("${LEFT_A}")`, leftB: `path("${LEFT_B}")`, rightA: `path("${RIGHT_A}")`, rightB: `path("${RIGHT_B}")` }}
+>
+  /* Desktop shows SVG, hides gradient; mobile / coarse does the reverse. */
+  .hero-ribbons-svg {
+    display: block;
+  }
+  .hero-ribbons-fallback {
+    display: none;
+  }
+
+  @media (max-width: 767px), (pointer: coarse) {
+    .hero-ribbons-svg {
+      display: none;
+    }
+    .hero-ribbons-fallback {
+      display: block;
+    }
+  }
+
+  .hero-ribbon-path {
+    animation: 9s ease-in-out infinite;
+  }
+  .hero-ribbon-path--left {
+    animation-name: hero-ribbon-left;
+  }
+  .hero-ribbon-path--right {
+    animation-name: hero-ribbon-right;
+  }
+
+  @keyframes hero-ribbon-left {
+    0%,
+    100% {
+      d: var(--leftA);
+    }
+    50% {
+      d: var(--leftB);
+    }
+  }
+  @keyframes hero-ribbon-right {
+    0%,
+    100% {
+      d: var(--rightA);
+    }
+    50% {
+      d: var(--rightB);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-ribbon-path {
+      animation: none;
+    }
+  }
+</style>

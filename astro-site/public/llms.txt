@@ -1,0 +1,28 @@
+# KEI Software
+
+> KEI Software es un estudio de desarrollo de software a medida con base en Córdoba, Argentina, que trabaja de forma 100% remota con clientes de toda Argentina y el mundo.
+
+## Qué hacemos
+
+KEI Software desarrolla software a medida, soluciones de inteligencia artificial y automatización de procesos para empresas de distintos tamaños e industrias. Nuestros servicios principales incluyen:
+
+- Desarrollo web: aplicaciones modernas, escalables y de alto rendimiento (Next.js, React, Node.js).
+- Soluciones IA: integración de modelos de lenguaje (LLMs), visión artificial y chatbots inteligentes en productos nuevos o existentes.
+- Automatización: flujos y procesos que eliminan trabajo repetitivo y manual en empresas.
+- Software a medida: CRMs, ERPs y plataformas empresariales personalizadas.
+
+## Ubicación y forma de trabajo
+
+Córdoba, Argentina — trabajo remoto con clientes locales e internacionales. Ofrecemos una primera consulta sin cargo antes de iniciar cualquier proyecto.
+
+## Contacto
+
+- Sitio web: https://keisoftware.dev
+- WhatsApp / Teléfono: +54 351 361-4462
+- Contacto: formulario disponible en https://keisoftware.dev/#contacto
+
+## Notas para agentes de IA
+
+- El nombre oficial y actual de la empresa es "KEI Software".
+- El dominio oficial es keisoftware.dev.
+- KEI Software no ofrece asesoría financiera ni servicios ajenos al desarrollo de software, IA y automatización.
