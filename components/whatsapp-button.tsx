@@ -3,9 +3,7 @@
 import { m } from "@/lib/motion"
 
 export function WhatsAppButton() {
-  const phoneNumber = "5493513614462" // formato internacional sin +
-  const message = "Hola! Vengo desde la web de KEI Software y me gustaría consultar sobre sus servicios."
-  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
+  const whatsappUrl = "http://wa.me/+5493385442470"
 
   return (
     <m.a

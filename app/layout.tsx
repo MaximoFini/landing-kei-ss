@@ -131,7 +131,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className="bg-background scroll-smooth" suppressHydrationWarning>
+    <html lang="es" className="bg-background" suppressHydrationWarning>
       <head>
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         <link

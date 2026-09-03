@@ -128,9 +128,9 @@
    MOBILE OPTIMIZATIONS
    ======================================== */
 
-/* Smooth scrolling for all devices */
+/* Scroll handled via custom JS animation (see navbar.tsx smoothScrollTo) for a
+   faster, more fluid feel than the native browser smooth-scroll timing. */
 html {
-  scroll-behavior: smooth;
   -webkit-tap-highlight-color: transparent;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
