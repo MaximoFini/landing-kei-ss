@@ -24,15 +24,17 @@ export interface BlogPost {
 export const blogPosts: BlogPost[] = [
   {
     slug: "como-integrar-ia-en-tu-negocio",
-    title: "Cómo Integrar IA en tu Negocio: Guía Práctica 2026",
+    title: "Integración de IA en Empresas: Guía Práctica 2026",
     excerpt:
-      "Descubre cómo las empresas están usando inteligencia artificial para automatizar procesos, mejorar la experiencia del cliente y aumentar la eficiencia.",
+      "Todo sobre la integración de IA en empresas: por dónde empezar, qué procesos automatizar primero y qué tecnologías tiene sentido usar en 2026.",
     date: "2026-05-01",
     readTime: "8 min",
     category: "Inteligencia Artificial",
     featured: false,
     coverImage: "/blog/covers/como-integrar-ia-en-tu-negocio.svg",
     keywords: [
+      "integración de IA en empresas",
+      "integración de IA",
       "IA",
       "inteligencia artificial",
       "automatización",
@@ -45,11 +47,11 @@ export const blogPosts: BlogPost[] = [
       role: "Equipo de Desarrollo",
     },
     content: `
-# Cómo Integrar IA en tu Negocio: Guía Práctica 2026
+# Integración de IA en Empresas: Guía Práctica 2026
 
-La inteligencia artificial ya no es el futuro: es el presente. En 2026, las empresas que integran IA de forma estratégica están viendo mejoras significativas en productividad, costos y experiencia del cliente.
+La integración de IA en empresas ya no es el futuro: es el presente. En 2026, las empresas que integran IA de forma estratégica están viendo mejoras significativas en productividad, costos y experiencia del cliente.
 
-## ¿Por Dónde Empezar?
+## ¿Por Dónde Empezar con la Integración de IA en tu Empresa?
 
 ### 1. Identifica Procesos Repetitivos
 El primer paso es analizar qué tareas consumen tiempo pero no generan valor directo. Algunos ejemplos:
@@ -170,6 +172,7 @@ El costo de integrar IA no se resume en un precio de catálogo, pero tampoco es 
     featured: false,
     coverImage: "/blog/covers/ia-a-medida-vs-herramientas-genericas.svg",
     keywords: [
+      "integración de IA a medida",
       "IA a medida",
       "herramientas de IA genéricas",
       "integración de IA",
@@ -183,7 +186,7 @@ El costo de integrar IA no se resume en un precio de catálogo, pero tampoco es 
     content: `
 # IA a Medida vs. Herramientas Genéricas: ¿Cuál Elegir?
 
-No toda "integración de IA" es igual, aunque el marketing de muchas herramientas quiera hacerte creer lo contrario. Hay una diferencia real entre conectar un plugin y construir algo que conoce tu negocio de verdad.
+No toda integración de IA a medida es igual, aunque el marketing de muchas herramientas quiera hacerte creer lo contrario. Hay una diferencia real entre conectar un plugin y construir algo que conoce tu negocio de verdad.
 
 ## Herramientas Genéricas
 
