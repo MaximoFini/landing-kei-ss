@@ -1,7 +1,9 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { BreadcrumbStructuredData } from "@/components/blog-structured-data";
 import { FaqPageStructuredData } from "@/components/faq-structured-data";
+import { SectionHeading } from "@/components/ui/section-heading";
 
 const FAQS = [
   {
@@ -84,38 +86,36 @@ export default function FaqPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-neon transition-colors"
+            className="inline-flex items-center gap-2 rounded-full py-2 pl-3 pr-4 -ml-3 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
           >
-            ← Volver al inicio
+            <ArrowLeft className="w-4 h-4" />
+            Volver al inicio
           </Link>
         </div>
       </header>
 
       {/* Hero */}
-      <section className="pt-16 sm:pt-24 pb-12 sm:pb-16 px-4 sm:px-6 border-b border-border/40">
+      <section className="pt-16 sm:pt-20 pb-12 sm:pb-16 px-4 sm:px-6">
         <div className="max-w-4xl mx-auto">
-          <div className="flex items-center gap-3 mb-6">
-            <span className="w-8 h-px bg-neon" />
-            <span className="text-[10px] tracking-[0.3em] text-neon uppercase font-mono">
-              FAQ
-            </span>
-          </div>
-          <h1 className="text-4xl sm:text-6xl font-black text-foreground uppercase tracking-tight leading-none mb-6">
-            Preguntas <span className="text-neon">Frecuentes</span>
-          </h1>
-          <p className="max-w-2xl text-muted-foreground text-lg leading-relaxed">
-            Todo lo que necesitás saber sobre cómo trabajamos, los tiempos de
-            desarrollo y los servicios de KEI Software.
-          </p>
+          <SectionHeading
+            eyebrow="FAQ"
+            title="Preguntas frecuentes"
+            align="left"
+            className="mb-0"
+            description="Todo lo que necesitás saber sobre cómo trabajamos, los tiempos de desarrollo y los servicios de KEI Software."
+          />
         </div>
       </section>
 
       {/* FAQ list */}
       <section className="py-12 sm:py-16 px-4 sm:px-6">
-        <div className="max-w-4xl mx-auto divide-y divide-border/40">
+        <div className="max-w-4xl mx-auto space-y-4">
           {FAQS.map((faq) => (
-            <div key={faq.question} className="py-6 sm:py-8">
-              <h2 className="text-lg sm:text-xl font-bold text-foreground mb-3">
+            <div
+              key={faq.question}
+              className="p-6 sm:p-8 rounded-2xl border border-border bg-card shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] dark:shadow-[0_2px_16px_-8px_rgba(0,0,0,0.5)]"
+            >
+              <h2 className="font-google-sans text-lg sm:text-xl font-[450] text-foreground mb-3">
                 {faq.question}
               </h2>
               <p className="text-muted-foreground leading-relaxed">
@@ -125,8 +125,8 @@ export default function FaqPage() {
           ))}
         </div>
 
-        <div className="max-w-4xl mx-auto mt-16 p-8 border border-neon/20 bg-neon/5 rounded-sm">
-          <h3 className="text-xl font-bold text-foreground mb-3">
+        <div className="max-w-4xl mx-auto mt-8 p-8 rounded-2xl border border-border bg-card shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] dark:shadow-[0_2px_16px_-8px_rgba(0,0,0,0.5)]">
+          <h3 className="font-google-sans text-xl font-[450] text-foreground mb-3">
             ¿Tenés otra pregunta?
           </h3>
           <p className="text-muted-foreground mb-6">
@@ -135,9 +135,11 @@ export default function FaqPage() {
           </p>
           <Link
             href="/#contacto"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-neon text-background font-bold text-sm tracking-wide hover:bg-neon-bright transition-all rounded-sm"
+            className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full font-semibold text-white text-[15px] transition-transform hover:scale-[1.03] active:scale-95"
+            style={{ backgroundColor: "#3f7dff" }}
           >
-            Agendar consulta gratuita →
+            Agendar consulta gratuita
+            <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </section>

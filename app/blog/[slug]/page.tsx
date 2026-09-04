@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Calendar, Clock, ArrowLeft, Tag } from "lucide-react";
+import { Calendar, Clock, ArrowLeft, ArrowRight, Tag } from "lucide-react";
 import {
   getPostBySlug,
   getRelatedPosts,
@@ -92,7 +92,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6">
           <Link
             href="/blog"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-neon transition-colors"
+            className="inline-flex items-center gap-2 rounded-full py-2 pl-3 pr-4 -ml-3 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Volver al blog
@@ -105,14 +105,14 @@ export default async function BlogPostPage({ params }: PageProps) {
         <div className="max-w-4xl mx-auto">
           {/* Category badge */}
           <div className="flex items-center gap-2 mb-6">
-            <Tag className="w-4 h-4 text-neon" />
-            <span className="text-xs font-mono text-neon uppercase tracking-wider">
+            <Tag className="w-4 h-4 text-[#3f7dff]" />
+            <span className="text-xs font-mono text-[#3f7dff] uppercase tracking-wider">
               {post.category}
             </span>
           </div>
 
           {/* Title */}
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-foreground leading-tight mb-6">
+          <h1 className="font-google-sans text-3xl sm:text-5xl lg:text-6xl font-[450] tracking-normal text-foreground leading-tight mb-6">
             {post.title}
           </h1>
 
@@ -154,8 +154,8 @@ export default async function BlogPostPage({ params }: PageProps) {
           </div>
 
           {/* CTA */}
-          <div className="mt-16 p-8 border border-neon/20 bg-neon/5 rounded-sm">
-            <h3 className="text-xl font-bold text-foreground mb-3">
+          <div className="mt-16 p-8 rounded-2xl border border-border bg-card shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] dark:shadow-[0_2px_16px_-8px_rgba(0,0,0,0.5)]">
+            <h3 className="font-google-sans text-xl font-[450] text-foreground mb-3">
               ¿Listo para llevar tu proyecto al siguiente nivel?
             </h3>
             <p className="text-muted-foreground mb-6">
@@ -164,9 +164,11 @@ export default async function BlogPostPage({ params }: PageProps) {
             </p>
             <Link
               href="/#contacto"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-neon text-background font-bold text-sm tracking-wide hover:bg-neon-bright transition-all rounded-sm"
+              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full font-semibold text-white text-[15px] transition-transform hover:scale-[1.03] active:scale-95"
+              style={{ backgroundColor: "#3f7dff" }}
             >
-              Agendar consulta gratuita →
+              Agendar consulta gratuita
+              <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </div>
@@ -176,7 +178,7 @@ export default async function BlogPostPage({ params }: PageProps) {
       {relatedPosts.length > 0 && (
         <section className="py-12 sm:py-16 px-4 sm:px-6 border-t border-border/40 bg-surface/20">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-sm font-mono tracking-wider text-muted-foreground uppercase mb-8">
+            <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground mb-8">
               Artículos relacionados
             </h2>
             <div className="grid sm:grid-cols-2 gap-6">
@@ -184,12 +186,12 @@ export default async function BlogPostPage({ params }: PageProps) {
                 <Link
                   key={relatedPost.slug}
                   href={`/blog/${relatedPost.slug}`}
-                  className="group block p-6 border border-border/60 rounded-sm hover:border-neon/40 hover:bg-surface/50 transition-all"
+                  className="group block p-6 rounded-2xl border border-border bg-card shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] dark:shadow-[0_2px_16px_-8px_rgba(0,0,0,0.5)] transition-all duration-300 hover:-translate-y-1 hover:border-[#3f7dff]/35 hover:shadow-[0_24px_60px_-20px_rgba(63,125,255,0.35)]"
                 >
-                  <span className="text-xs font-mono text-neon uppercase tracking-wider">
+                  <span className="text-xs font-mono text-[#3f7dff] uppercase tracking-wider">
                     {relatedPost.category}
                   </span>
-                  <h3 className="text-lg font-bold text-foreground mt-3 mb-2 group-hover:text-neon transition-colors">
+                  <h3 className="font-google-sans text-lg font-[450] text-foreground mt-3 mb-2 group-hover:text-[#3f7dff] transition-colors">
                     {relatedPost.title}
                   </h3>
                   <p className="text-sm text-muted-foreground line-clamp-2">

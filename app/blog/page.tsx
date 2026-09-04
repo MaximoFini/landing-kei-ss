@@ -1,11 +1,12 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Calendar, Clock } from "lucide-react";
+import { ArrowLeft, ArrowRight, Calendar, Clock } from "lucide-react";
 import { getAllPosts, getFeaturedPosts } from "@/lib/blog";
 import {
   BlogListStructuredData,
   BreadcrumbStructuredData,
 } from "@/components/blog-structured-data";
+import { SectionHeading } from "@/components/ui/section-heading";
 
 export const metadata: Metadata = {
   title: "Blog de Desarrollo y Tecnología",
@@ -40,38 +41,33 @@ export default function BlogPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-neon transition-colors"
+            className="inline-flex items-center gap-2 rounded-full py-2 pl-3 pr-4 -ml-3 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
           >
-            ← Volver al inicio
+            <ArrowLeft className="w-4 h-4" />
+            Volver al inicio
           </Link>
         </div>
       </header>
 
       {/* Hero */}
-      <section className="pt-16 sm:pt-24 pb-12 sm:pb-16 px-4 sm:px-6 border-b border-border/40">
+      <section className="pt-16 sm:pt-20 pb-12 sm:pb-16 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center gap-3 mb-6">
-            <span className="w-8 h-px bg-neon" />
-            <span className="text-[10px] tracking-[0.3em] text-neon uppercase font-mono">
-              Blog
-            </span>
-          </div>
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-foreground uppercase tracking-tight leading-none mb-6">
-            Desarrollo de Software, IA<br />
-            <span className="text-neon">y Automatización</span>
-          </h1>
-          <p className="max-w-2xl text-muted-foreground text-lg leading-relaxed">
-            Exploramos desarrollo de software, IA, automatización y las
-            tecnologías que están transformando la industria.
-          </p>
+          <SectionHeading
+            eyebrow="Blog"
+            title="Blog"
+            subtitle="Software, IA y automatización"
+            align="left"
+            className="mb-0"
+            description="Exploramos desarrollo de software, inteligencia artificial y las tecnologías que están transformando la industria."
+          />
         </div>
       </section>
 
       {/* Featured Posts */}
       {featuredPosts.length > 0 && (
-        <section className="py-12 sm:py-16 px-4 sm:px-6 bg-surface/20">
+        <section className="py-12 sm:py-16 px-4 sm:px-6">
           <div className="max-w-7xl mx-auto">
-            <h2 className="text-sm font-mono tracking-wider text-muted-foreground uppercase mb-8">
+            <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground mb-8">
               Destacados
             </h2>
             <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
@@ -79,10 +75,10 @@ export default function BlogPage() {
                 <Link
                   key={post.slug}
                   href={`/blog/${post.slug}`}
-                  className="group block p-6 sm:p-8 border border-border/60 rounded-sm hover:border-neon/40 hover:bg-surface/50 transition-all duration-300"
+                  className="group block p-6 sm:p-8 rounded-2xl border border-border bg-card shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] dark:shadow-[0_2px_16px_-8px_rgba(0,0,0,0.5)] transition-all duration-300 hover:-translate-y-1 hover:border-[#3f7dff]/35 hover:shadow-[0_24px_60px_-20px_rgba(63,125,255,0.35)]"
                 >
                   <div className="flex items-center gap-2 mb-4">
-                    <span className="text-xs font-mono text-neon uppercase tracking-wider">
+                    <span className="text-xs font-mono text-[#3f7dff] uppercase tracking-wider">
                       {post.category}
                     </span>
                     <span className="text-muted-foreground">·</span>
@@ -91,7 +87,7 @@ export default function BlogPage() {
                       {post.readTime}
                     </div>
                   </div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-3 group-hover:text-neon transition-colors">
+                  <h3 className="font-google-sans text-xl sm:text-2xl font-[450] text-foreground mb-3 group-hover:text-[#3f7dff] transition-colors">
                     {post.title}
                   </h3>
                   <p className="text-muted-foreground text-sm sm:text-base leading-relaxed mb-4">
@@ -106,7 +102,7 @@ export default function BlogPage() {
                         day: "numeric",
                       })}
                     </div>
-                    <ArrowRight className="w-4 h-4 text-neon opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <ArrowRight className="w-4 h-4 text-[#3f7dff] opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
                   </div>
                 </Link>
               ))}
@@ -118,20 +114,20 @@ export default function BlogPage() {
       {/* Regular Posts */}
       <section className="py-12 sm:py-16 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-sm font-mono tracking-wider text-muted-foreground uppercase mb-8">
+          <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground mb-8">
             Todos los artículos
           </h2>
-          <div className="space-y-6">
+          <div className="space-y-4">
             {regularPosts.map((post) => (
               <Link
                 key={post.slug}
                 href={`/blog/${post.slug}`}
-                className="group block p-6 border-b border-border/40 hover:bg-surface/30 transition-all -mx-6 px-6"
+                className="group block p-6 rounded-2xl border border-transparent hover:border-border hover:bg-card transition-all"
               >
                 <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="text-xs font-mono text-neon uppercase tracking-wider">
+                      <span className="text-xs font-mono text-[#3f7dff] uppercase tracking-wider">
                         {post.category}
                       </span>
                       <span className="text-muted-foreground">·</span>
@@ -140,7 +136,7 @@ export default function BlogPage() {
                         {post.readTime}
                       </div>
                     </div>
-                    <h3 className="text-lg sm:text-xl font-bold text-foreground mb-2 group-hover:text-neon transition-colors">
+                    <h3 className="font-google-sans text-lg sm:text-xl font-[450] text-foreground mb-2 group-hover:text-[#3f7dff] transition-colors">
                       {post.title}
                     </h3>
                     <p className="text-muted-foreground text-sm leading-relaxed">
@@ -155,7 +151,7 @@ export default function BlogPage() {
                         day: "numeric",
                       })}
                     </div>
-                    <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-neon transition-colors" />
+                    <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-[#3f7dff] group-hover:translate-x-0.5 transition-all" />
                   </div>
                 </div>
               </Link>
