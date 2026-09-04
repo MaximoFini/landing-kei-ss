@@ -26,6 +26,7 @@ const navLinks = [
   { label: "Servicios", href: "#servicios" },
   { label: "Proceso", href: "#proceso" },
   { label: "Proyectos", href: "#proyectos" },
+  { label: "Blog", href: "/blog" },
   { label: "Preguntas frecuentes", href: "/preguntas-frecuentes" },
   { label: "Contacto", href: "#contacto" },
 ]
