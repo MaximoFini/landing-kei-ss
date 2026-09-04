@@ -34,6 +34,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.9,
     },
+    {
+      url: `${baseUrl}/preguntas-frecuentes`,
+      lastModified: homeLastModified,
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
     ...blogPosts,
     // Agregar aquí futuras páginas como:
     // { url: `${baseUrl}/servicios`, lastModified: currentDate, changeFrequency: 'monthly', priority: 0.8 },

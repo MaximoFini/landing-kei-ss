@@ -118,85 +118,6 @@ export function StructuredData() {
     },
   };
 
-  const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: "¿Cuánto tiempo toma desarrollar un proyecto de software?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "El tiempo varía según la complejidad. Proyectos simples pueden tomar 2-4 semanas, mientras que sistemas complejos pueden requerir 2-6 meses. Trabajamos con sprints ágiles para entregar valor incremental.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "¿Trabajan de forma remota?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Sí, trabajamos 100% remoto con clientes de toda Argentina y el mundo. Tenemos nuestra base en Córdoba, Argentina.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "¿Qué tecnologías utilizan?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Utilizamos tecnologías modernas como Next.js, React, Node.js, Python, PostgreSQL, y servicios cloud. Seleccionamos la mejor stack según las necesidades de cada proyecto.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "¿Ofrecen soporte después del lanzamiento?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Sí, todos nuestros proyectos incluyen soporte post-lanzamiento. Ofrecemos mantenimiento continuo, actualizaciones y mejoras según lo necesites.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "¿Pueden integrar IA en mi producto?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Sí, desarrollamos soluciones con modelos de lenguaje (LLMs), visión artificial, y automatización inteligente. Podemos integrar IA en productos nuevos o existentes.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "¿Qué tipo de proyectos desarrolla KEI Software?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Desarrollamos software a medida, aplicaciones web y móviles, plataformas e-commerce, CRMs y ERPs personalizados, soluciones con inteligencia artificial y sistemas de automatización para empresas de distintos tamaños e industrias.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "¿Cómo puedo contactar a KEI Software?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Podés escribirnos por WhatsApp al +54 351 361-4462, completar el formulario de contacto en keisoftware.dev, o enviarnos un email. Respondemos en menos de 24 horas hábiles y la primera consulta es sin cargo.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "¿En qué se diferencian de otras consultoras de software?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Nos enfocamos en transparencia total durante el proyecto, comunicación constante con el cliente, entregas incrementales con sprints cortos, y calidad garantizada con testing desde el día uno, en lugar de entregas cerradas sin visibilidad del proceso.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "¿Dónde está ubicada KEI Software?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Tenemos nuestra base en Córdoba, Argentina, y trabajamos 100% remoto con clientes de toda Argentina y el mundo.",
-        },
-      },
-    ],
-  };
-
   return (
     <>
       <script
@@ -216,10 +137,6 @@ export function StructuredData() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
     </>
   );
