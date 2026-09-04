@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="bg-dev" cx="50%" cy="-10%" r="90%">
+      <stop offset="0%" stop-color="#0f2678" />
+      <stop offset="35%" stop-color="#091c50" />
+      <stop offset="68%" stop-color="#050f28" />
+      <stop offset="100%" stop-color="#030816" />
+    </radialGradient>
+    <pattern id="dots-dev" width="34" height="34" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1.5" fill="#ffffff" opacity="0.08" />
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg-dev)" />
+  <rect width="1200" height="630" fill="url(#dots-dev)" />
+
+  <!-- git-graph motif -->
+  <g stroke="#3f7dff" stroke-width="3" fill="none" opacity="0.7">
+    <path d="M260 480 V180" />
+  </g>
+  <g stroke="#bcdcff" stroke-width="3" fill="none" opacity="0.55">
+    <path d="M260 320 C 420 320, 420 240, 560 240" />
+    <path d="M560 240 C 700 240, 700 320, 860 320" />
+    <path d="M260 380 C 380 380, 380 440, 500 440" />
+  </g>
+
+  <g fill="#0b1a42" stroke="#3f7dff" stroke-width="3">
+    <circle cx="260" cy="180" r="12" />
+    <circle cx="260" cy="320" r="12" />
+    <circle cx="260" cy="380" r="12" />
+    <circle cx="260" cy="480" r="12" />
+    <circle cx="560" cy="240" r="12" />
+    <circle cx="860" cy="320" r="12" />
+    <circle cx="500" cy="440" r="12" />
+  </g>
+
+  <g fill="none" stroke="#bcdcff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95">
+    <path d="M848 312 l8 8 16 -16" />
+    <path d="M488 432 l8 8 16 -16" />
+  </g>
+
+  <!-- terminal / checklist card -->
+  <g transform="translate(760,120)">
+    <rect x="0" y="0" width="330" height="230" rx="14" fill="#050f28" stroke="#3f7dff" stroke-width="1.5" opacity="0.9" />
+    <circle cx="24" cy="26" r="6" fill="#bcdcff" opacity="0.5" />
+    <circle cx="46" cy="26" r="6" fill="#bcdcff" opacity="0.35" />
+    <circle cx="68" cy="26" r="6" fill="#bcdcff" opacity="0.25" />
+    <g stroke="#bcdcff" stroke-width="2.5" stroke-linecap="round">
+      <line x1="24" y1="66" x2="150" y2="66" opacity="0.8" />
+      <line x1="24" y1="98" x2="200" y2="98" opacity="0.6" />
+      <line x1="24" y1="130" x2="120" y2="130" opacity="0.6" />
+      <line x1="24" y1="162" x2="180" y2="162" opacity="0.45" />
+    </g>
+    <g stroke="#3f7dff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <path d="M240 62 l8 8 16 -16" />
+      <path d="M240 94 l8 8 16 -16" />
+      <path d="M240 126 l8 8 16 -16" />
+    </g>
+  </g>
+</svg>

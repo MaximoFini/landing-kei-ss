@@ -14,6 +14,7 @@ export interface BlogPost {
   category: string;
   featured: boolean;
   keywords: string[];
+  coverImage: string;
   author: {
     name: string;
     role: string;
@@ -25,22 +26,18 @@ export const blogPosts: BlogPost[] = [
     slug: "como-integrar-ia-en-tu-negocio",
     title: "Cómo Integrar IA en tu Negocio: Guía Práctica 2026",
     excerpt:
-      "Descubre cómo integrar IA en tu negocio de forma real: cuánto cuesta, IA a medida vs. herramientas genéricas, y cómo lo hacemos en KEI Software desde Córdoba, Argentina.",
+      "Descubre cómo las empresas están usando inteligencia artificial para automatizar procesos, mejorar la experiencia del cliente y aumentar la eficiencia.",
     date: "2026-05-01",
-    readTime: "11 min",
+    readTime: "8 min",
     category: "Inteligencia Artificial",
     featured: true,
+    coverImage: "/blog/covers/como-integrar-ia-en-tu-negocio.svg",
     keywords: [
       "IA",
       "inteligencia artificial",
-      "IA a medida",
-      "integración de IA",
-      "costo integración IA",
-      "software a medida",
+      "automatización",
       "ChatGPT",
       "LLM",
-      "Córdoba",
-      "Argentina",
       "negocio",
     ],
     author: {
@@ -91,42 +88,6 @@ Usa IA para:
 - **Gemini**: Integración con ecosistema Google
 - **Modelos open-source**: Llama 3, Mistral para deployment privado
 
-## ¿Cuánto Cuesta Integrar IA en tu Empresa?
-
-El costo varía mucho según el alcance, pero hay tres niveles típicos:
-
-- **Herramientas listas para usar** (ChatGPT Team, Copilot, plugins de tu CRM): desde gratis hasta unos pocos cientos de dólares mensuales. Rápido de implementar, pero limitado a lo que la herramienta ya permite.
-- **Integración a medida sobre tu software existente** (un chatbot conectado a tu base de datos, IA que lee tus documentos, un asistente interno): la inversión típica arranca en un piloto acotado y crece según la complejidad y los sistemas que haya que conectar.
-- **Plataforma con IA integrada desde el diseño** (un producto nuevo con IA como parte central): se presupuesta como cualquier desarrollo de software a medida, con la IA como un módulo más del sistema.
-
-En KEI Software no vendemos una IA genérica: la integramos directamente en el software que ya usás (o que desarrollamos para vos), por eso cada presupuesto se arma según tu caso puntual. La primera consulta es sin cargo — ahí definimos alcance y un número real, no una estimación genérica.
-
-## IA a Medida vs. Herramientas Genéricas
-
-No toda "integración de IA" es igual:
-
-**Herramientas genéricas** (ChatGPT, Zapier AI, plugins prearmados)
-- Rápidas de probar
-- Limitadas a los flujos que la herramienta ya soporta
-- No conocen los datos ni las reglas específicas de tu negocio
-
-**IA a medida, integrada en tu software**
-- Se conecta directo a tu base de datos, tu CRM o tu sistema interno
-- Responde con las reglas y el contexto reales de tu empresa, no genéricos
-- Escala junto con el resto de tu plataforma en vez de quedar aislada
-
-La diferencia se nota apenas el caso de uso se aleja de lo genérico: un chatbot que "sabe" tu stock real, un sistema que clasifica tus documentos con tu propio criterio, un dashboard que predice con tus datos históricos. Ahí es donde el desarrollo de software a medida le gana a cualquier herramienta lista para usar.
-
-## IA para Empresas en Córdoba y Argentina
-
-Somos un equipo de Córdoba, Argentina, y trabajamos 100% remoto con empresas de todo el país. Eso nos da una ventaja concreta para proyectos de IA locales:
-
-- Entendemos el contexto de pymes y empresas argentinas: presupuestos, tiempos, y con qué sistemas ya trabajan (facturación local, ERPs regionales, WhatsApp Business, etc.)
-- Podemos integrar IA sobre herramientas que ya usás sin migrar todo tu stack
-- Comunicación directa en español, sin intermediarios ni tercerización
-
-Si estás evaluando IA para tu empresa en Córdoba o en cualquier parte de Argentina, [conversemos sin cargo](/#contacto) sobre qué tiene sentido para tu caso.
-
 ## Errores Comunes a Evitar
 
 ❌ Implementar IA por "estar a la moda"  
@@ -147,6 +108,176 @@ La IA es una herramienta, no una solución mágica. El éxito está en identific
     `,
   },
   {
+    slug: "cuanto-cuesta-integrar-ia-en-tu-empresa",
+    title: "¿Cuánto Cuesta Integrar IA en tu Empresa?",
+    excerpt:
+      "Nadie te va a dar un precio fijo por \"integrar IA\" porque no existe. Te contamos los 3 niveles reales de inversión y qué mueve el costo final.",
+    date: "2026-05-03",
+    readTime: "6 min",
+    category: "Inteligencia Artificial",
+    featured: false,
+    coverImage: "/blog/covers/cuanto-cuesta-integrar-ia-en-tu-empresa.svg",
+    keywords: [
+      "costo integración IA",
+      "cuánto cuesta IA",
+      "precio IA empresas",
+      "IA a medida",
+      "presupuesto IA",
+      "software a medida",
+    ],
+    author: {
+      name: "KEI Software",
+      role: "Equipo de Desarrollo",
+    },
+    content: `
+# ¿Cuánto Cuesta Integrar IA en tu Empresa?
+
+Es la pregunta que más nos hacen en la primera consulta, y la que menos nos gusta responder con un solo número — porque cualquier cifra sin contexto termina siendo mentira. El costo de integrar IA en una empresa no es un precio de catálogo: depende de qué estás integrando, dónde, y qué tan atado está a tus sistemas actuales.
+
+Esto es lo que realmente mueve el precio, sin vueltas.
+
+## Los 3 Niveles Reales de Inversión
+
+### 1. Herramientas listas para usar
+ChatGPT Team, Copilot, plugins de tu CRM o tu helpdesk. Van desde gratis hasta unos pocos cientos de dólares mensuales. Se implementan en días, pero hacen exactamente lo que la herramienta ya permite — ni un poco más.
+
+### 2. Integración a medida sobre tu software existente
+Un chatbot conectado a tu base de datos real, un sistema que lee y clasifica tus documentos, un asistente interno con el contexto de tu empresa. La inversión típica arranca en un piloto acotado (un caso de uso, bien definido) y crece según cuántos sistemas hay que conectar y qué tan compleja es la lógica de negocio.
+
+### 3. Plataforma con IA integrada desde el diseño
+Un producto nuevo donde la IA es un módulo más del sistema, no un agregado. Se presupuesta igual que cualquier desarrollo de software a medida: por alcance, no por "cuánto cuesta la IA" como si fuera un ítem aparte.
+
+## Qué Factores Mueven el Precio
+
+- **Cuántos sistemas hay que conectar**: CRM, ERP, base de datos, WhatsApp Business, facturación. Cada integración adicional suma tiempo de desarrollo real.
+- **El estado de tus datos**: si están ordenados y accesibles, el proyecto avanza rápido. Si hay que limpiar, migrar o consolidar información primero, ese trabajo se presupuesta aparte.
+- **Privacidad y compliance**: si necesitás que todo corra en tu propia infraestructura en vez de la nube de un tercero, el proyecto cambia de arquitectura.
+- **Soporte post-lanzamiento**: mantenimiento, ajustes del modelo con el tiempo, monitoreo de calidad de las respuestas.
+
+## Por Qué no Publicamos una Tabla de Precios
+
+Porque publicar "IA desde U$D X" sin conocer tu caso es, en el mejor de los casos, un precio de piloto mínimo que casi nunca aplica a un proyecto real — y en el peor, una forma de generar leads con un número que después no se cumple.
+
+En KEI Software preferimos la otra vía: una primera consulta sin cargo donde entendemos tu caso puntual, definimos el alcance real, y ahí sí te damos un número concreto.
+
+## Conclusión
+
+El costo de integrar IA no se resume en un precio de catálogo, pero tampoco es un misterio: son tres niveles claros, y factores concretos que los mueven. Si querés saber en cuál de los tres estás parado vos, [conversemos sin cargo](/#contacto).
+    `,
+  },
+  {
+    slug: "ia-a-medida-vs-herramientas-genericas",
+    title: "IA a Medida vs. Herramientas Genéricas: ¿Cuál Elegir?",
+    excerpt:
+      "ChatGPT y los plugins prearmados resuelven el 80% de los casos genéricos. Para el otro 20% — el que realmente te diferencia — hace falta IA integrada a tu propio software.",
+    date: "2026-05-05",
+    readTime: "6 min",
+    category: "Inteligencia Artificial",
+    featured: false,
+    coverImage: "/blog/covers/ia-a-medida-vs-herramientas-genericas.svg",
+    keywords: [
+      "IA a medida",
+      "herramientas de IA genéricas",
+      "integración de IA",
+      "software a medida",
+      "ChatGPT vs IA a medida",
+    ],
+    author: {
+      name: "KEI Software",
+      role: "Equipo de Desarrollo",
+    },
+    content: `
+# IA a Medida vs. Herramientas Genéricas: ¿Cuál Elegir?
+
+No toda "integración de IA" es igual, aunque el marketing de muchas herramientas quiera hacerte creer lo contrario. Hay una diferencia real entre conectar un plugin y construir algo que conoce tu negocio de verdad.
+
+## Herramientas Genéricas
+
+ChatGPT, Zapier AI, los plugins prearmados de tu CRM o helpdesk:
+
+- Rápidas de probar, muchas veces sin costo inicial
+- Limitadas a los flujos que la herramienta ya soporta de fábrica
+- No conocen los datos ni las reglas específicas de tu negocio — responden con conocimiento general, no con el tuyo
+
+Son excelentes para el 80% de los casos genéricos: redactar un email, resumir un documento, responder una pregunta frecuente sin contexto de tu empresa.
+
+## IA a Medida, Integrada en tu Software
+
+Un desarrollo que se conecta directo a tu base de datos, tu CRM o tu sistema interno:
+
+- Responde con las reglas y el contexto reales de tu empresa, no genéricos
+- Escala junto con el resto de tu plataforma en vez de quedar aislada como una herramienta más
+- Se puede ajustar con el tiempo a medida que cambia tu negocio
+
+## Ejemplos Concretos de Cuándo Conviene Cada Una
+
+**Usá una herramienta genérica si:** necesitás redactar contenido, resumir textos, o responder consultas simples que no dependen de datos internos de tu empresa.
+
+**Necesitás IA a medida si:** querés un chatbot que "sepa" tu stock real en tiempo real, un sistema que clasifique tus documentos con tu propio criterio de negocio (no uno genérico), o un dashboard que prediga demanda con tus datos históricos y no con supuestos generales.
+
+La diferencia se nota apenas el caso de uso se aleja de lo genérico. Ahí es donde el desarrollo de software a medida le gana a cualquier herramienta lista para usar — porque una herramienta genérica no puede razonar sobre datos que nunca vio.
+
+## Cómo Elegir
+
+Antes de contratar cualquier IA, hacete una pregunta simple: ¿esta respuesta necesita saber algo específico de mi empresa que no está en internet? Si la respuesta es sí, una herramienta genérica te va a quedar corta tarde o temprano.
+
+## Conclusión
+
+No se trata de elegir "la mejor IA" en abstracto, sino la que corresponde a tu caso de uso. En KEI Software integramos ambos enfoques según lo que realmente necesites — sin venderte de más. [Conversemos sin cargo](/#contacto) sobre tu caso.
+    `,
+  },
+  {
+    slug: "ia-para-empresas-en-cordoba-y-argentina",
+    title: "IA para Empresas en Córdoba y Argentina",
+    excerpt:
+      "Ser un equipo de Córdoba con clientes en toda Argentina nos da una mirada distinta sobre cómo pymes y empresas del país pueden integrar IA sin sobre-invertir.",
+    date: "2026-05-07",
+    readTime: "5 min",
+    category: "Inteligencia Artificial",
+    featured: false,
+    coverImage: "/blog/covers/ia-para-empresas-en-cordoba-y-argentina.svg",
+    keywords: [
+      "IA Córdoba",
+      "IA Argentina",
+      "inteligencia artificial pymes Argentina",
+      "desarrollo de software Córdoba",
+    ],
+    author: {
+      name: "KEI Software",
+      role: "Equipo de Desarrollo",
+    },
+    content: `
+# IA para Empresas en Córdoba y Argentina
+
+Somos un equipo de Córdoba, Argentina, y trabajamos 100% remoto con empresas de todo el país. Eso nos da una mirada distinta sobre qué tiene sentido en IA para una pyme o empresa argentina, más allá de lo que se lee en artículos pensados para el mercado de Estados Unidos.
+
+## El Contexto Local Importa
+
+Las guías genéricas de IA asumen presupuestos, herramientas y sistemas que muchas empresas argentinas no tienen instalados. La realidad local es otra:
+
+- Facturación electrónica de AFIP como sistema central del negocio
+- WhatsApp Business como canal principal de ventas y atención, no un canal secundario
+- ERPs y sistemas de gestión regionales que no siempre tienen integraciones "de fábrica" con las herramientas de IA más conocidas
+- Presupuestos que necesitan resultados concretos rápido, no experimentos de laboratorio
+
+## Dónde Vemos más Oportunidad Hoy
+
+- **Atención por WhatsApp con contexto real**: un asistente que responda con el stock, los precios y las políticas reales de la empresa, no respuestas genéricas
+- **Automatización de facturación y documentación**: extraer y cargar datos de facturas y comprobantes sin depender de una integración de fábrica que no existe para tu sistema
+- **Integrar IA sobre lo que ya tenés**: no hace falta migrar todo tu stack para sumar IA — se puede integrar sobre el sistema que ya usás
+
+## Por Qué Trabajar con un Equipo Local
+
+- Entendemos el contexto de pymes y empresas argentinas: presupuestos, tiempos, y con qué sistemas ya trabajan
+- Comunicación directa en español, sin intermediarios ni tercerización
+- Somos parte del mismo huso horario y la misma realidad económica que vos
+
+## Conclusión
+
+La IA no es solo para empresas con presupuestos de Silicon Valley. Si estás evaluando qué tiene sentido para tu empresa en Córdoba o en cualquier parte de Argentina, [conversemos sin cargo](/#contacto) sobre tu caso puntual.
+    `,
+  },
+  {
     slug: "nextjs-vs-react-que-elegir",
     title: "Next.js vs React: ¿Qué Framework Elegir en 2026?",
     excerpt:
@@ -155,6 +286,7 @@ La IA es una herramienta, no una solución mágica. El éxito está en identific
     readTime: "6 min",
     category: "Desarrollo Web",
     featured: true,
+    coverImage: "/blog/covers/nextjs-vs-react-que-elegir.svg",
     keywords: [
       "Next.js",
       "React",
@@ -257,6 +389,7 @@ No hay respuesta incorrecta, pero Next.js ha evolucionado tanto que en 2026 es d
     readTime: "7 min",
     category: "Automatización",
     featured: false,
+    coverImage: "/blog/covers/automatizacion-procesos-empresariales.svg",
     keywords: [
       "automatización",
       "productividad",
@@ -338,6 +471,7 @@ La automatización no es reemplazar personas: es liberarlas para trabajo de mayo
     readTime: "10 min",
     category: "Desarrollo",
     featured: false,
+    coverImage: "/blog/covers/mejores-practicas-desarrollo-software.svg",
     keywords: [
       "desarrollo software",
       "metodología ágil",

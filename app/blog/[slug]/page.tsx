@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Calendar, Clock, ArrowLeft, ArrowRight, Tag } from "lucide-react";
 import {
@@ -138,6 +139,18 @@ export default async function BlogPostPage({ params }: PageProps) {
             </div>
           </div>
 
+          {/* Cover image */}
+          <div className="relative aspect-[1200/630] overflow-hidden rounded-2xl mb-12">
+            <Image
+              src={post.coverImage}
+              alt={post.title}
+              fill
+              unoptimized
+              priority
+              className="object-cover"
+            />
+          </div>
+
           {/* Excerpt */}
           <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed mb-12 pb-8 border-b border-border/40">
             {post.excerpt}
@@ -186,17 +199,28 @@ export default async function BlogPostPage({ params }: PageProps) {
                 <Link
                   key={relatedPost.slug}
                   href={`/blog/${relatedPost.slug}`}
-                  className="group block p-6 rounded-2xl border border-border bg-card shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] dark:shadow-[0_2px_16px_-8px_rgba(0,0,0,0.5)] transition-all duration-300 hover:-translate-y-1 hover:border-[#3f7dff]/35 hover:shadow-[0_24px_60px_-20px_rgba(63,125,255,0.35)]"
+                  className="group block overflow-hidden rounded-2xl border border-border bg-card shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] dark:shadow-[0_2px_16px_-8px_rgba(0,0,0,0.5)] transition-all duration-300 hover:-translate-y-1 hover:border-[#3f7dff]/35 hover:shadow-[0_24px_60px_-20px_rgba(63,125,255,0.35)]"
                 >
-                  <span className="text-xs font-mono text-[#3f7dff] uppercase tracking-wider">
-                    {relatedPost.category}
-                  </span>
-                  <h3 className="font-google-sans text-lg font-[450] text-foreground mt-3 mb-2 group-hover:text-[#3f7dff] transition-colors">
-                    {relatedPost.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground line-clamp-2">
-                    {relatedPost.excerpt}
-                  </p>
+                  <div className="relative aspect-[1200/630] overflow-hidden">
+                    <Image
+                      src={relatedPost.coverImage}
+                      alt=""
+                      fill
+                      unoptimized
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+                  <div className="p-6">
+                    <span className="text-xs font-mono text-[#3f7dff] uppercase tracking-wider">
+                      {relatedPost.category}
+                    </span>
+                    <h3 className="font-google-sans text-lg font-[450] text-foreground mt-3 mb-2 group-hover:text-[#3f7dff] transition-colors">
+                      {relatedPost.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground line-clamp-2">
+                      {relatedPost.excerpt}
+                    </p>
+                  </div>
                 </Link>
               ))}
             </div>

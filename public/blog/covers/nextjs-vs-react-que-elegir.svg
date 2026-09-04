@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="bg-fw" cx="50%" cy="-10%" r="90%">
+      <stop offset="0%" stop-color="#0f2678" />
+      <stop offset="35%" stop-color="#091c50" />
+      <stop offset="68%" stop-color="#050f28" />
+      <stop offset="100%" stop-color="#030816" />
+    </radialGradient>
+    <pattern id="dots-fw" width="34" height="34" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1.5" fill="#ffffff" opacity="0.08" />
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg-fw)" />
+  <rect width="1200" height="630" fill="url(#dots-fw)" />
+
+  <circle cx="470" cy="315" r="215" fill="#3f7dff" opacity="0.12" />
+  <circle cx="470" cy="315" r="215" stroke="#3f7dff" stroke-width="1.6" fill="none" opacity="0.55" />
+  <circle cx="730" cy="315" r="215" fill="#bcdcff" opacity="0.08" />
+  <circle cx="730" cy="315" r="215" stroke="#bcdcff" stroke-width="1.6" fill="none" opacity="0.45" />
+
+  <line x1="600" y1="70" x2="600" y2="560" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="4 10" opacity="0.35" />
+
+  <g fill="#bcdcff" opacity="0.85">
+    <circle cx="360" cy="220" r="6" />
+    <circle cx="330" cy="400" r="5" />
+    <circle cx="470" cy="470" r="7" />
+  </g>
+  <g fill="#3f7dff">
+    <circle cx="840" cy="230" r="6" />
+    <circle cx="870" cy="410" r="7" />
+    <circle cx="740" cy="460" r="5" />
+  </g>
+
+  <g stroke="#e6f0ff" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.9">
+    <path d="M410 260 l-42 42 42 42" />
+    <path d="M530 260 l42 42 -42 42" />
+  </g>
+  <g stroke="#0b1a42" stroke-width="7" fill="none" stroke-linecap="round" opacity="0.7">
+    <path d="M690 250 q60 30 0 60" />
+    <path d="M690 350 q60 -30 0 -60" />
+  </g>
+  <g stroke="#bcdcff" stroke-width="3.5" fill="none" stroke-linecap="round" opacity="0.9">
+    <path d="M690 250 q60 30 0 60" />
+    <path d="M690 350 q60 -30 0 -60" />
+  </g>
+</svg>

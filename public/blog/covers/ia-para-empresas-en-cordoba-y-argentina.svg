@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="bg-loc" cx="50%" cy="-10%" r="90%">
+      <stop offset="0%" stop-color="#0f2678" />
+      <stop offset="35%" stop-color="#091c50" />
+      <stop offset="68%" stop-color="#050f28" />
+      <stop offset="100%" stop-color="#030816" />
+    </radialGradient>
+    <pattern id="dots-loc" width="34" height="34" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1.5" fill="#ffffff" opacity="0.08" />
+    </pattern>
+    <radialGradient id="glow-loc" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#3f7dff" stop-opacity="0.5" />
+      <stop offset="100%" stop-color="#3f7dff" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg-loc)" />
+  <rect width="1200" height="630" fill="url(#dots-loc)" />
+  <circle cx="600" cy="300" r="260" fill="url(#glow-loc)" />
+
+  <!-- signal rings -->
+  <g fill="none" stroke="#bcdcff" opacity="0.35">
+    <circle cx="600" cy="270" r="90" stroke-width="1.5" />
+    <circle cx="600" cy="270" r="140" stroke-width="1.2" />
+    <circle cx="600" cy="270" r="190" stroke-width="1" />
+  </g>
+
+  <!-- remote nodes around the country -->
+  <g stroke="#bcdcff" stroke-width="1.4" opacity="0.5">
+    <line x1="600" y1="270" x2="330" y2="180" />
+    <line x1="600" y1="270" x2="300" y2="380" />
+    <line x1="600" y1="270" x2="420" y2="500" />
+    <line x1="600" y1="270" x2="780" y2="480" />
+    <line x1="600" y1="270" x2="900" y2="360" />
+    <line x1="600" y1="270" x2="860" y2="170" />
+  </g>
+  <g fill="#3f7dff">
+    <circle cx="330" cy="180" r="8" />
+    <circle cx="300" cy="380" r="8" />
+    <circle cx="420" cy="500" r="8" />
+    <circle cx="780" cy="480" r="8" />
+    <circle cx="900" cy="360" r="8" />
+    <circle cx="860" cy="170" r="8" />
+  </g>
+
+  <!-- map pin -->
+  <path d="M600 170 c-44 0 -80 35 -80 80 c0 60 80 150 80 150 s80 -90 80 -150 c0 -45 -36 -80 -80 -80 z"
+        fill="#0b1a42" stroke="#bcdcff" stroke-width="3" />
+  <circle cx="600" cy="250" r="30" fill="none" stroke="#bcdcff" stroke-width="3" />
+  <circle cx="600" cy="250" r="10" fill="#bcdcff" />
+</svg>

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="bg-cost" cx="50%" cy="-10%" r="90%">
+      <stop offset="0%" stop-color="#0f2678" />
+      <stop offset="35%" stop-color="#091c50" />
+      <stop offset="68%" stop-color="#050f28" />
+      <stop offset="100%" stop-color="#030816" />
+    </radialGradient>
+    <pattern id="dots-cost" width="34" height="34" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1.5" fill="#ffffff" opacity="0.08" />
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg-cost)" />
+  <rect width="1200" height="630" fill="url(#dots-cost)" />
+
+  <line x1="260" y1="470" x2="960" y2="470" stroke="#bcdcff" stroke-width="1.5" opacity="0.3" />
+
+  <!-- Tier 1 -->
+  <rect x="330" y="380" width="90" height="90" rx="10" fill="#3f7dff" fill-opacity="0.14" stroke="#3f7dff" stroke-width="1.5" stroke-opacity="0.5" />
+  <circle cx="375" cy="330" r="26" fill="#0b1a42" stroke="#bcdcff" stroke-width="2" />
+  <g stroke="#bcdcff" stroke-width="2" fill="none" stroke-linecap="round">
+    <path d="M366 330 h18 M375 321 v18" />
+  </g>
+
+  <!-- Tier 2 -->
+  <rect x="555" y="290" width="90" height="180" rx="10" fill="#3f7dff" fill-opacity="0.22" stroke="#3f7dff" stroke-width="1.5" stroke-opacity="0.6" />
+  <circle cx="600" cy="240" r="30" fill="#0b1a42" stroke="#3f7dff" stroke-width="2.5" />
+  <g stroke="#3f7dff" stroke-width="2.2" fill="none">
+    <circle cx="600" cy="240" r="9" />
+    <path d="M600 210 v10 M600 260 v10 M570 240 h10 M620 240 h10" />
+  </g>
+
+  <!-- Tier 3 -->
+  <rect x="780" y="180" width="90" height="290" rx="10" fill="#bcdcff" fill-opacity="0.22" stroke="#bcdcff" stroke-width="1.5" stroke-opacity="0.7" />
+  <circle cx="825" cy="130" r="34" fill="#0b1a42" stroke="#bcdcff" stroke-width="2.5" />
+  <g stroke="#bcdcff" stroke-width="2.2" fill="none">
+    <rect x="810" y="115" width="30" height="30" rx="4" />
+    <path d="M818 130 h14 M825 123 v14" />
+  </g>
+
+  <text x="600" y="555" text-anchor="middle" font-family="Arial, sans-serif" font-size="34" fill="#bcdcff" opacity="0.5">$</text>
+</svg>

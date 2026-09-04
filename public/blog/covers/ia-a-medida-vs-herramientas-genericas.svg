@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="bg-cmp" cx="50%" cy="-10%" r="90%">
+      <stop offset="0%" stop-color="#0f2678" />
+      <stop offset="35%" stop-color="#091c50" />
+      <stop offset="68%" stop-color="#050f28" />
+      <stop offset="100%" stop-color="#030816" />
+    </radialGradient>
+    <pattern id="dots-cmp" width="34" height="34" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1.5" fill="#ffffff" opacity="0.08" />
+    </pattern>
+    <radialGradient id="glow-cmp" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#3f7dff" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#3f7dff" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg-cmp)" />
+  <rect width="1200" height="630" fill="url(#dots-cmp)" />
+
+  <line x1="600" y1="90" x2="600" y2="540" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="4 10" opacity="0.3" />
+
+  <!-- Left: custom puzzle piece fitting its slot -->
+  <circle cx="380" cy="315" r="180" fill="url(#glow-cmp)" />
+  <path d="M300 235 h100 a18 18 0 0 1 0 36 a18 18 0 0 0 0 36 h-100 v-30 a18 18 0 0 1 -36 0 a18 18 0 0 1 36 0 z"
+        fill="none" stroke="#bcdcff" stroke-width="2" stroke-dasharray="5 6" opacity="0.5" />
+  <path d="M300 235 h100 a18 18 0 0 1 0 36 a18 18 0 0 0 0 36 h-100 v-30 a18 18 0 0 1 -36 0 a18 18 0 0 1 36 0 z"
+        fill="#3f7dff" fill-opacity="0.85" stroke="#bcdcff" stroke-width="2" />
+
+  <!-- Right: generic identical boxes -->
+  <g fill="#0b1a42" stroke="#bcdcff" stroke-width="2" opacity="0.75">
+    <rect x="770" y="230" width="70" height="70" rx="8" />
+    <rect x="870" y="230" width="70" height="70" rx="8" />
+    <rect x="970" y="230" width="70" height="70" rx="8" />
+    <rect x="770" y="330" width="70" height="70" rx="8" />
+    <rect x="870" y="330" width="70" height="70" rx="8" />
+    <rect x="970" y="330" width="70" height="70" rx="8" />
+  </g>
+  <g stroke="#bcdcff" stroke-width="1.5" opacity="0.4">
+    <line x1="792" y1="252" x2="818" y2="278" />
+    <line x1="892" y1="252" x2="918" y2="278" />
+    <line x1="992" y1="252" x2="1018" y2="278" />
+    <line x1="792" y1="352" x2="818" y2="378" />
+    <line x1="892" y1="352" x2="918" y2="378" />
+    <line x1="992" y1="352" x2="1018" y2="378" />
+  </g>
+</svg>

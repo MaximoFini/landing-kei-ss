@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="bg-au" cx="50%" cy="-10%" r="90%">
+      <stop offset="0%" stop-color="#0f2678" />
+      <stop offset="35%" stop-color="#091c50" />
+      <stop offset="68%" stop-color="#050f28" />
+      <stop offset="100%" stop-color="#030816" />
+    </radialGradient>
+    <pattern id="dots-au" width="34" height="34" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1.5" fill="#ffffff" opacity="0.08" />
+    </pattern>
+    <marker id="arrow-au" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#bcdcff" opacity="0.8" />
+    </marker>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg-au)" />
+  <rect width="1200" height="630" fill="url(#dots-au)" />
+
+  <g stroke="#bcdcff" stroke-width="2" fill="none" opacity="0.55" marker-end="url(#arrow-au)">
+    <path d="M170 230 L360 400" />
+    <path d="M400 400 L590 230" />
+    <path d="M630 230 L820 400" />
+    <path d="M860 400 L1030 230" />
+  </g>
+
+  <g>
+    <circle cx="140" cy="215" r="34" fill="#0b1a42" stroke="#3f7dff" stroke-width="2.5" />
+    <circle cx="400" cy="415" r="34" fill="#0b1a42" stroke="#3f7dff" stroke-width="2.5" />
+    <circle cx="600" cy="215" r="34" fill="#0b1a42" stroke="#3f7dff" stroke-width="2.5" />
+    <circle cx="860" cy="415" r="34" fill="#0b1a42" stroke="#3f7dff" stroke-width="2.5" />
+    <circle cx="1060" cy="215" r="34" fill="#0b1a42" stroke="#3f7dff" stroke-width="2.5" />
+  </g>
+
+  <g fill="none" stroke="#bcdcff" stroke-width="2" opacity="0.9">
+    <path d="M126 215 h28 M140 201 v28" />
+    <path d="M386 415 h28 M400 401 v28" />
+    <path d="M1046 215 h28" />
+    <circle cx="1060" cy="215" r="8" />
+  </g>
+
+  <g transform="translate(600,215)" fill="#bcdcff" opacity="0.9">
+    <circle r="16" fill="none" stroke="#bcdcff" stroke-width="3" />
+    <g stroke="#bcdcff" stroke-width="3">
+      <line x1="0" y1="-22" x2="0" y2="-16" />
+      <line x1="0" y1="22" x2="0" y2="16" />
+      <line x1="-22" y1="0" x2="-16" y2="0" />
+      <line x1="22" y1="0" x2="16" y2="0" />
+      <line x1="-15.5" y1="-15.5" x2="-11" y2="-11" />
+      <line x1="15.5" y1="15.5" x2="11" y2="11" />
+      <line x1="-15.5" y1="15.5" x2="-11" y2="11" />
+      <line x1="15.5" y1="-15.5" x2="11" y2="-11" />
+    </g>
+  </g>
+
+  <g transform="translate(860,415)" fill="none" stroke="#3f7dff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M-14 1 l9 9 20 -20" />
+  </g>
+</svg>

@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowLeft, ArrowRight, Calendar, Clock } from "lucide-react";
 import { getAllPosts, getFeaturedPosts } from "@/lib/blog";
 import {
@@ -75,34 +76,45 @@ export default function BlogPage() {
                 <Link
                   key={post.slug}
                   href={`/blog/${post.slug}`}
-                  className="group block p-6 sm:p-8 rounded-2xl border border-border bg-card shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] dark:shadow-[0_2px_16px_-8px_rgba(0,0,0,0.5)] transition-all duration-300 hover:-translate-y-1 hover:border-[#3f7dff]/35 hover:shadow-[0_24px_60px_-20px_rgba(63,125,255,0.35)]"
+                  className="group block overflow-hidden rounded-2xl border border-border bg-card shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] dark:shadow-[0_2px_16px_-8px_rgba(0,0,0,0.5)] transition-all duration-300 hover:-translate-y-1 hover:border-[#3f7dff]/35 hover:shadow-[0_24px_60px_-20px_rgba(63,125,255,0.35)]"
                 >
-                  <div className="flex items-center gap-2 mb-4">
-                    <span className="text-xs font-mono text-[#3f7dff] uppercase tracking-wider">
-                      {post.category}
-                    </span>
-                    <span className="text-muted-foreground">·</span>
-                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                      <Clock className="w-3 h-3" />
-                      {post.readTime}
-                    </div>
+                  <div className="relative aspect-[1200/630] overflow-hidden">
+                    <Image
+                      src={post.coverImage}
+                      alt=""
+                      fill
+                      unoptimized
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
                   </div>
-                  <h3 className="font-google-sans text-xl sm:text-2xl font-[450] text-foreground mb-3 group-hover:text-[#3f7dff] transition-colors">
-                    {post.title}
-                  </h3>
-                  <p className="text-muted-foreground text-sm sm:text-base leading-relaxed mb-4">
-                    {post.excerpt}
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <Calendar className="w-3 h-3" />
-                      {new Date(post.date).toLocaleDateString("es-AR", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
+                  <div className="p-6 sm:p-8">
+                    <div className="flex items-center gap-2 mb-4">
+                      <span className="text-xs font-mono text-[#3f7dff] uppercase tracking-wider">
+                        {post.category}
+                      </span>
+                      <span className="text-muted-foreground">·</span>
+                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                        <Clock className="w-3 h-3" />
+                        {post.readTime}
+                      </div>
                     </div>
-                    <ArrowRight className="w-4 h-4 text-[#3f7dff] opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+                    <h3 className="font-google-sans text-xl sm:text-2xl font-[450] text-foreground mb-3 group-hover:text-[#3f7dff] transition-colors">
+                      {post.title}
+                    </h3>
+                    <p className="text-muted-foreground text-sm sm:text-base leading-relaxed mb-4">
+                      {post.excerpt}
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <Calendar className="w-3 h-3" />
+                        {new Date(post.date).toLocaleDateString("es-AR", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}
+                      </div>
+                      <ArrowRight className="w-4 h-4 text-[#3f7dff] opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+                    </div>
                   </div>
                 </Link>
               ))}
@@ -122,36 +134,47 @@ export default function BlogPage() {
               <Link
                 key={post.slug}
                 href={`/blog/${post.slug}`}
-                className="group block p-6 rounded-2xl border border-transparent hover:border-border hover:bg-card transition-all"
+                className="group block p-4 sm:p-6 rounded-2xl border border-transparent hover:border-border hover:bg-card transition-all"
               >
-                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-xs font-mono text-[#3f7dff] uppercase tracking-wider">
-                        {post.category}
-                      </span>
-                      <span className="text-muted-foreground">·</span>
-                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                        <Clock className="w-3 h-3" />
-                        {post.readTime}
-                      </div>
-                    </div>
-                    <h3 className="font-google-sans text-lg sm:text-xl font-[450] text-foreground mb-2 group-hover:text-[#3f7dff] transition-colors">
-                      {post.title}
-                    </h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed">
-                      {post.excerpt}
-                    </p>
+                <div className="flex items-start gap-4 sm:gap-6">
+                  <div className="relative shrink-0 w-20 h-16 sm:w-32 sm:h-20 overflow-hidden rounded-xl">
+                    <Image
+                      src={post.coverImage}
+                      alt=""
+                      fill
+                      unoptimized
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
                   </div>
-                  <div className="flex items-center gap-3 sm:flex-col sm:items-end sm:gap-2">
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground whitespace-nowrap">
-                      <Calendar className="w-3 h-3" />
-                      {new Date(post.date).toLocaleDateString("es-AR", {
-                        month: "short",
-                        day: "numeric",
-                      })}
+                  <div className="flex-1 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-xs font-mono text-[#3f7dff] uppercase tracking-wider">
+                          {post.category}
+                        </span>
+                        <span className="text-muted-foreground">·</span>
+                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                          <Clock className="w-3 h-3" />
+                          {post.readTime}
+                        </div>
+                      </div>
+                      <h3 className="font-google-sans text-lg sm:text-xl font-[450] text-foreground mb-2 group-hover:text-[#3f7dff] transition-colors">
+                        {post.title}
+                      </h3>
+                      <p className="text-muted-foreground text-sm leading-relaxed">
+                        {post.excerpt}
+                      </p>
                     </div>
-                    <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-[#3f7dff] group-hover:translate-x-0.5 transition-all" />
+                    <div className="flex items-center gap-3 sm:flex-col sm:items-end sm:gap-2">
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground whitespace-nowrap">
+                        <Calendar className="w-3 h-3" />
+                        {new Date(post.date).toLocaleDateString("es-AR", {
+                          month: "short",
+                          day: "numeric",
+                        })}
+                      </div>
+                      <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-[#3f7dff] group-hover:translate-x-0.5 transition-all" />
+                    </div>
                   </div>
                 </div>
               </Link>
