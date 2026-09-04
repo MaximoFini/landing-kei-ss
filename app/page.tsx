@@ -1,8 +1,13 @@
+import type { Metadata } from "next"
 import dynamic from 'next/dynamic'
 import { Navbar } from "@/components/navbar"
 import { Hero } from "@/components/hero"
 import { Services } from "@/components/services"
 import { Footer } from "@/components/footer"
+
+export const metadata: Metadata = {
+  title: "Desarrollo de Software a Medida, IA y Automatización | KEI Software",
+}
 
 // Lazy load below-the-fold components
 // Placeholder min-heights approximate each section's real rendered height at
