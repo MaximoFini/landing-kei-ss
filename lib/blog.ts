@@ -30,7 +30,7 @@ export const blogPosts: BlogPost[] = [
     date: "2026-05-01",
     readTime: "8 min",
     category: "Inteligencia Artificial",
-    featured: true,
+    featured: false,
     coverImage: "/blog/covers/como-integrar-ia-en-tu-negocio.svg",
     keywords: [
       "IA",
@@ -279,7 +279,7 @@ La IA no es solo para empresas con presupuestos de Silicon Valley. Si estás eva
     date: "2026-04-28",
     readTime: "6 min",
     category: "Desarrollo Web",
-    featured: true,
+    featured: false,
     coverImage: "/blog/covers/nextjs-vs-react-que-elegir.svg",
     keywords: [
       "Next.js",
