@@ -65,7 +65,7 @@ Los chatbots modernos con LLMs (Large Language Models) pueden:
 - Derivar a humanos cuando es necesario
 - Aprender de cada interacción
 
-**Caso real:** Una empresa de e-commerce redujo 60% el tiempo de respuesta con un chatbot que accede a su inventario y políticas.
+**Caso real:** en el sistema que desarrollamos para Alfa Club, armamos un asistente —Alfa Bot— que responde en segundos cuántos socios están activos, cuánto se recaudó o quién está por vencer su cuota, con los datos reales del negocio. Antes de darlo por terminado lo sometimos a un examen de 59 preguntas reales del negocio: acertó las 59. [Contamos el caso completo acá](/blog/le-ensenamos-a-una-ia-a-conocer-un-negocio-de-memoria).
 
 ### 3. Automatización de Documentos
 La IA puede:
@@ -90,15 +90,9 @@ Usa IA para:
 
 ## Errores Comunes a Evitar
 
-❌ Implementar IA por "estar a la moda"  
-❌ No definir métricas de éxito claras  
-❌ Ignorar la privacidad de datos  
-❌ No capacitar al equipo  
+Los errores más frecuentes que vemos: implementar IA por "estar a la moda" sin un objetivo concreto detrás, no definir de antemano qué significa éxito, ignorar la privacidad de los datos que la IA va a tocar, y no capacitar al equipo que la va a usar en el día a día.
 
-✅ Empezar con un proyecto piloto  
-✅ Medir ROI desde el día 1  
-✅ Involucrar a usuarios finales  
-✅ Iterar basado en feedback  
+Lo que sí funciona: empezar con un proyecto piloto acotado, medir el ROI desde el día uno, involucrar a los usuarios finales desde el principio, e iterar según el feedback real en vez de aferrarse a la hoja de ruta original.
 
 ## Conclusión
 
@@ -589,6 +583,124 @@ El software a medida no es más caro si se hace bien desde el inicio.
 Estas prácticas nos permiten entregar en tiempo, presupuesto, y con calidad excepcional.
 
 [Hablemos de tu proyecto](/#contacto).
+    `,
+  },
+  {
+    slug: "stability-asistente-ia-para-entrenadores",
+    title: "Dejá de Buscar. Empezá a Preguntar: el Asistente que le Sumamos a Stability",
+    excerpt:
+      "Le sumamos a Stability un asistente que conoce a cada uno de tus alumnos —planes, constancia, cargas, esfuerzo— y te contesta al toque, con tus palabras, sin abrir una sola planilla.",
+    date: "2026-05-10",
+    readTime: "5 min",
+    category: "Casos de Éxito",
+    featured: true,
+    coverImage: "/blog/covers/stability-asistente-ia-para-entrenadores.svg",
+    keywords: [
+      "Stability",
+      "asistente de IA",
+      "software para gimnasios",
+      "IA para entrenadores",
+      "caso de éxito",
+    ],
+    author: {
+      name: "KEI Software",
+      role: "Equipo de Desarrollo",
+    },
+    content: `
+# Dejá de Buscar. Empezá a Preguntar
+
+Le sumamos a **Stability** un asistente que conoce a cada uno de tus alumnos —planes, constancia, cargas, esfuerzo— y te contesta al toque, con tus palabras, sin que abras una sola planilla.
+
+Así se ve en la práctica:
+
+> **Vos:** ¿quién no entrenó esta semana?
+>
+> **Stability:** 3 alumnos sin sesiones registradas: Lucas M. (0/3), Fede R. (1/4), Cami S. (0/3). ¿Querés que te arme un recordatorio para los tres?
+
+> **Vos:** ¿y cómo viene la sentadilla de Cami?
+>
+> **Stability:** De 40 kg a 62 kg en 10 semanas. Progresión constante, sin estancamientos.
+
+## Tenés 60 Alumnos en la Cabeza y Ninguno en una Sola Pantalla
+
+Planillas de Excel, capturas de WhatsApp, un cuaderno con anotaciones de la última semana. Te das cuenta de que alguien bajó los brazos recién cuando ya dejó de venir. Antes de armarle el próximo plan a un alumno, tenés que ir a buscar cómo venía entrenando, qué cargas movió, si viene reportando molestias — y eso, multiplicado por cada persona que entrena con vos, se come la tarde.
+
+## Ahora se lo Preguntás, como Quien le Escribe a Alguien del Equipo
+
+Nada de exportar reportes ni bucear en tres pantallas distintas. Le preguntás en una frase, con tus propias palabras, y te contesta con los datos reales de tu gimnasio —al instante, desde donde estés.
+
+- **"¿Cómo viene la constancia de Juan este mes?"** → 68% de cumplimiento. Bajó dos semanas seguidas.
+- **"¿A quién se le vence el plan esta semana?"** → 4 alumnos. El más urgente vence en 2 días.
+- **"¿Quién viene entrenando muy exigido?"** → 2 alumnos con esfuerzo percibido alto en sus últimas 3 sesiones.
+- **"Contame los planes que armé este mes"** → 12 planes nuevos, 7 ya asignados a alumnos activos.
+
+## No es una Caja Negra. Es una Lupa más Rápida sobre lo Tuyo
+
+Entendemos la desconfianza que genera meter "inteligencia artificial" en algo tan sensible como la información de tus alumnos. Por eso lo construimos con reglas simples:
+
+- **Solo lee, nunca escribe.** El asistente consulta lo que ya tenés cargado. No puede crear, borrar ni modificar nada por su cuenta.
+- **Solo vos le preguntás.** Cada acceso es personal y queda registrado. Nadie más entra a tus datos a través de él.
+- **Tus datos siguen siendo tuyos.** No se comparten con terceros ni se usan para entrenar nada. Son la información de tu gimnasio, punto.
+
+## ¿Y en tu Gimnasio?
+
+Mostranos cómo trabajás hoy. Te mostramos cómo quedaría con tus alumnos reales. Sin compromiso, sin tecnicismos — una charla de 20 minutos para ver si un asistente así te sirve tal como venís laburando.
+
+**[Hablemos →](/#contacto)**
+
+Respondemos nosotros, no un bot.
+    `,
+  },
+  {
+    slug: "le-ensenamos-a-una-ia-a-conocer-un-negocio-de-memoria",
+    title: "Le Enseñamos a una Inteligencia Artificial a Conocer un Negocio de Memoria",
+    excerpt:
+      "En el sistema que desarrollamos para Alfa Club armamos un asistente que sabe, en tiempo real, cuántos socios están activos, cuánto se recaudó y quién está por vencer su cuota — y lo pusimos a prueba con 59 preguntas reales antes de darlo por terminado.",
+    date: "2026-05-12",
+    readTime: "4 min",
+    category: "Casos de Éxito",
+    featured: true,
+    coverImage: "/blog/covers/le-ensenamos-a-una-ia-a-conocer-un-negocio-de-memoria.svg",
+    keywords: [
+      "Alfa Club",
+      "Alfa Bot",
+      "asistente de IA",
+      "software para gimnasios",
+      "caso de éxito",
+      "IA para negocios",
+    ],
+    author: {
+      name: "KEI Software",
+      role: "Equipo de Desarrollo",
+    },
+    content: `
+# Le Enseñamos a una Inteligencia Artificial a Conocer un Negocio de Memoria
+
+Hay una pregunta que todo dueño de negocio se hace parado, con el celular en la mano: "¿cómo venimos este mes?" Normalmente cuesta tiempo: abrir una planilla, cruzar números, llamar a alguien.
+
+En uno de nuestros últimos proyectos —el sistema que desarrollamos para **Alfa Club**— decidimos que esa pregunta debía tener respuesta en tres segundos, en español de todos los días, sin que nadie tuviera que aprender nada nuevo.
+
+## Así Nació Alfa Bot
+
+Un asistente que vive adentro del sistema y sabe, en tiempo real, cuántos socios están activos, cuánto se recaudó, quién está por vencer su cuota. Se le pregunta como a un empleado de confianza que se sabe el negocio de memoria — con la diferencia de que está disponible las 24 horas y nunca se cansa de repetir la respuesta.
+
+## Lo Fácil y lo Difícil
+
+Conectar una inteligencia artificial a los datos de una empresa es la parte fácil. Lo difícil —y en lo que pusimos casi todo el esfuerzo— es hacerlo bien: que nunca muestre lo que no debe, que nunca se equivoque con un número, que el dueño pueda confiar ciegamente en lo que le contesta.
+
+## El Examen de 59 Preguntas
+
+Antes de dar el trabajo por terminado, armamos un examen de 59 preguntas reales del negocio y las corrimos una por una para medir qué tan bien respondía Alfa Bot.
+
+**El resultado: acertó las 59.**
+
+Esa disciplina —probar antes de confiar— es la diferencia entre "le pusimos un chat de IA" y algo que un negocio puede usar todos los días sin sorpresas.
+
+## La Pregunta que Importa
+
+Si estás pensando en sumarle inteligencia artificial a tu negocio, la pregunta no es "¿se puede?" — hoy casi todo se puede. La pregunta es quién te lo construye con ese mismo cuidado.
+
+**[Hablemos →](/#contacto)**
     `,
   },
 ];
