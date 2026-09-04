@@ -8,6 +8,7 @@ import {
   BreadcrumbStructuredData,
 } from "@/components/blog-structured-data";
 import { SectionHeading } from "@/components/ui/section-heading";
+import { BlogHeaderActions } from "@/components/blog-header-actions";
 
 export const metadata: Metadata = {
   title: "Blog de Desarrollo y Tecnología",
@@ -39,14 +40,17 @@ export default function BlogPage() {
       />
       {/* Header */}
       <header className="border-b border-border/40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex items-center justify-between gap-3">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 rounded-full py-2 pl-3 pr-4 -ml-3 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+            className="inline-flex min-w-0 items-center gap-2 rounded-full py-2 pl-3 pr-4 -ml-3 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
           >
-            <ArrowLeft className="w-4 h-4" />
-            Volver al inicio
+            <ArrowLeft className="w-4 h-4 shrink-0" />
+            <span className="truncate">Volver al inicio</span>
           </Link>
+          <div className="shrink-0">
+            <BlogHeaderActions />
+          </div>
         </div>
       </header>
 
@@ -146,14 +150,14 @@ export default function BlogPage() {
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
-                  <div className="flex-1 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
+                  <div className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mb-2">
                         <span className="text-xs font-mono text-[#3f7dff] uppercase tracking-wider">
                           {post.category}
                         </span>
                         <span className="text-muted-foreground">·</span>
-                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground whitespace-nowrap shrink-0">
                           <Clock className="w-3 h-3" />
                           {post.readTime}
                         </div>

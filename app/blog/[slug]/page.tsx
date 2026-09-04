@@ -13,6 +13,7 @@ import {
   BlogPostingStructuredData,
   BreadcrumbStructuredData,
 } from "@/components/blog-structured-data";
+import { BlogHeaderActions } from "@/components/blog-header-actions";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -90,14 +91,17 @@ export default async function BlogPostPage({ params }: PageProps) {
       />
       {/* Header */}
       <header className="border-b border-border/40">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 flex items-center justify-between gap-3">
           <Link
             href="/blog"
-            className="inline-flex items-center gap-2 rounded-full py-2 pl-3 pr-4 -ml-3 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+            className="inline-flex min-w-0 items-center gap-2 rounded-full py-2 pl-3 pr-4 -ml-3 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
           >
-            <ArrowLeft className="w-4 h-4" />
-            Volver al blog
+            <ArrowLeft className="w-4 h-4 shrink-0" />
+            <span className="truncate">Volver al blog</span>
           </Link>
+          <div className="shrink-0">
+            <BlogHeaderActions />
+          </div>
         </div>
       </header>
 
