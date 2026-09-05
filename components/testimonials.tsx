@@ -21,7 +21,7 @@ type Testimonial = {
 
 const testimonials: Testimonial[] = [
   {
-    name: "Juan Borrego",
+    name: "Juan Borreda",
     role: "Co-founder",
     company: "Stability",
     companyInitials: "ST",
@@ -30,7 +30,7 @@ const testimonials: Testimonial[] = [
       "Si lo tuviera que describir con una palabra a KEI, sería con “soluciones” ya que nos dio respuestas a muchas de las problemáticas que teníamos que solucionar con nuestro proyecto pero no sabíamos cómo.",
   },
   {
-    name: "Agustín",
+    name: "Agustín Ramis",
     role: "Co-founder",
     company: "Stability",
     companyInitials: "ST",
