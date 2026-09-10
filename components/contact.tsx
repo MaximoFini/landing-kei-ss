@@ -2,7 +2,7 @@
 
 import { m, useInView } from "@/lib/motion"
 import { useRef, useState } from "react"
-import { Mail, Phone, CheckCircle, ArrowRight, ArrowLeft } from "lucide-react"
+import { Mail, Phone, Instagram, CheckCircle, ArrowRight, ArrowLeft } from "lucide-react"
 import { SectionHeading } from "@/components/ui/section-heading"
 import { LightAurora } from "@/components/ui/light-aurora"
 import { BorderBeam } from "@/components/ui/border-beam"
@@ -19,6 +19,13 @@ const contactMethods = [
     label: "Teléfono / WhatsApp",
     value: "+54 351 361-4462",
     href: "tel:+543513614462",
+  },
+  {
+    icon: Instagram,
+    label: "Instagram",
+    value: "@keisoftware",
+    href: "https://www.instagram.com/keisoftware/",
+    external: true,
   },
 ]
 
@@ -291,10 +298,11 @@ export function Contact() {
             </p>
 
             <div className="flex flex-col gap-4">
-              {contactMethods.map(({ icon: Icon, label, value, href }) => (
+              {contactMethods.map(({ icon: Icon, label, value, href, external }) => (
                 <a
                   key={label}
                   href={href}
+                  {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                   className="group flex items-center gap-4 transition-transform duration-300 hover:translate-x-1"
                 >
                   <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl border border-[#3f7dff]/20 bg-[#3f7dff]/10 transition-all duration-300 group-hover:scale-105 group-hover:bg-[#3f7dff]/15">

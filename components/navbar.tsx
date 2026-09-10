@@ -5,28 +5,7 @@ import { m, AnimatePresence } from "@/lib/motion";
 import { Menu, X, Volume2, VolumeX } from "lucide-react";
 import Image from "next/image";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
-
-// Faster, more fluid replacement for the native browser smooth-scroll
-// (which feels sluggish and inconsistent on long distances). Eases out
-// quickly and scales its duration with distance, capped so a scroll to
-// the bottom of the page never feels slow.
-function smoothScrollTo(targetY: number, duration = 500) {
-  const startY = window.scrollY;
-  const distance = targetY - startY;
-  if (Math.abs(distance) < 1) return;
-
-  const start = performance.now();
-  const easeOutQuart = (t: number) => 1 - Math.pow(1 - t, 4);
-
-  const step = (now: number) => {
-    const elapsed = now - start;
-    const progress = Math.min(elapsed / duration, 1);
-    window.scrollTo(0, startY + distance * easeOutQuart(progress));
-    if (progress < 1) requestAnimationFrame(step);
-  };
-
-  requestAnimationFrame(step);
-}
+import { smoothScrollTo } from "@/lib/utils";
 
 const navLinks = [
   { label: "Servicios", href: "#servicios" },
