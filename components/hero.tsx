@@ -8,14 +8,14 @@ import { SpecularButton } from "./SpecularButton";
 import { TypewriterHeadline } from "./TypewriterHeadline";
 import { StarField } from "./StarField";
 import { HeroRibbons } from "./HeroRibbons";
-import { Code2, Users, Clock } from "lucide-react";
+import { Code2, Users } from "lucide-react";
+import { smoothScrollToHash } from "@/lib/utils";
 
 const LiquidEther = dynamic(() => import("@/components/LiquidEther"), { ssr: false });
 
 const stats = [
   { value: "7", label: "Proyectos", icon: Code2 },
   { value: "100%", label: "Satisfacción", icon: Users },
-  { value: "2 años", label: "Experiencia", icon: Clock },
 ];
 
 const HEADLINE_LINES = [
@@ -188,6 +188,10 @@ export function Hero() {
 
           <a
             href="#proyectos"
+            onClick={(e) => {
+              e.preventDefault();
+              smoothScrollToHash("#proyectos");
+            }}
             className="scale-90 inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full font-semibold text-[15px] text-white/85 bg-white/[0.06] border border-white/[0.14] backdrop-blur-sm hover:bg-white/[0.1] hover:text-white hover:border-white/[0.22] transition-all duration-200 group select-none"
           >
             Ver proyectos

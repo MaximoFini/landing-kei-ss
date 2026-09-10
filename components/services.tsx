@@ -2,9 +2,10 @@
 
 import { m, useInView, useScroll, useTransform, type MotionValue } from "@/lib/motion"
 import { useEffect, useRef, useState } from "react"
-import { Globe, Brain, Zap, Database, Lightbulb, type LucideIcon } from "lucide-react"
+import { Puzzle, Brain, Heart, Globe, Lightbulb, type LucideIcon } from "lucide-react"
 import { DiaTextReveal } from "@/components/ui/dia-text-reveal"
 import { BorderBeam } from "@/components/ui/border-beam"
+import { hexToRgba } from "@/lib/utils"
 
 const HEADER_REVEAL_DURATION = 1.3
 
@@ -13,36 +14,48 @@ interface Service {
   icon: LucideIcon
   title: string
   description: string
+  /** Accent hex driving this card's icon, glow, spotlight and beam — each
+   *  service gets its own instead of every card sharing the same blue. */
+  accent: string
+  accentLight: string
 }
 
 const services: Service[] = [
   {
     num: "01",
-    icon: Globe,
-    title: "Desarrollo Web",
+    icon: Puzzle,
+    title: "Sistemas a tu medida",
     description:
-      "Aplicaciones modernas, escalables y de alto rendimiento. De 0 a 100.",
+      "Diseñamos el sistema exacto que tu negocio necesita, dejando atrás las soluciones genéricas que te hacen perder tiempo.",
+    accent: "#8b5cf6",
+    accentLight: "#ddd6fe",
   },
   {
     num: "02",
     icon: Brain,
-    title: "Soluciones IA",
+    title: "IA que entiende tu negocio",
     description:
-      "Modelos de lenguaje y visión artificial integrados a tus procesos. Automatizamos lo complejo y añadimos inteligencia real a tus productos.",
+      "Consultá tu sistema como a tu mejor colaborador: te responde al instante con datos e ideas claras para decidir mejor.",
+    accent: "#3f7dff",
+    accentLight: "#bcdcff",
   },
   {
     num: "03",
-    icon: Zap,
-    title: "Automatización",
+    icon: Heart,
+    title: "Plataformas que fidelizan",
     description:
-      "Flujos que eliminan trabajo repetitivo y conectan tus herramientas. Más tiempo para lo que importa.",
+      "El espacio digital donde tus clientes viven la experiencia con tu marca y eligen quedarse, sin que dependa de vos.",
+    accent: "#fb7185",
+    accentLight: "#fecdd3",
   },
   {
     num: "04",
-    icon: Database,
-    title: "Sistemas a Medida",
+    icon: Globe,
+    title: "Sitios que convierten",
     description:
-      "ERPs, CRMs, dashboards y plataformas internas diseñadas exactamente para tu negocio, sin soluciones genéricas.",
+      "Una presencia web ágil y clara, diseñada para un solo objetivo: que te contacten.",
+    accent: "#34d399",
+    accentLight: "#a7f3d0",
   },
 ]
 
@@ -179,9 +192,10 @@ function ServiceCard({
   scrollYProgress: MotionValue<number>
   range?: { start: number; end: number }
 }) {
-  const ref = useRef(null)
+  const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: "-60px" })
   const Icon = service.icon
+  const { accent } = service
 
   // Mobile — light wash is lit only while the lamp bulb is actually inside this
   // card's bounds: 0 the instant it's above or below, never bleeding into the
@@ -195,31 +209,56 @@ function ServiceCard({
     [0, 1, 1, 0]
   )
 
+  // Desktop spotlight — tracks the cursor within the card via CSS vars mutated
+  // directly on the node (no React re-render per mousemove), so the radial
+  // gradient in the wash below can recenter on var(--spot-x/--spot-y).
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const rect = ref.current?.getBoundingClientRect()
+    if (!rect) return
+    ref.current!.style.setProperty("--spot-x", `${e.clientX - rect.left}px`)
+    ref.current!.style.setProperty("--spot-y", `${e.clientY - rect.top}px`)
+  }
+
   return (
     <m.div
       ref={ref}
+      onPointerMove={handlePointerMove}
       initial={{ opacity: 0, y: 24 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.5, delay: index * 0.08 }}
       whileHover={{ y: -4 }}
       data-service-card
-      className="group relative overflow-hidden rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] dark:shadow-[0_2px_16px_-8px_rgba(0,0,0,0.5)] transition-[border-color,box-shadow] duration-300 hover:border-[#3f7dff]/35 hover:shadow-[0_24px_60px_-20px_rgba(63,125,255,0.35)]"
+      style={
+        {
+          "--accent": accent,
+          "--accent-10": hexToRgba(accent, 0.1),
+          "--accent-15": hexToRgba(accent, 0.15),
+          "--accent-20": hexToRgba(accent, 0.2),
+          "--accent-30": hexToRgba(accent, 0.3),
+          "--accent-35": hexToRgba(accent, 0.35),
+          "--accent-40": hexToRgba(accent, 0.4),
+        } as React.CSSProperties
+      }
+      className="group relative overflow-hidden rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-[0_2px_16px_-8px_rgba(10,14,26,0.08)] dark:shadow-[0_2px_16px_-8px_rgba(0,0,0,0.5)] transition-[border-color,box-shadow] duration-300 hover:border-[var(--accent-35)] hover:shadow-[0_24px_60px_-20px_var(--accent-35)]"
     >
       <BorderBeam
         size={70}
         duration={7 + index}
         delay={index * 1.2}
-        colorFrom="#bcdcff"
-        colorTo="#3f7dff"
+        colorFrom={service.accentLight}
+        colorTo={accent}
         borderWidth={1.5}
       />
 
-      {/* Light wash — desktop: grows from a point at the top on hover, collapses back into it on leave */}
+      {/* Spotlight — desktop: a soft glow in this card's own accent color that
+          follows the cursor (--spot-x/--spot-y), fading in on hover instead of
+          the old fixed top-down reveal. */}
       <div
-        className="hidden sm:block absolute inset-0 [clip-path:circle(0%_at_50%_0%)] group-hover:[clip-path:circle(150%_at_50%_0%)] transition-[clip-path] duration-700 ease-out pointer-events-none"
+        aria-hidden="true"
+        className="hidden sm:block absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
         style={{
           background:
-            "linear-gradient(to bottom, rgba(63,125,255,0.28) 0%, rgba(63,125,255,0.16) 50%, rgba(63,125,255,0.1) 100%)",
+            "radial-gradient(260px circle at var(--spot-x, 50%) var(--spot-y, 0%), var(--accent-30) 0%, var(--accent-10) 45%, transparent 75%)",
         }}
       />
 
@@ -229,8 +268,7 @@ function ServiceCard({
       <m.div
         className="absolute inset-0 pointer-events-none sm:hidden"
         style={{
-          background:
-            "linear-gradient(to bottom, rgba(63,125,255,0.28) 0%, rgba(63,125,255,0.16) 50%, rgba(63,125,255,0.1) 100%)",
+          background: `linear-gradient(to bottom, ${hexToRgba(accent, 0.28)} 0%, ${hexToRgba(accent, 0.16)} 50%, ${hexToRgba(accent, 0.1)} 100%)`,
           opacity: litOpacity,
           willChange: "opacity",
         }}
@@ -238,16 +276,16 @@ function ServiceCard({
 
       {/* Lamp — a cord drops down from the top edge with a bulb at its tip, lighting the card (desktop hover only; mobile uses the scroll-driven lamp in the grid) */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 z-20 h-0 opacity-0 sm:group-hover:h-14 sm:group-hover:opacity-100 transition-[height,opacity] duration-500 ease-out overflow-visible pointer-events-none hidden sm:flex sm:flex-col sm:items-center">
-        <div className="w-px flex-1 bg-[#3f7dff]/50" />
+        <div className="w-px flex-1 bg-[var(--accent-40)]" />
         <Lightbulb
-          className="w-4 h-4 sm:w-5 sm:h-5 text-[#3f7dff] shrink-0"
-          style={{ filter: "drop-shadow(0 0 8px rgba(63,125,255,0.85))" }}
+          className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 text-[var(--accent)]"
+          style={{ filter: `drop-shadow(0 0 8px ${hexToRgba(accent, 0.85)})` }}
         />
       </div>
 
       {/* Icon */}
-      <div className="relative z-10 w-11 h-11 rounded-xl bg-[#3f7dff]/10 border border-[#3f7dff]/20 flex items-center justify-center mb-5 group-hover:bg-[#3f7dff]/15 group-hover:border-[#3f7dff]/40 group-hover:shadow-[0_0_20px_rgba(63,125,255,0.35)] transition-all duration-300">
-        <Icon className="w-5 h-5 text-[#3f7dff]" />
+      <div className="relative z-10 w-11 h-11 rounded-xl bg-[var(--accent-10)] border border-[var(--accent-20)] flex items-center justify-center mb-5 group-hover:bg-[var(--accent-15)] group-hover:border-[var(--accent-40)] group-hover:shadow-[0_0_20px_var(--accent-35)] transition-all duration-300">
+        <Icon className="w-5 h-5 text-[var(--accent)]" />
       </div>
 
       {/* Content */}
