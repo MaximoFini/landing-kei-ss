@@ -160,7 +160,10 @@ select {
   touch-action: manipulation;
 }
 
-/* Prevent horizontal scroll on mobile */
+/* Prevent horizontal scroll on mobile. Note: this makes `overflow-y` compute
+   to `auto`, turning <body> into a scroll container, which disables
+   `position: sticky` anywhere on the page — use `overflow-x: clip` here if a
+   sticky descendant is ever needed. */
 body {
   overflow-x: hidden;
   width: 100%;
@@ -555,6 +558,28 @@ body {
   .star-field__layer {
     animation: none !important;
   }
+}
+
+/* ========================================
+   SERVICIOS — cinematic deep-blue card
+   ======================================== */
+
+/* Proceso → Proyectos handoff: the rest of the page starts a viewport early so
+   it slides up over the still-pinned stage. Gated on the stage actually being
+   pinned — with reduced motion there is no pin and no spacer to overlap into,
+   and the margin would just drag Proyectos on top of the hero. */
+[data-kei-stage="pinned"] .kei-overlap {
+  margin-top: -100vh;
+}
+
+.kei-depth-card {
+  background: linear-gradient(145deg, #10245c 0%, #060d1e 100%);
+  border: 1px solid rgba(188, 220, 255, 0.07);
+  box-shadow:
+    0 40px 100px -20px rgba(0, 0, 0, 0.9),
+    0 20px 40px -20px rgba(0, 0, 0, 0.8),
+    inset 0 1px 2px rgba(255, 255, 255, 0.14),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.8);
 }
 
 /* ========================================

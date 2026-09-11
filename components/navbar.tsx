@@ -75,7 +75,15 @@ export function Navbar() {
             : null
         )
         .filter((s): s is { i: number; el: HTMLElement } => !!s && !!s.el)
-        .map((s) => ({ i: s.i, top: s.el.offsetTop }));
+        // Document-absolute position, not `offsetTop`: that one is relative to
+        // the nearest positioned ancestor, so any wrapper with `position:
+        // relative` (the sections after the hero stage sit in one) silently
+        // reported near-zero and the scrollspy locked onto the last link.
+        .map((s) => ({
+          i: s.i,
+          top: Math.round(s.el.getBoundingClientRect().top + window.scrollY),
+        }))
+        .sort((a, b) => a.top - b.top);
       maxScroll = document.documentElement.scrollHeight - window.innerHeight;
     };
 
@@ -85,8 +93,8 @@ export function Navbar() {
       // Ignore while a click-triggered smooth scroll is settling
       if (Date.now() - clickLockRef.current < 700 || offsets.length === 0) return;
 
-      // Self-heal: if positions were cached before the lazy sections laid out
-      // (last section still at 0), re-read now. Happens at most once.
+      // Self-heal: positions cached before anything laid out leave even the
+      // bottom-most section at 0. Re-read once if so.
       if (offsets.length > 1 && offsets[offsets.length - 1].top === 0) measure();
 
       const probe = window.scrollY + window.innerHeight * 0.32;
@@ -117,6 +125,10 @@ export function Navbar() {
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", remeasure);
     window.addEventListener("load", remeasure);
+    // The hero stage pins with ScrollTrigger, which installs a multi-thousand
+    // pixel spacer on its first animation frame. Every section below moves when
+    // that lands, so the positions cached here are wrong until it does.
+    window.addEventListener("kei:layout", remeasure);
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
@@ -124,6 +136,7 @@ export function Navbar() {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", remeasure);
       window.removeEventListener("load", remeasure);
+      window.removeEventListener("kei:layout", remeasure);
     };
   }, []);
 

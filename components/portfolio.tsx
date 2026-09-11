@@ -114,8 +114,7 @@ export function Portfolio() {
 
   return (
     <section
-      id="proyectos"
-      className="relative overflow-hidden bg-background px-4 pt-10 pb-16 sm:px-6 sm:pt-14 sm:pb-24 lg:pt-16 lg:pb-28"
+      className="relative overflow-hidden rounded-t-[28px] bg-background px-4 pt-10 pb-16 shadow-[0_-24px_60px_-20px_rgba(10,20,50,0.45)] sm:px-6 sm:pt-14 sm:pb-24 lg:pt-16 lg:pb-28"
     >
       <LightAurora intensity={0.7} />
 

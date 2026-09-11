@@ -1,8 +1,8 @@
 import type { Metadata } from "next"
 import dynamic from 'next/dynamic'
 import { Navbar } from "@/components/navbar"
-import { Hero } from "@/components/hero"
-import { Services } from "@/components/services"
+import { HeroStage } from "@/components/hero-stage"
+import { StoryHandoff } from "@/components/ui/story-scroll"
 import { Footer } from "@/components/footer"
 
 export const metadata: Metadata = {
@@ -38,15 +38,38 @@ export default function Page() {
   return (
     <main className="min-h-screen bg-background text-foreground">
       <Navbar />
-      <Hero />
-      <Services />
-      <Process />
-      <Portfolio />
-      <Clients />
-      <Testimonials />
-      <Team />
-      <Contact />
-      <Footer />
+      <HeroStage>
+        <Process />
+      </HeroStage>
+
+      {/* Proceso → Proyectos handoff. Proceso is the last thing the pinned
+          stage shows, and it stays perfectly still while this block slides up
+          over it: `kei-overlap` starts the rest of the page a viewport early,
+          inside the stage's pinned runway, and the z-index puts it on top. No
+          extra scroll library needed — the stacking is the effect. */}
+      <div className="kei-overlap relative z-10">
+        {/* Nav anchor outside the sticky panel below: a stuck element is
+            visually offset from its flow position, so measuring it while the
+            handoff is mid-flight would report the wrong place. */}
+        <div id="proyectos" aria-hidden="true" className="h-0" />
+
+        {/* Proyectos (with the "Confían en nosotros" strip) parks at the bottom
+            of the viewport while Clientes hinges up over it. */}
+        <StoryHandoff
+          outgoing={
+            <>
+              <Portfolio />
+              <Clients />
+            </>
+          }
+          incoming={<Testimonials />}
+        />
+
+        <Team />
+        <Contact />
+        <Footer />
+      </div>
+
       <WhatsAppButton />
     </main>
   )

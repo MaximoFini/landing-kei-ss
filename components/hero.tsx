@@ -7,8 +7,8 @@ import { useEffect, useState } from "react";
 import { SpecularButton } from "./SpecularButton";
 import { TypewriterHeadline } from "./TypewriterHeadline";
 import { StarField } from "./StarField";
-import { HeroRibbons } from "./HeroRibbons";
-import { Code2, Users } from "lucide-react";
+import { HeroGlow } from "./HeroGlow";
+import { Code2, Users, ChevronDown } from "lucide-react";
 import { smoothScrollToHash } from "@/lib/utils";
 
 const LiquidEther = dynamic(() => import("@/components/LiquidEther"), { ssr: false });
@@ -75,10 +75,7 @@ export function Hero() {
         }}
       />
 
-      {/* 2. Ribbons — diagonal flowing gradient waves, weighted toward the bottom */}
-      <HeroRibbons />
-
-      {/* 3. Stars — above gradient, below fluid */}
+      {/* 2. Stars — above gradient, below fluid */}
       <StarField />
 
       {/* 4. Liquid Ether WebGL fluid — mounted after first paint (see showFluid) */}
@@ -106,14 +103,10 @@ export function Hero() {
         </div>
       )}
 
-      {/* 5. Bottom vignette */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(ellipse 80% 55% at 50% 110%, rgba(2,6,18,0.65) 0%, transparent 65%)",
-        }}
-      />
+      {/* 4. Glow — symmetric bloom rising from the bottom edge. Sits above the
+           WebGL fluid (which paints its own opaque field) so the bloom still
+           reads, and being translucent the stars and fluid show through it. */}
+      <HeroGlow />
 
       {/* Top rule */}
       <div className="absolute top-20 sm:top-24 left-4 sm:left-6 right-4 sm:right-6 h-px bg-white/[0.08]" />
@@ -218,7 +211,7 @@ export function Hero() {
           delay: 0.25,
           ease: [0.16, 1, 0.3, 1],
         }}
-        className="absolute inset-x-0 bottom-20 sm:bottom-12 z-10 px-4 sm:px-6 pointer-events-none"
+        className="absolute inset-x-0 bottom-32 sm:bottom-28 z-10 px-4 sm:px-6 pointer-events-none"
       >
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-center gap-0">
@@ -246,6 +239,30 @@ export function Hero() {
           </div>
         </div>
       </m.div>
+
+      {/* ─── Scroll cue — sits under the stats, invites the cinematic reveal ─── */}
+      <m.a
+        href="#servicios"
+        onClick={(e) => {
+          e.preventDefault();
+          smoothScrollToHash("#servicios");
+        }}
+        initial={{ opacity: 0, y: 10 }}
+        animate={textCompleted ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+        transition={{ duration: 0.9, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+        className="absolute inset-x-0 bottom-10 sm:bottom-8 z-10 flex flex-col items-center gap-1.5 text-white/45 hover:text-white/80 transition-colors"
+      >
+        <span className="text-[9px] sm:text-[10px] tracking-[0.28em] uppercase font-mono">
+          Scrolleá para explorar
+        </span>
+        <m.span
+          animate={{ y: [0, 5, 0] }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+          className="block"
+        >
+          <ChevronDown className="w-4 h-4" />
+        </m.span>
+      </m.a>
     </section>
   );
 }
