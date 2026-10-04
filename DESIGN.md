@@ -255,7 +255,7 @@ Soft, confident pills with a leading blue dot and a label that rolls.
 A floating ink pill, 3.5rem tall, centered, max 46rem: horizontal logo left, rolling links (0.8125rem, weight 500, 70% white to full on hover), theme and sound icon buttons, an ice "Hablemos" pill. An ice marquee strip of tagged phrases hangs under it and slides up out of view after 40px of scroll. On mobile a "Menú" pill opens a full-screen ground sheet that wipes down via clip-path (500ms, in-out) with Glacial links at 3.25rem staggering up and a full-width primary pill at the bottom.
 
 ### Project Wheel (signature)
-The hero is type and two actions only, centred in the first screen with generous spacing between the headline, the sentence and the buttons. The blue thread starts below it, in the statement.
+The hero is type and two actions only, centred in the first screen with generous spacing between the headline, the sentence and the buttons. Behind it, KEI's isotipo is drawn huge and cropped by the right edge at very low opacity (6–12% light, 10–16% dark, navy facets up to 55% in dark), with two faint radial glows of Azul UI. This is the one place soft radial gradients are allowed; they come from the approved reference, not a default. The blue thread starts below it, in the statement.
 
 ### Motion
 - **Curves:** ease-out cubic-bezier(0.23, 1, 0.32, 1) for nearly everything; in-out cubic-bezier(0.77, 0, 0.175, 1) for the loader and menu wipe.

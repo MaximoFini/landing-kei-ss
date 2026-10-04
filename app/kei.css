@@ -418,6 +418,53 @@
     clip-path: inset(0 0 0 0 round 999px);
   }
 }
+/* Hero backdrop: the isotipo, huge, cropped at the right, barely there. */
+.k-hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(58% 52% at 86% 18%, rgba(63, 125, 255, 0.11), transparent 70%),
+    radial-gradient(36% 38% at 6% 88%, rgba(63, 125, 255, 0.06), transparent 70%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
+}
+.dark .k-hero__bg {
+  background:
+    radial-gradient(58% 52% at 86% 18%, rgba(63, 125, 255, 0.2), transparent 70%),
+    radial-gradient(36% 38% at 6% 88%, rgba(63, 125, 255, 0.09), transparent 70%);
+}
+.k-hero__gem {
+  position: absolute;
+  top: 50%;
+  right: -9vw;
+  height: 130%;
+  width: auto;
+  aspect-ratio: 376 / 544;
+  transform: translateY(-50%);
+}
+@media (max-width: 767px) {
+  .k-hero__gem {
+    height: 85%;
+    right: -42vw;
+  }
+}
+.k-hero__f {
+  fill-opacity: var(--l);
+}
+.dark .k-hero__f {
+  fill-opacity: var(--d);
+}
+.kei-js .k-hero__bg {
+  animation: k-bg-in 1800ms ease both;
+  animation-delay: calc(var(--intro) + 150ms);
+}
+@keyframes k-bg-in {
+  from {
+    opacity: 0;
+  }
+}
 .k-strip {
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent);
   mask-image: linear-gradient(90deg, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent);
@@ -489,7 +536,8 @@ textarea.k-field {
   .kei-js .k-hero .k-lines > .k-line > span,
   .kei-js .k-hero__sub,
   .kei-js .k-hero__cta,
-  .kei-js .k-mark::before {
+  .kei-js .k-mark::before,
+  .kei-js .k-hero__bg {
     animation: none;
   }
   .kei-js .k-lines > .k-line > span,
