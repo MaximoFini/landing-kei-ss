@@ -379,12 +379,6 @@ body {
 
 /* Micro-interacciones sutiles */
 @layer utilities {
-  /* Transiciones suaves para todos los botones */
-  button,
-  a[href] {
-    @apply transition-all duration-300 ease-out;
-  }
-
   /* Efecto sutil de elevación en hover */
   .hover-lift:hover {
     transform: translateY(-2px);
@@ -412,12 +406,6 @@ body {
   input:focus,
   textarea:focus {
     @apply ring-2 ring-neon/30;
-  }
-
-  /* Cursor con feedback táctil */
-  button:active,
-  a:active {
-    transform: scale(0.98);
   }
 
   /* Campo de estrellas del hero — dos capas de puntos (radial-gradient)

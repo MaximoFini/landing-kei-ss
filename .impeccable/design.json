@@ -1,0 +1,171 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-04T00:00:00Z",
+  "title": "Design System: KEI Software",
+  "extensions": {
+    "colorMeta": {
+      "azul-ui": { "role": "primary", "displayName": "Azul UI", "canonical": "#3F7DFF", "tonalRamp": ["#0a1f4d", "#12337f", "#1d4bb3", "#2c64e6", "#3f7dff", "#7aa5ff", "#b4ccff", "#e6eeff"] },
+      "azul-marino": { "role": "secondary", "displayName": "Azul Marino", "canonical": "#16205E", "tonalRamp": ["#070a1f", "#0e1540", "#16205e", "#25318a", "#3a47b0", "#6670cc", "#a2a8e3", "#dcdff6"] },
+      "azul-hielo": { "role": "tertiary", "displayName": "Azul Hielo", "canonical": "#DFE8FD", "tonalRamp": ["#1a2547", "#33447a", "#5068a8", "#7a91cc", "#a6bbea", "#c6d5f7", "#dfe8fd", "#f1f5fe"] },
+      "fondo-oscuro": { "role": "neutral", "displayName": "Fondo Oscuro", "canonical": "#020714", "tonalRamp": ["#020714", "#0b1426", "#1c2538", "#373f52", "#5b6273", "#878c99", "#b9bcc4", "#e6e7eb"] },
+      "fondo-claro": { "role": "neutral", "displayName": "Fondo Claro", "canonical": "#F9FAFC", "tonalRamp": ["#22252b", "#40444c", "#62666f", "#878b94", "#acafb7", "#d0d3d9", "#eceef2", "#f9fafc"] },
+      "card-white": { "role": "neutral", "displayName": "Card White", "canonical": "#FFFFFF" },
+      "ink-soft": { "role": "neutral", "displayName": "Ink Soft", "canonical": "rgba(2, 7, 20, 0.64)" },
+      "hairline": { "role": "neutral", "displayName": "Hairline", "canonical": "rgba(2, 7, 20, 0.12)" },
+      "on-dark-soft": { "role": "neutral", "displayName": "On-dark Soft", "canonical": "rgba(223, 232, 253, 0.72)" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero headline and closing question." },
+      "headline": { "displayName": "Headline", "purpose": "Every section title." },
+      "title": { "displayName": "Title", "purpose": "Service row names; project and team names at 1.75 to 3.25rem." },
+      "body": { "displayName": "Body", "purpose": "Paragraphs in Ink Soft, 22 to 40rem measure." },
+      "label": { "displayName": "Label", "purpose": "Uppercase tags joined by bullets, form and contact labels." },
+      "button": { "displayName": "Button", "purpose": "Pill labels." }
+    },
+    "themes": {
+      "dark": {
+        "selector": ".dark",
+        "--k-ground": "#020714",
+        "--k-ink": "#f9fafc",
+        "--k-ink-soft": "rgba(223, 232, 253, 0.7)",
+        "--k-ink-faint": "rgba(223, 232, 253, 0.66)",
+        "--k-ice": "#16205e",
+        "--k-line": "rgba(223, 232, 253, 0.14)",
+        "--k-card": "#16205e"
+      }
+    },
+    "shadows": [
+      { "name": "floating-ink", "value": "0 18px 40px -18px rgba(2,7,20,0.55)", "purpose": "Nav pill and WhatsApp pill, with a 1px white/10 ring." },
+      { "name": "light-lift", "value": "0 1px 0 rgba(2,7,20,0.04), 0 8px 24px -14px rgba(2,7,20,0.35)", "purpose": "Light pill and carousel arrow buttons." },
+      { "name": "wheel-card", "value": "0 30px 60px -30px rgba(2,7,20,0.55)", "purpose": "Hero project wheel cards (dark mode adds a 1px ice/16 ring)." }
+    ],
+    "motion": [
+      { "name": "ease-out", "value": "cubic-bezier(0.23, 1, 0.32, 1)", "purpose": "Default for reveals, pill roll, hover and press." },
+      { "name": "ease-in-out", "value": "cubic-bezier(0.77, 0, 0.175, 1)", "purpose": "Loader bar, counter, loader wipe and mobile menu wipe." },
+      { "name": "ease-drawer", "value": "cubic-bezier(0.32, 0.72, 0, 1)", "purpose": "Declared drawer curve; not currently used on the landing." },
+      { "name": "press", "value": "160ms", "purpose": "Pill scale(0.97) on active." },
+      { "name": "roll", "value": "320ms", "purpose": "Label roll on hover; dot scale 1.6 at 300ms." },
+      { "name": "line-rise", "value": "1000ms, 90ms stagger", "purpose": "Headline lines rising from a mask (hero: 1100ms, 110ms stagger, CSS-only)." },
+      { "name": "fade-up", "value": "800ms opacity / 900ms transform, 18px, 70ms stagger", "purpose": "Block reveals." },
+      { "name": "rule-draw", "value": "1200ms, 80ms stagger", "purpose": "Hairline rules scaling in from the left." },
+      { "name": "marquee", "value": "38s linear infinite", "purpose": "Nav strip." },
+      { "name": "smooth-scroll", "value": "Lenis lerp 0.1, anchor duration 1.3s", "purpose": "Wheel and trackpad only; off for touch and reduced motion." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Pill",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Ink pill with a blue leading dot and a rolling label; the main call to action.",
+      "html": "<a class=\"ds-pill\" href=\"#\"><span class=\"ds-pill__dot\"></span><span class=\"ds-roll\"><span class=\"ds-roll__a\">Hablemos</span><span class=\"ds-roll__b\" aria-hidden=\"true\">Hablemos</span></span></a>",
+      "css": ".ds-pill { display: inline-flex; align-items: center; gap: 0.7rem; height: 3.25rem; padding: 0 1.5rem 0 1.25rem; border-radius: 999px; background: #020714; color: #f9fafc; font-family: Montserrat, system-ui, sans-serif; font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; white-space: nowrap; transition: transform 160ms cubic-bezier(0.23,1,0.32,1); } .ds-pill:active { transform: scale(0.97); } .ds-pill:focus-visible { outline: 2px solid #3f7dff; outline-offset: 3px; } .ds-pill__dot { width: 0.4rem; height: 0.4rem; border-radius: 999px; background: #3f7dff; transition: transform 300ms cubic-bezier(0.23,1,0.32,1); } .ds-roll { position: relative; display: inline-block; overflow: hidden; height: 1.25em; line-height: 1.25em; } .ds-roll__a, .ds-roll__b { display: block; transition: transform 320ms cubic-bezier(0.23,1,0.32,1); } .ds-roll__b { position: absolute; inset: 0; transform: translateY(105%); } .ds-pill:hover .ds-roll__a { transform: translateY(-105%); } .ds-pill:hover .ds-roll__b { transform: translateY(0); } .ds-pill:hover .ds-pill__dot { transform: scale(1.6); }"
+    },
+    {
+      "name": "Light Pill",
+      "kind": "button",
+      "refersTo": "button-light",
+      "description": "White pill with a soft lift; the secondary action beside a primary pill, usually without the dot.",
+      "html": "<a class=\"ds-pill-light\" href=\"#\"><span class=\"ds-roll\"><span class=\"ds-roll__a\">Ver proyectos</span><span class=\"ds-roll__b\" aria-hidden=\"true\">Ver proyectos</span></span></a>",
+      "css": ".ds-pill-light { display: inline-flex; align-items: center; height: 3.25rem; padding: 0 1.5rem; border-radius: 999px; background: #ffffff; color: #020714; box-shadow: 0 1px 0 rgba(2,7,20,0.04), 0 8px 24px -14px rgba(2,7,20,0.35); font-family: Montserrat, system-ui, sans-serif; font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; transition: transform 160ms cubic-bezier(0.23,1,0.32,1); } .ds-pill-light:active { transform: scale(0.97); } .ds-pill-light:focus-visible { outline: 2px solid #3f7dff; outline-offset: 3px; } .ds-roll { position: relative; display: inline-block; overflow: hidden; height: 1.25em; line-height: 1.25em; } .ds-roll__a, .ds-roll__b { display: block; transition: transform 320ms cubic-bezier(0.23,1,0.32,1); } .ds-roll__b { position: absolute; inset: 0; transform: translateY(105%); } .ds-pill-light:hover .ds-roll__a { transform: translateY(-105%); } .ds-pill-light:hover .ds-roll__b { transform: translateY(0); }"
+    },
+    {
+      "name": "Ice Pill (small)",
+      "kind": "button",
+      "refersTo": "button-ice",
+      "description": "Small Azul Hielo pill; the CTA inside the dark nav.",
+      "html": "<a class=\"ds-pill-ice\" href=\"#\"><span class=\"ds-pill-ice__dot\"></span>Hablemos</a>",
+      "css": ".ds-pill-ice { display: inline-flex; align-items: center; gap: 0.55rem; height: 2.5rem; padding: 0 1.1rem 0 0.95rem; border-radius: 999px; background: #dfe8fd; color: #020714; font-family: Montserrat, system-ui, sans-serif; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; transition: transform 160ms cubic-bezier(0.23,1,0.32,1); } .ds-pill-ice:active { transform: scale(0.97); } .ds-pill-ice:focus-visible { outline: 2px solid #3f7dff; outline-offset: 3px; } .ds-pill-ice__dot { width: 0.4rem; height: 0.4rem; border-radius: 999px; background: #3f7dff; transition: transform 300ms cubic-bezier(0.23,1,0.32,1); } .ds-pill-ice:hover .ds-pill-ice__dot { transform: scale(1.6); }"
+    },
+    {
+      "name": "Pill Field",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Ice pill field that turns white with a blue border on focus.",
+      "html": "<label class=\"ds-field-label\" for=\"ds-name\">Nombre</label><input id=\"ds-name\" class=\"ds-field\" placeholder=\"Cómo te llamás\">",
+      "css": ".ds-field-label { display: block; margin-bottom: 0.625rem; padding-left: 0.375rem; font-family: Montserrat, system-ui, sans-serif; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(2,7,20,0.64); } .ds-field { width: 100%; height: 3.5rem; padding: 0 1.4rem; border: 1px solid transparent; border-radius: 999px; background: #dfe8fd; color: #020714; font-family: Montserrat, system-ui, sans-serif; font-size: 1rem; transition: border-color 200ms ease, background-color 200ms ease; } .ds-field::placeholder { color: rgba(2,7,20,0.62); } .ds-field:focus { outline: none; border-color: #3f7dff; background: #ffffff; }"
+    },
+    {
+      "name": "Floating Nav",
+      "kind": "nav",
+      "refersTo": "nav-bar",
+      "description": "Centered floating ink pill with rolling links and an ice CTA.",
+      "html": "<nav class=\"ds-nav\"><span class=\"ds-nav__logo\">KEI Software</span><ul class=\"ds-nav__links\"><li><a href=\"#\">Servicios</a></li><li><a href=\"#\">Proyectos</a></li><li><a href=\"#\">Proceso</a></li><li><a href=\"#\">Equipo</a></li></ul><a class=\"ds-nav__cta\" href=\"#\"><span class=\"ds-nav__dot\"></span>Hablemos</a></nav>",
+      "css": ".ds-nav { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; height: 3.5rem; max-width: 46rem; padding: 0.5rem 0.5rem 0.5rem 1.25rem; border-radius: 999px; background: #020714; color: #f9fafc; box-shadow: 0 18px 40px -18px rgba(2,7,20,0.55), 0 0 0 1px rgba(255,255,255,0.1); font-family: Montserrat, system-ui, sans-serif; } .ds-nav__logo { font-weight: 700; font-size: 0.95rem; } .ds-nav__links { display: flex; gap: 0.25rem; list-style: none; margin: 0; padding: 0; } .ds-nav__links a { display: block; padding: 0.5rem 0.75rem; border-radius: 999px; font-size: 0.8125rem; font-weight: 500; color: rgba(249,250,252,0.7); text-decoration: none; transition: color 200ms ease; } .ds-nav__links a:hover { color: #f9fafc; } .ds-nav__links a:focus-visible, .ds-nav__cta:focus-visible { outline: 2px solid #3f7dff; outline-offset: 3px; } .ds-nav__cta { display: inline-flex; align-items: center; gap: 0.55rem; height: 2.5rem; padding: 0 1.1rem 0 0.95rem; border-radius: 999px; background: #dfe8fd; color: #020714; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; } .ds-nav__dot { width: 0.4rem; height: 0.4rem; border-radius: 999px; background: #3f7dff; }"
+    },
+    {
+      "name": "Inline Chip and Tag Line",
+      "kind": "chip",
+      "refersTo": "chip-inline",
+      "description": "Ice chip wrapping a word in running text; uppercase tag line joined by bullets.",
+      "html": "<p class=\"ds-sub\">Creamos <span class=\"ds-chip\">sistemas</span> y <span class=\"ds-chip\">sitios web</span> a medida.</p><p class=\"ds-tag\">Web • Diseño • Desarrollo</p>",
+      "css": ".ds-sub { font-family: Montserrat, system-ui, sans-serif; font-size: 1.125rem; line-height: 1.7; color: rgba(2,7,20,0.64); } .ds-chip { display: inline-block; padding: 0.18em 0.6em; border-radius: 999px; background: #dfe8fd; color: #020714; font-weight: 500; } .ds-tag { font-family: Montserrat, system-ui, sans-serif; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; line-height: 1.5; color: rgba(2,7,20,0.62); }"
+    },
+    {
+      "name": "Navy Slab",
+      "kind": "card",
+      "refersTo": "panel-navy",
+      "description": "Large Azul Marino panel with fluid radius and Lusion register marks; hosts the process steps.",
+      "html": "<div class=\"ds-slab\"><h2 class=\"ds-slab__title\">Cómo trabajamos</h2><p class=\"ds-slab__body\">De la primera charla al sistema funcionando, en cuatro pasos.</p></div>",
+      "css": ".ds-slab { position: relative; padding: 4.5rem 2.5rem; border-radius: clamp(1.5rem, 2.6vw, 2.5rem); background: #16205e; color: #f9fafc; } .ds-slab::before, .ds-slab::after { content: '+'; position: absolute; bottom: -1.6rem; font-family: Montserrat, sans-serif; font-weight: 300; font-size: 1rem; line-height: 1; color: rgba(2,7,20,0.62); } .ds-slab::before { left: -0.3rem; } .ds-slab::after { right: -0.3rem; } .ds-slab__title { margin: 0; font-family: 'Glacial Indifference', Montserrat, sans-serif; font-weight: 400; font-size: 3.5rem; line-height: 0.98; letter-spacing: -0.02em; } .ds-slab__body { margin-top: 1.5rem; max-width: 30rem; font-family: Montserrat, system-ui, sans-serif; font-size: 1.0625rem; line-height: 1.65; color: rgba(223,232,253,0.72); }"
+    },
+    {
+      "name": "Testimonial Card",
+      "kind": "card",
+      "refersTo": "card-quote",
+      "description": "Ice card in the drag rail: quote above a circular logo and name.",
+      "html": "<figure class=\"ds-quote\"><blockquote>“Excelente experiencia con KEI. Entendieron el negocio desde el primer día.”</blockquote><figcaption><span class=\"ds-quote__logo\"></span><span><strong>Cliente</strong><small>Fundador, Empresa</small></span></figcaption></figure>",
+      "css": ".ds-quote { display: flex; flex-direction: column; justify-content: space-between; gap: 2.5rem; width: min(86vw, 27rem); margin: 0; padding: 2rem; border-radius: clamp(1.25rem, 1.8vw, 1.75rem); background: #dfe8fd; color: #020714; font-family: Montserrat, system-ui, sans-serif; } .ds-quote blockquote { margin: 0; font-size: 1.0625rem; line-height: 1.7; } .ds-quote figcaption { display: flex; align-items: center; gap: 0.75rem; } .ds-quote__logo { width: 3rem; height: 3rem; border-radius: 999px; background: #f9fafc; flex: none; } .ds-quote strong { display: block; font-weight: 600; } .ds-quote small { display: block; font-size: 0.875rem; color: rgba(2,7,20,0.64); }"
+    },
+    {
+      "name": "Section Header",
+      "kind": "custom",
+      "description": "The section grammar: Glacial headline in columns 1 to 7, short body in columns 9 to 12, baseline-aligned.",
+      "html": "<div class=\"ds-head\"><h2 class=\"ds-head__title\">Qué hacemos</h2><p class=\"ds-head__body\">Cuatro formas de ordenar tu negocio con tecnología. Todas hechas a medida.</p></div>",
+      "css": ".ds-head { display: grid; grid-template-columns: repeat(12, 1fr); gap: 2rem; align-items: end; } .ds-head__title { grid-column: 1 / span 7; margin: 0; font-family: 'Glacial Indifference', Montserrat, sans-serif; font-weight: 400; font-size: clamp(2.6rem, 6.4vw, 6rem); line-height: 0.98; letter-spacing: -0.02em; color: #020714; } .ds-head__body { grid-column: 9 / span 4; margin: 0; font-family: Montserrat, system-ui, sans-serif; font-size: 1.0625rem; line-height: 1.65; color: rgba(2,7,20,0.64); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Quiet Studio Floor",
+    "overview": "A bright, unhurried studio page where the work does the talking. The ground is a near-white cool paper, type is set huge and at regular weight, and everything you can touch is a soft pill or a big soft-cornered panel. The register is borrowed from lusion.co (statement sections, the reel window, register marks, the counting intro) and osmo.supply (floating dark pill nav, ruled service rows, pill fields, colored author cards, rolling labels). Decoration is replaced by KEI's real projects: the hero's arc of project cards, the reel, the two-column project grid.\n\nDensity is low. Sections breathe with 88 to 176px of vertical padding, headlines take the width, and body copy sits off to the right in a narrow column. Motion is soft and once: lines rise out of masks, blocks fade up, rules draw from the left. Nothing loops except the nav strip marquee and the reel crossfade.\n\nThe palette is the brand manual and nothing else: five brand colors plus white for cards. One accent, Azul UI, carries every highlight.",
+    "keyCharacteristics": [
+      "Regular-weight Glacial Indifference display at very large sizes, tight leading (0.98), slight negative tracking.",
+      "Full pills everywhere: buttons, nav, fields, chips, icon buttons, logo discs.",
+      "Large panel radii (24 to 40px, fluid) on photo frames, navy slabs and team cards.",
+      "A single blue accent: the pill dot, the second headline line, the drawn arc, the process progress line.",
+      "Flat surfaces; depth only from long soft shadows on floating ink elements.",
+      "Light and dark themes share one token set; dark swaps ground and ink and turns ice surfaces navy."
+    ],
+    "rules": [
+      { "name": "The Brand Manual Rule", "body": "The palette is exactly #3F7DFF, #020714, #16205E, #F9FAFC, #DFE8FD, plus #FFFFFF for cards. Tints are opacity steps of those colors, never new hues. No gradients.", "section": "colors" },
+      { "name": "The One Blue Rule", "body": "Azul UI is the only accent. If something needs to point, it gets the blue dot or blue text; nothing else competes.", "section": "colors" },
+      { "name": "The Two-Theme Rule", "body": "Use the variable tokens (ground, ink, ice, card, line) for anything that sits on the page ground, so the .dark swap carries it. Hard-coded navy and ink are reserved for surfaces that stay dark in both themes (nav, loader, process slab, wheel frames).", "section": "colors" },
+      { "name": "The Regular Weight Rule", "body": "Display type is always weight 400. Size carries the hierarchy; the bold cut is loaded but not part of the system.", "section": "typography" },
+      { "name": "The Two Faces Rule", "body": "Glacial for anything read as a headline or name, Montserrat for everything else. No third family on this surface.", "section": "typography" },
+      { "name": "The Tone Before Shadow Rule", "body": "Panels and cards never take a shadow. Only floating controls and the wheel cards do.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do draw every color from the brand manual tokens; express softer shades as opacity steps of ink or ice.",
+      "Do set headlines in Glacial Indifference at weight 400 with 0.98 leading and -0.02em tracking.",
+      "Do make every control a full pill (999px) and every content surface a large fluid-radius panel.",
+      "Do lead primary pills with the Azul UI dot and give them the rolling label.",
+      "Do show KEI's real projects, people and clients as the imagery.",
+      "Do use the 12-column header grammar: headline in columns 1 to 7, short body in columns 9 to 12.",
+      "Do gate hover effects behind fine-pointer media queries and give every motion a reduced-motion fallback.",
+      "Do keep content visible before JavaScript runs; reveals only hide content once the document is marked ready."
+    ],
+    "donts": [
+      "Don't introduce colors outside #3F7DFF, #020714, #16205E, #F9FAFC, #DFE8FD and white cards, and don't use gradients.",
+      "Don't recolor, tint or filter the KEI isotipo PNG; it is placed as supplied (inline in the hero headline).",
+      "Don't apply this system to the footer (components/footer.tsx); it is a preserved legacy piece and stays as it is.",
+      "Don't build dark neon heroes, icon-card grids, or abstract 3D and blob decoration.",
+      "Don't put shadows on panels or cards; shadows belong only to floating controls and wheel cards.",
+      "Don't set display type bold, or add a third typeface.",
+      "Don't add small uppercase labels above section headlines; section titles stand alone."
+    ]
+  }
+}

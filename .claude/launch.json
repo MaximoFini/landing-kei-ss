@@ -4,8 +4,8 @@
     {
       "name": "landing-kei-dev",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["run", "dev"],
-      "port": 3000,
+      "runtimeArgs": ["exec", "next", "dev", "-p", "3001"],
+      "port": 3001,
       "autoPort": true
     }
   ]

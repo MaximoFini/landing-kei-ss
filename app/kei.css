@@ -1,0 +1,504 @@
+/* ==========================================================================
+   KEI landing — visual system
+   Colors and type come straight from the brand manual. One accent (Azul UI).
+   ========================================================================== */
+
+:root {
+  --k-ground: #f9fafc; /* Fondo claro */
+  --k-ink: #020714; /* Fondo oscuro, used as ink */
+  --k-ink-soft: rgba(2, 7, 20, 0.64);
+  --k-ink-faint: rgba(2, 7, 20, 0.62);
+  --k-ice: #dfe8fd; /* Azul hielo */
+  --k-navy: #16205e; /* Azul marino */
+  --k-blue: #3f7dff; /* Azul UI — the only accent */
+  --k-line: rgba(2, 7, 20, 0.12);
+  --k-card: #ffffff;
+  --k-on-dark: #f9fafc;
+  --k-on-dark-soft: rgba(223, 232, 253, 0.72);
+
+  --k-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --k-ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --k-ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+
+  --k-gutter: clamp(1.25rem, 3vw, 2.5rem);
+  --k-radius-panel: clamp(1.5rem, 2.6vw, 2.5rem);
+  --k-radius-card: clamp(1.25rem, 1.8vw, 1.75rem);
+}
+
+.dark {
+  --k-ground: #020714;
+  --k-ink: #f9fafc;
+  --k-ink-soft: rgba(223, 232, 253, 0.7);
+  --k-ink-faint: rgba(223, 232, 253, 0.66);
+  --k-ice: #16205e;
+  --k-line: rgba(223, 232, 253, 0.14);
+  --k-card: #16205e;
+}
+
+@property --k-count {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: false;
+}
+
+@counter-style k-pad3 {
+  system: extends decimal;
+  pad: 3 "0";
+}
+
+@layer components {
+/* ---------- Base ---------------------------------------------------------- */
+
+.kei {
+  background: var(--k-ground);
+  color: var(--k-ink);
+  font-family: var(--font-montserrat), system-ui, sans-serif;
+  font-weight: 400;
+  overflow-x: clip;
+}
+
+.kei ::selection {
+  background: var(--k-blue);
+  color: #fff;
+}
+
+.kei :focus-visible {
+  outline: 2px solid var(--k-blue);
+  outline-offset: 3px;
+  border-radius: 999px;
+}
+
+.k-display {
+  font-family: var(--font-glacial), var(--font-montserrat), sans-serif;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 0.98;
+  text-wrap: balance;
+}
+
+.k-h1 {
+  font-size: clamp(2.9rem, 7.6vw, 7.25rem);
+}
+.k-h2 {
+  font-size: clamp(2.6rem, 6.4vw, 6rem);
+}
+.k-h3 {
+  font-size: clamp(1.75rem, 2.8vw, 2.6rem);
+  line-height: 1.04;
+}
+
+.k-body {
+  font-size: clamp(1rem, 1.15vw, 1.125rem);
+  line-height: 1.65;
+  color: var(--k-ink-soft);
+  font-weight: 400;
+}
+
+.k-tag {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.5;
+}
+
+.k-wrap {
+  width: 100%;
+  max-width: 1600px;
+  margin-inline: auto;
+  padding-inline: var(--k-gutter);
+}
+
+.k-section {
+  padding-block: clamp(4.5rem, 12vw, 11rem);
+}
+
+/* ---------- Pill button (dot + rolling label) ------------------------------ */
+
+.k-pill {
+  --pill-bg: var(--k-ink);
+  --pill-fg: var(--k-ground);
+  --pill-dot: var(--k-blue);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  height: 3.25rem;
+  padding: 0 1.5rem 0 1.25rem;
+  border-radius: 999px;
+  background: var(--pill-bg);
+  color: var(--pill-fg);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 160ms var(--k-ease-out), background-color 200ms ease;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.k-pill:active {
+  transform: scale(0.97);
+}
+.k-pill--light {
+  --pill-bg: var(--k-card);
+  --pill-fg: var(--k-ink);
+  box-shadow: 0 1px 0 rgba(2, 7, 20, 0.04), 0 8px 24px -14px rgba(2, 7, 20, 0.35);
+}
+.k-pill--ice {
+  --pill-bg: var(--k-ice);
+  --pill-fg: var(--k-ink);
+}
+.dark .k-pill--ice {
+  --pill-fg: var(--k-on-dark);
+}
+.k-pill--on-dark {
+  --pill-bg: var(--k-on-dark);
+  --pill-fg: #020714;
+}
+.k-pill--sm {
+  height: 2.5rem;
+  padding: 0 1.1rem 0 0.95rem;
+  font-size: 0.6875rem;
+  gap: 0.55rem;
+}
+
+.k-pill__dot {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 999px;
+  background: var(--pill-dot);
+  flex: none;
+  transition: transform 300ms var(--k-ease-out);
+}
+
+.k-roll {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  height: 1.25em;
+  line-height: 1.25em;
+}
+.k-roll__a,
+.k-roll__b {
+  display: block;
+  transition: transform 320ms var(--k-ease-out);
+}
+.k-roll__b {
+  position: absolute;
+  inset: 0;
+  transform: translateY(105%);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .k-pill:hover .k-roll__a,
+  .k-roll-host:hover .k-roll__a {
+    transform: translateY(-105%);
+  }
+  .k-pill:hover .k-roll__b,
+  .k-roll-host:hover .k-roll__b {
+    transform: translateY(0);
+  }
+  .k-pill:hover .k-pill__dot {
+    transform: scale(1.6);
+  }
+}
+
+/* ---------- Register marks (Lusion "+") ------------------------------------ */
+
+.k-marks {
+  position: relative;
+}
+.k-marks::before,
+.k-marks::after {
+  content: "+";
+  position: absolute;
+  font-family: var(--font-montserrat), sans-serif;
+  font-weight: 300;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--k-ink-faint);
+  pointer-events: none;
+}
+.k-marks::before {
+  left: -0.3rem;
+  bottom: -1.6rem;
+}
+.k-marks::after {
+  right: -0.3rem;
+  bottom: -1.6rem;
+}
+
+/* ---------- Reveal system ----------------------------------------------------
+   Content is visible by default. Only once JS has marked the document
+   (html.kei-js) do lines start hidden and wait for [data-in].              */
+
+.kei-js .k-lines > .k-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+.kei-js .k-lines > .k-line > span {
+  display: inline-block;
+  transform: translateY(108%);
+  transition: transform 1000ms var(--k-ease-out);
+  transition-delay: calc(var(--i, 0) * 90ms);
+}
+.kei-js .k-lines[data-in] > .k-line > span {
+  transform: none;
+}
+
+.kei-js .k-fade {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 800ms var(--k-ease-out), transform 900ms var(--k-ease-out);
+  transition-delay: calc(var(--i, 0) * 70ms);
+}
+.kei-js .k-fade[data-in],
+.kei-js [data-in] > .k-fade {
+  opacity: 1;
+  transform: none;
+}
+
+.kei-js .k-rule {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1200ms var(--k-ease-out);
+  transition-delay: calc(var(--i, 0) * 80ms);
+}
+.kei-js .k-rule[data-in],
+.kei-js [data-in] > .k-rule {
+  transform: none;
+}
+
+/* ---------- Intro loader (Lusion) ------------------------------------------- */
+
+
+.k-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: #020714;
+  color: #f9fafc;
+  pointer-events: none;
+  animation: k-loader-out 700ms var(--k-ease-in-out) 1150ms forwards;
+}
+.k-loader__bar {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 7.5rem;
+  height: 0.875rem;
+  translate: -50% -50%;
+  background: rgba(249, 250, 252, 0.18);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.k-loader__bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #f9fafc;
+  transform-origin: left;
+  animation: k-loader-bar 1100ms var(--k-ease-in-out) forwards;
+}
+.k-loader__count {
+  position: absolute;
+  left: var(--k-gutter);
+  bottom: 0.5rem;
+  font-family: var(--font-glacial), sans-serif;
+  font-size: clamp(4rem, 12vw, 9rem);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  counter-reset: k var(--k-count);
+  animation: k-count 1100ms var(--k-ease-in-out) forwards;
+}
+.k-loader__count::after {
+  content: counter(k, k-pad3);
+}
+@keyframes k-count {
+  to {
+    --k-count: 100;
+  }
+}
+@keyframes k-loader-bar {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes k-loader-out {
+  to {
+    clip-path: inset(0 0 100% 0);
+    visibility: hidden;
+  }
+}
+.kei-seen .k-loader {
+  display: none;
+}
+
+/* ---------- Hero ------------------------------------------------------------- */
+
+.k-hero {
+  --intro: 1050ms;
+}
+.kei-seen .k-hero {
+  --intro: 80ms;
+}
+
+/* The hero headline is the LCP: it animates on its own with CSS, never
+   waiting for hydration or an observer. */
+.kei-js .k-hero .k-lines > .k-line > span {
+  transform: none;
+  transition: none;
+  animation: k-line-up 1100ms var(--k-ease-out) both;
+  animation-delay: calc(var(--intro) + var(--i, 0) * 110ms);
+}
+@keyframes k-line-up {
+  from {
+    transform: translateY(108%);
+  }
+}
+.kei-js .k-hero__sub,
+.kei-js .k-hero__cta {
+  animation: k-rise 900ms var(--k-ease-out) both;
+  animation-delay: calc(var(--intro) + 260ms);
+}
+.kei-js .k-hero__cta {
+  animation-delay: calc(var(--intro) + 360ms);
+}
+@keyframes k-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+.k-hero__sub {
+  text-wrap: pretty;
+}
+/* Celeste highlight on the three things KEI builds: a tint of Azul UI,
+   swept in like a marker once the line has risen. */
+.k-mark {
+  position: relative;
+  display: inline-block;
+  padding: 0.06em 0.5em;
+  line-height: 1.5;
+
+  font-weight: 600;
+  color: var(--k-blue);
+  isolation: isolate;
+}
+.k-mark::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 999px;
+  background: rgba(63, 125, 255, 0.16);
+  transform-origin: left center;
+}
+.dark .k-mark::before {
+  background: rgba(63, 125, 255, 0.24);
+}
+.kei-js .k-mark::before {
+  animation: k-mark-in 700ms var(--k-ease-out) both;
+  animation-delay: calc(var(--intro) + 620ms + var(--i, 0) * 90ms);
+}
+@keyframes k-mark-in {
+  from {
+    clip-path: inset(0 100% 0 0 round 999px);
+  }
+  to {
+    clip-path: inset(0 0 0 0 round 999px);
+  }
+}
+.k-strip {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent);
+}
+/* ---------- Marquee (Osmo strip) -------------------------------------------- */
+
+.k-marquee {
+  display: flex;
+  width: max-content;
+  animation: k-marquee 38s linear infinite;
+}
+@keyframes k-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ---------- Hide native scrollbars on rails ---------------------------------- */
+
+.k-rail {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.k-rail::-webkit-scrollbar {
+  display: none;
+}
+
+/* ---------- Form fields (Osmo) ----------------------------------------------- */
+
+.k-field {
+  width: 100%;
+  background: var(--k-ice);
+  color: var(--k-ink);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 0 1.4rem;
+  height: 3.5rem;
+  font-family: inherit;
+  font-size: 1rem;
+  transition: border-color 200ms ease, background-color 200ms ease;
+}
+textarea.k-field {
+  border-radius: 1.75rem;
+  height: auto;
+  padding: 1.1rem 1.4rem;
+  resize: none;
+  line-height: 1.6;
+}
+.k-field::placeholder {
+  color: var(--k-ink-faint);
+}
+.k-field:focus {
+  outline: none;
+  border-color: var(--k-blue);
+  background: var(--k-card);
+  box-shadow: none;
+}
+.k-field[aria-invalid="true"] {
+  border-color: #d93a3a;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .k-loader {
+    display: none;
+  }
+  .k-marquee {
+    animation: none;
+  }
+  .kei-js .k-hero .k-lines > .k-line > span,
+  .kei-js .k-hero__sub,
+  .kei-js .k-hero__cta,
+  .kei-js .k-mark::before {
+    animation: none;
+  }
+  .kei-js .k-lines > .k-line > span,
+  .kei-js .k-fade,
+  .kei-js .k-rule {
+    transform: none;
+    opacity: 1;
+    transition: none;
+  }
+}
+
+}

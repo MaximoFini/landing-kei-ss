@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Google_Sans_Flex } from "next/font/google";
+import { Geist, Geist_Mono, Google_Sans_Flex, Montserrat } from "next/font/google";
+import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/next";
 import { StructuredData } from "@/components/structured-data";
 import { PageTransition } from "@/components/page-transition";
@@ -7,6 +8,7 @@ import { TitleAttention } from "@/components/title-attention";
 import { ThemeProvider } from "@/components/theme-provider";
 import { LazyMotionProvider } from "@/components/lazy-motion-provider";
 import "./globals.css";
+import "./kei.css";
 
 const geist = Geist({
   subsets: ["latin"],
@@ -23,6 +25,23 @@ const geistMono = Geist_Mono({
 const googleSansFlex = Google_Sans_Flex({
   subsets: ["latin"],
   variable: "--font-google-sans-flex",
+  display: "swap",
+});
+
+// Brand manual typography: Montserrat for body/UI, Glacial Indifference
+// (SIL OFL, self-hosted from app/fonts) for display.
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-montserrat",
+  display: "swap",
+});
+const glacial = localFont({
+  src: [
+    { path: "./fonts/GlacialIndifference-Regular.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/GlacialIndifference-Bold.woff2", weight: "700", style: "normal" },
+  ],
+  variable: "--font-glacial",
   display: "swap",
 });
 
@@ -120,8 +139,8 @@ export const viewport: Viewport = {
   maximumScale: 1,
   userScalable: false,
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+    { media: "(prefers-color-scheme: light)", color: "#f9fafc" },
+    { media: "(prefers-color-scheme: dark)", color: "#020714" },
   ],
 };
 
@@ -151,9 +170,17 @@ export default function RootLayout({
             to be merged into the document head without hydration issues,
             since this content is server-rendered and non-interactive). */}
         <StructuredData />
+        {/* Marks the document before first paint: enables reveal animations
+            (content stays visible without JS) and skips the intro loader
+            after the first visit of the session. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){var d=document.documentElement;d.classList.add("kei-js");try{if(sessionStorage.getItem("kei-intro"))d.classList.add("kei-seen");else sessionStorage.setItem("kei-intro","1")}catch(e){}})();`,
+          }}
+        />
       </head>
       <body
-        className={`${geist.variable} ${geistMono.variable} ${googleSansFlex.variable} font-sans antialiased bg-background text-foreground min-h-screen`}
+        className={`${geist.variable} ${geistMono.variable} ${googleSansFlex.variable} ${montserrat.variable} ${glacial.variable} font-sans antialiased bg-background text-foreground min-h-screen`}
       >
         <ThemeProvider
           attribute="class"

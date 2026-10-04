@@ -165,7 +165,7 @@ export const AnimatedThemeToggler = ({ className }: AnimatedThemeTogglerProps) =
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.33 }}
-            className="text-white"
+            className="text-current"
           >
             <Sun className="w-4 h-4" />
           </m.span>
@@ -176,7 +176,7 @@ export const AnimatedThemeToggler = ({ className }: AnimatedThemeTogglerProps) =
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.33 }}
-            className="text-black"
+            className="text-current"
           >
             <Moon className="w-4 h-4" />
           </m.span>
