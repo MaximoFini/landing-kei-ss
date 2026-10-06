@@ -23,14 +23,21 @@ export function Thread({ children }: { children: React.ReactNode }) {
     const svgs = [back.current, front.current]
     if (!host || !body || !svgs[0] || !svgs[1]) return
     const roots = svgs as SVGSVGElement[]
-    const paths = roots.map((r) => r.querySelector("path") as SVGPathElement)
+    // Two strokes per layer: the line up to where it leaves on the right, and
+    // from where it comes back in on the left. (One path with a second `M`
+    // would restart the dash pattern there, so the re-entry would draw itself.)
+    const [outs, ins] = [0, 1].map((i) => roots.map((r) => r.querySelectorAll("path")[i] as SVGPathElement))
+    const paths = [...outs, ...ins]
 
     let total = 0
+    let first = 0 // length of the stroke before the jump
     let ys: number[] = [] // running max of y per sample keeps the lookup monotonic
     let shown = 0 // drawn length on screen
     let target = 0
     let frame = 0
     let last = 0
+    let hideY = Infinity // the tip waits here until the right-hand exit has scrolled out of view
+    let backY = 0 // where it comes back in on the left
 
     // Path length whose y still sits above `y` (interpolated so the tip moves continuously).
     const lenAt = (y: number) => {
@@ -53,7 +60,7 @@ export function Thread({ children }: { children: React.ReactNode }) {
       const H = host.clientHeight
       const s = Array.from(body.children) as HTMLElement[]
       if (s.length < 8 || !W) return
-      const [ST, SV, , PR, PC, , TE, CL] = [0, 1, 2, 3, 4, 5, 6, 7]
+      const [ST, SV, RE, PR, , , TE, CL] = [0, 1, 2, 3, 4, 5, 6, 7]
       const base = body.getBoundingClientRect()
       const rect = s.map((n) => n.getBoundingClientRect())
       const top = rect.map((r) => r.top - base.top)
@@ -108,38 +115,55 @@ export function Thread({ children }: { children: React.ReactNode }) {
         )
       }
 
-      // Right margin → left margin in the empty gap between Projects and Process.
-      const g1a = bottom[PR] - pad * 0.9
-      const g1b = top[PC] - 6
+      // Right margin → off the right edge beside the Reel, then back in from the
+      // left edge lower down the same card.
+      const turn = Math.max(56, margin * 0.9)
+      const card = (s[RE].querySelector("a") ?? s[RE]).getBoundingClientRect()
+      const cTop = card.top - base.top
+      const out = cTop + card.height * 0.15
+      const back = cTop + card.height * 0.6
       // Left margin → centre, in the gap between Team and the closing question.
       const g2a = bottom[TE] - pad * 0.85
       const g2b = top[CL] + pad * 0.6
 
+      hideY = out + turn + stroke
+      backY = back
       d.push(
-        `L ${p(R, Math.max(laneY, g1a))}`,
-        cross(R, Math.max(laneY, g1a), L, g1b),
+        `L ${p(R, Math.max(laneY, out))}`,
+        `C ${p(R, out + turn * 0.55)} ${p(R + turn * 0.45, out + turn)} ${p(W + stroke * 2, out + turn)}`,
+      )
+      const d2 = [
+        `M ${p(-stroke * 2, back)}`,
+        `C ${p(L - turn * 0.45, back)} ${p(L, back + turn * 0.45)} ${p(L, back + turn)}`,
         `L ${p(L, g2a)}`,
         cross(L, g2a, W / 2, g2b),
-      )
+      ]
 
-      const dStr = d.join(" ")
       roots.forEach((r) => r.setAttribute("viewBox", `0 0 ${W} ${H}`))
-      paths.forEach((el) => {
-        el.setAttribute("d", dStr)
-        el.setAttribute("stroke-width", stroke.toFixed(1))
-      })
+      const set = (els: SVGPathElement[], dStr: string) =>
+        els.forEach((el) => {
+          el.setAttribute("d", dStr)
+          el.setAttribute("stroke-width", stroke.toFixed(1))
+        })
+      set(outs, d.join(" "))
+      set(ins, d2.join(" "))
       // Inside the Statement the arc stays behind the headline; past it, on top of everything.
       roots[1].style.clipPath = `inset(${bottom[ST].toFixed(0)}px 0 0 0)`
 
-      total = paths[0].getTotalLength()
+      first = outs[0].getTotalLength()
+      total = first + ins[0].getTotalLength()
+      const at = (l: number) => (l <= first ? outs[0].getPointAtLength(l) : ins[0].getPointAtLength(l - first))
       const n = 900
       ys = []
       let max = -Infinity
       for (let i = 0; i <= n; i++) {
-        max = Math.max(max, paths[0].getPointAtLength((i / n) * total).y)
+        max = Math.max(max, at((i / n) * total).y)
         ys.push(max)
       }
-      paths.forEach((el) => (el.style.strokeDasharray = `${total} ${total}`))
+      paths.forEach((el) => {
+        const len = el.getTotalLength()
+        el.style.strokeDasharray = `${len} ${len}`
+      })
       measure()
       shown = target
       paint()
@@ -152,16 +176,29 @@ export function Thread({ children }: { children: React.ReactNode }) {
         target = total
         return
       }
-      target = lenAt(window.innerHeight * 0.62 - host.getBoundingClientRect().top)
+      const vh = window.innerHeight
+      const viewTop = -host.getBoundingClientRect().top
+      const y = viewTop + vh * 0.62
+      if (viewTop < hideY) {
+        // Don't re-enter on the left while the exit on the right is still on screen.
+        target = lenAt(Math.min(y, hideY - 1))
+        return
+      }
+      // Once it's gone the reader is already past the entry: start the tip at the
+      // entry and let it catch up with the reader over most of a screen, not in one jump.
+      const release = hideY + vh * 0.62
+      const lag = Math.max(0, release - backY)
+      target = lenAt(y - lag * Math.max(0, 1 - (y - release) / (vh * 0.9)))
     }
 
     const paint = () => {
-      const off = String(total - shown)
-      const op = shown > 1 ? "1" : "0" // the round cap would paint a lone dot at zero length
-      paths.forEach((el) => {
-        el.style.strokeDashoffset = off
-        el.style.opacity = op
-      })
+      const draw = (els: SVGPathElement[], len: number, l: number) =>
+        els.forEach((el) => {
+          el.style.strokeDashoffset = String(len - l)
+          el.style.opacity = l > 1 ? "1" : "0" // the round cap would paint a lone dot at zero length
+        })
+      draw(outs, first, Math.min(shown, first))
+      draw(ins, total - first, Math.max(0, shown - first))
     }
 
     // Critically damped follow: the tip keeps pace with the scroll but glides
@@ -208,6 +245,7 @@ export function Thread({ children }: { children: React.ReactNode }) {
 
   const layer = (ref: React.RefObject<SVGSVGElement | null>, z: string) => (
     <svg ref={ref} aria-hidden="true" className={`pointer-events-none absolute inset-0 h-full w-full ${z}`} fill="none">
+      <path stroke="var(--k-blue)" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0 }} />
       <path stroke="var(--k-blue)" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0 }} />
     </svg>
   )

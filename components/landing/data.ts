@@ -10,10 +10,20 @@ export type Project = {
   description: string
   image: string
   position?: string
-  link: string
+  link?: string
 }
 
 export const projects: Project[] = [
+  {
+    title: "AgroSync",
+    category: "Agro",
+    tags: ["Landing page", "App mobile"],
+    description:
+      "Landing page para la app que coordina productores y contratistas: pedidos de servicios, presupuestos, clima y seguimiento de cada trabajo desde el celular.",
+    image: "/proyectos/proyecto-agrosync.webp",
+    position: "center top",
+    link: "https://agrosyncrural.com/",
+  },
   {
     title: "Stability",
     category: "Salud & Fitness",
@@ -154,6 +164,7 @@ export const clients = [
   { name: "Alfa Club", logo: "/testimonials/alfa-club.webp" },
   { name: "OG Circle", logo: "/testimonials/ogcircle.webp" },
   { name: "Centro Automotores", logo: "/testimonials/centro-autos.webp" },
+  { name: "AgroSync", logo: "/testimonials/agrosync.webp" },
 ]
 
 export const team = [

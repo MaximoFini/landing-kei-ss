@@ -181,31 +181,33 @@ export function Projects() {
           </Fade>
         </div>
 
-        <ul className="mt-[clamp(2.5rem,5vw,4.5rem)] grid gap-x-[clamp(1rem,2vw,2rem)] gap-y-[clamp(3rem,5vw,4.5rem)] md:grid-cols-2">
-          {projects.map((p, i) => (
-            <Fade as="li" key={p.title} delay={i % 2}>
-              <a
-                href={p.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group mx-2 block md:mx-0"
-                aria-label={`${p.title}: ${p.description} (se abre en una pestaña nueva)`}
-              >
+        <ul className="mt-[clamp(2.5rem,5vw,4.5rem)] grid gap-x-[clamp(1rem,2vw,2rem)] gap-y-[clamp(3rem,5vw,4.5rem)] md:grid-cols-6">
+          {projects.map((p, i) => {
+            // Five projects: a pair on top, a trio below, so no row is left with a lone card.
+            const wide = i < 2
+            const body = (
+              <>
                 <div className="relative aspect-[4/3] overflow-hidden rounded-[var(--k-radius-panel)] bg-[var(--k-ice)]">
                   <Image
                     src={p.image}
                     alt=""
                     fill
-                    sizes="(max-width: 768px) 100vw, 50vw"
+                    sizes={wide ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 100vw, 33vw"}
                     className="object-cover"
                     style={{ objectPosition: p.position }}
                   />
-                  <span className="k-pill k-pill--light k-pill--sm absolute bottom-4 left-4 translate-y-3 opacity-0 transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] group-focus-visible:translate-y-0 group-focus-visible:opacity-100 [@media(hover:hover)]:group-hover:translate-y-0 [@media(hover:hover)]:group-hover:opacity-100">
-                    Ver proyecto
-                    <ArrowUpRight className="size-3.5" />
-                  </span>
+                  {/* Hairline edge: light screenshots otherwise melt into the page. */}
+                  <span className="pointer-events-none absolute inset-0 rounded-[inherit] ring-1 ring-inset ring-[var(--k-line)]" />
+                  {p.link && (
+                    <span className="k-pill k-pill--light k-pill--sm absolute bottom-4 left-4 translate-y-3 opacity-0 transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] group-focus-visible:translate-y-0 group-focus-visible:opacity-100 [@media(hover:hover)]:group-hover:translate-y-0 [@media(hover:hover)]:group-hover:opacity-100">
+                      Ver proyecto
+                      <ArrowUpRight className="size-3.5" />
+                    </span>
+                  )}
                 </div>
-                <h3 className="k-display mt-5 text-[clamp(1.75rem,2.6vw,2.4rem)]">
+                <h3
+                  className={`k-display mt-5 ${wide ? "text-[clamp(1.75rem,2.6vw,2.4rem)]" : "text-[clamp(1.6rem,2vw,2rem)]"}`}
+                >
                   {p.title}
                   <span className="ml-3 align-middle text-[0.875rem] font-medium tracking-normal text-[var(--k-ink-faint)] [font-family:var(--font-montserrat)]">
                     {p.category}
@@ -213,9 +215,26 @@ export function Projects() {
                 </h3>
                 <p className="k-body mt-2 max-w-[34rem] text-[0.95rem]">{p.description}</p>
                 <Tags items={p.tags} className="mt-4 text-[var(--k-ink-faint)]" />
-              </a>
-            </Fade>
-          ))}
+              </>
+            )
+            return (
+              <Fade as="li" key={p.title} delay={wide ? i : i - 2} className={wide ? "md:col-span-3" : "md:col-span-2"}>
+                {p.link ? (
+                  <a
+                    href={p.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group mx-2 block md:mx-0"
+                    aria-label={`${p.title}: ${p.description} (se abre en una pestaña nueva)`}
+                  >
+                    {body}
+                  </a>
+                ) : (
+                  <div className="mx-2 md:mx-0">{body}</div>
+                )}
+              </Fade>
+            )
+          })}
         </ul>
       </div>
     </section>

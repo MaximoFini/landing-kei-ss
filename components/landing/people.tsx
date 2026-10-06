@@ -223,7 +223,8 @@ export function Voices() {
 const cardTones = [
   { bg: "bg-[var(--k-blue)]", fg: "text-[#020714]", soft: "text-[#020714]/70", pill: "light" as const },
   { bg: "bg-[#16205e]", fg: "text-[#f9fafc]", soft: "text-[#dfe8fd]/75", pill: "on-dark" as const },
-  { bg: "bg-[var(--k-ice)]", fg: "text-[var(--k-ink)]", soft: "text-[var(--k-ink-soft)]", pill: "ink" as const },
+  // Fixed light palette: --k-ice / --k-ink flip in dark mode, this card should not.
+  { bg: "bg-[#dfe8fd]", fg: "text-[#020714]", soft: "text-[rgba(2,7,20,0.64)]", pill: "ink" as const },
 ]
 
 export function Team() {
@@ -444,10 +445,11 @@ export function Contact() {
                 <label htmlFor="c-message" className={label}>
                   Qué necesitás
                 </label>
+                {/* !important: .k-field's 999px pill radius must never win here, or the text runs into the curve. */}
                 <textarea
                   id="c-message"
                   rows={6}
-                  className="k-field"
+                  className="k-field !rounded-[1.75rem] !px-[1.4rem] !py-[1.1rem]"
                   placeholder="Contanos sobre tu negocio y qué te gustaría resolver."
                   value={data.message}
                   aria-invalid={invalid.message || undefined}
