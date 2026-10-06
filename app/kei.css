@@ -451,9 +451,11 @@
   }
 }
 .k-hero__f {
+  fill: var(--fl);
   fill-opacity: var(--l);
 }
 .dark .k-hero__f {
+  fill: var(--fd);
   fill-opacity: var(--d);
 }
 .kei-js .k-hero__bg {
