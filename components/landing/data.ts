@@ -15,14 +15,14 @@ export type Project = {
 
 export const projects: Project[] = [
   {
-    title: "AgroSync",
-    category: "Agro",
-    tags: ["Landing page", "App mobile"],
+    title: "Centro Automotores",
+    category: "Automotriz",
+    tags: ["Sitio web", "Catálogo digital"],
     description:
-      "Landing page para la app que coordina productores y contratistas: pedidos de servicios, presupuestos, clima y seguimiento de cada trabajo desde el celular.",
-    image: "/proyectos/proyecto-agrosync.webp",
-    position: "center top",
-    link: "https://agrosyncrural.com/",
+      "Sitio web y catálogo digital para concesionaria líder, optimizando la exhibición de vehículos y captación de clientes.",
+    image: "/proyectos/proyecto-centro-automotores.webp",
+    position: "center center",
+    link: "https://www.instagram.com/centro_automotores/",
   },
   {
     title: "Stability",
@@ -55,14 +55,14 @@ export const projects: Project[] = [
     link: "https://www.instagram.com/alfa.mma.team/",
   },
   {
-    title: "Centro Automotores",
-    category: "Automotriz",
-    tags: ["Sitio web", "Catálogo digital"],
+    title: "AgroSync",
+    category: "Agro",
+    tags: ["Landing page", "App mobile"],
     description:
-      "Sitio web y catálogo digital para concesionaria líder, optimizando la exhibición de vehículos y captación de clientes.",
-    image: "/proyectos/proyecto-centro-automotores.webp",
-    position: "center center",
-    link: "https://www.instagram.com/centro_automotores/",
+      "Landing page para la app que coordina productores y contratistas: pedidos de servicios, presupuestos, clima y seguimiento de cada trabajo desde el celular.",
+    image: "/proyectos/proyecto-agrosync.webp",
+    position: "center top",
+    link: "https://agrosyncrural.com/",
   },
 ]
 
@@ -118,7 +118,7 @@ export const steps = [
 export const testimonials = [
   {
     name: "Juan Borreda",
-    role: "Co-founder",
+    role: "Co-fundador",
     company: "Stability",
     logo: "/testimonials/stability.webp",
     quote:
@@ -134,7 +134,7 @@ export const testimonials = [
   },
   {
     name: "Agustín Ramis",
-    role: "Co-founder",
+    role: "Co-fundador",
     company: "Stability",
     logo: "/testimonials/stability.webp",
     quote:
@@ -150,7 +150,7 @@ export const testimonials = [
   },
   {
     name: "Joaquin Vera",
-    role: "Co-founder",
+    role: "Co-fundador",
     company: "VeGroup",
     logo: "/testimonials/vegroup.webp",
     quote:
@@ -165,25 +165,30 @@ export const clients = [
   { name: "OG Circle", logo: "/testimonials/ogcircle.webp" },
   { name: "Centro Automotores", logo: "/testimonials/centro-autos.webp" },
   { name: "AgroSync", logo: "/testimonials/agrosync.webp" },
+  { name: "Riegos del Sur", logo: "/testimonials/riegos-del-sur.webp" },
+  { name: "Deutsch", logo: "/testimonials/deutsch.webp" },
 ]
 
 export const team = [
   {
     name: "Jerónimo Zallocco",
-    role: "Co-founder · Full Stack Developer",
+    role: "Co-fundador · Full Stack Developer",
     image: "/team/jeronimo-zallocco.webp",
     linkedin: "https://www.linkedin.com/in/jer%C3%B3nimo-zallocco-036090417/",
   },
   {
     name: "Máximo Fini",
-    role: "Co-founder · Project Manager",
+    role: "Co-fundador · Project Manager",
     image: "/team/maximo-fini.webp",
     linkedin: "https://www.linkedin.com/in/maximo-fini-560742201/",
   },
   {
     name: "Ramiro Celada",
-    role: "Co-founder · Product Manager",
+    role: "Co-fundador · Product Manager",
     image: "/team/ramiro-celada.webp",
     linkedin: "https://www.linkedin.com/in/ramiro-celada/",
   },
 ]
+
+/** Logos shipped as full-bleed squares with a solid background: fill the circle so it crops the corners. */
+export const bleedLogos = new Set(["/testimonials/ogcircle.webp", "/testimonials/centro-autos.webp", "/testimonials/riegos-del-sur.webp", "/testimonials/deutsch.webp"])

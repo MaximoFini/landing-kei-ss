@@ -3,9 +3,9 @@ import { NextResponse } from "next/server"
 
 export async function POST(req: Request) {
   try {
-    const { name, email, message } = await req.json()
+    const { name, phone, message } = await req.json()
 
-    if (!name || !email || !message) {
+    if (!name || !phone || !message) {
       return NextResponse.json({ error: "Faltan campos requeridos." }, { status: 400 })
     }
 
@@ -15,7 +15,6 @@ export async function POST(req: Request) {
     const { error } = await resend.emails.send({
       from: "KEI Software <onboarding@resend.dev>",
       to: "maximofinicba@gmail.com",
-      replyTo: email,
       subject: `Nuevo contacto desde la web: ${name}`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; background: #0d0f17; color: #f5f5f5; padding: 32px; border-radius: 8px; border: 1px solid #1e2235;">
@@ -29,9 +28,9 @@ export async function POST(req: Request) {
               <td style="padding: 10px 0; border-bottom: 1px solid #1e2235; font-size: 14px;">${name}</td>
             </tr>
             <tr>
-              <td style="padding: 10px 0; border-bottom: 1px solid #1e2235; color: #8a93b0; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em;">Email</td>
+              <td style="padding: 10px 0; border-bottom: 1px solid #1e2235; color: #8a93b0; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em;">Teléfono</td>
               <td style="padding: 10px 0; border-bottom: 1px solid #1e2235; font-size: 14px;">
-                <a href="mailto:${email}" style="color: #4f6dff; text-decoration: none;">${email}</a>
+                <a href="tel:${String(phone).replace(/[^\d+]/g, "")}" style="color: #4f6dff; text-decoration: none;">${phone}</a>
               </td>
             </tr>
           </table>
@@ -41,7 +40,7 @@ export async function POST(req: Request) {
               ${message.replace(/\n/g, "<br/>")}
             </p>
           </div>
-          <p style="margin-top: 32px; font-size: 11px; color: #555f7a;">Enviado desde keisoftware.dev — Respondé directamente a este email para contactar al cliente.</p>
+          <p style="margin-top: 32px; font-size: 11px; color: #555f7a;">Enviado desde keisoftware.dev — Contactá al cliente al teléfono indicado.</p>
         </div>
       `,
     })

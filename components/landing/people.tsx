@@ -5,7 +5,7 @@ import Image from "next/image"
 import { ArrowLeft, ArrowRight, ArrowUpRight, Instagram, Mail, MessageCircle } from "lucide-react"
 import { m, useReducedMotion, useScroll, useTransform } from "@/lib/motion"
 import { Fade, Lines, Pill, useReveal } from "@/components/landing/primitives"
-import { WHATSAPP_URL, clients, steps, team, testimonials } from "@/components/landing/data"
+import { WHATSAPP_URL, bleedLogos, clients, steps, team, testimonials } from "@/components/landing/data"
 
 /* ---------------------------------------------------------------------------
    Process — a navy rounded panel (Osmo's dark slab). The four steps sit in
@@ -25,12 +25,6 @@ export function Process() {
         <div className="px-[clamp(1.25rem,4vw,4rem)]">
           <div className="grid gap-8 md:grid-cols-12 md:items-end">
             <Lines as="h2" id="proceso-title" className="k-display k-h2 md:col-span-7" lines={["Cómo trabajamos"]} />
-            <Fade className="md:col-span-4 md:col-start-9">
-              <p className="k-body text-[var(--k-on-dark-soft)]">
-                De la primera charla al sistema funcionando, en cuatro pasos. Siempre sabés qué estamos haciendo y
-                cuánto cuesta.
-              </p>
-            </Fade>
           </div>
 
           <div ref={ref} className="relative mt-[clamp(3.5rem,7vw,6rem)]">
@@ -66,17 +60,41 @@ export function Process() {
    Voices — client logos in a pill-labelled row, then a rail of quotes that
    can be dragged with the mouse (native swipe on touch).
    ------------------------------------------------------------------------ */
+/** The rail renders the quotes this many times and always rests on the middle copy. */
+const LOOP_COPIES = 3
+
+/** Width of one full set of quotes, measured from card offsets so gaps are included. */
+function loopWidth(el: HTMLElement) {
+  const cards = el.querySelectorAll<HTMLElement>("li")
+  const n = cards.length / LOOP_COPIES
+  return cards[n] && cards[0] ? cards[n].offsetLeft - cards[0].offsetLeft : 0
+}
+
+/** Keeps scrollLeft inside the middle copy by jumping exactly one set. Returns the shift applied. */
+function wrapLoop(el: HTMLElement) {
+  const w = loopWidth(el)
+  if (!w) return 0
+  let shift = 0
+  if (el.scrollLeft < w * 0.5) shift = w
+  else if (el.scrollLeft > w * 1.5) shift = -w
+  if (shift) el.scrollLeft += shift
+  return shift
+}
+
 export function Voices() {
   const rail = useRef<HTMLUListElement>(null)
-  const [edge, setEdge] = useState({ start: true, end: false })
 
   useEffect(() => {
     const el = rail.current
     if (!el) return
-    const onScroll = () =>
-      setEdge({ start: el.scrollLeft < 8, end: el.scrollLeft + el.clientWidth > el.scrollWidth - 8 })
-    onScroll()
+    // Start on the middle copy so there is room to go both ways.
+    el.scrollTo({ left: loopWidth(el), behavior: "instant" })
+    const onScroll = () => {
+      const shift = wrapLoop(el)
+      if (shift) startLeft += shift
+    }
     el.addEventListener("scroll", onScroll, { passive: true })
+    window.addEventListener("resize", onScroll)
 
     // Mouse drag-to-scroll with a short momentum tail.
     let down = false
@@ -130,6 +148,7 @@ export function Voices() {
     return () => {
       cancelAnimationFrame(raf)
       el.removeEventListener("scroll", onScroll)
+      window.removeEventListener("resize", onScroll)
       el.removeEventListener("pointerdown", onDown)
       window.removeEventListener("pointermove", onMove)
       window.removeEventListener("pointerup", onUp)
@@ -140,6 +159,8 @@ export function Voices() {
   const nudge = (dir: 1 | -1) => {
     const el = rail.current
     if (!el) return
+    // Re-centre before moving so the smooth scroll is never cut short by a jump.
+    wrapLoop(el)
     const card = el.querySelector("li")
     el.scrollBy({ left: dir * ((card?.clientWidth ?? 400) + 16), behavior: "smooth" })
   }
@@ -158,7 +179,7 @@ export function Voices() {
             {clients.map((c) => (
               <li key={c.name} className="flex items-center gap-3">
                 <span className="relative size-11 overflow-hidden rounded-full bg-[#f9fafc] ring-1 ring-[var(--k-line)]">
-                  <Image src={c.logo} alt="" fill sizes="44px" className="object-contain p-1.5" />
+                  <Image src={c.logo} alt="" fill sizes="44px" className={bleedLogos.has(c.logo) ? "object-cover" : "object-contain p-1.5"} />
                 </span>
                 <span className="text-[0.95rem] font-semibold">{c.name}</span>
               </li>
@@ -174,10 +195,10 @@ export function Voices() {
             lines={["Lo que dicen", "nuestros clientes"]}
           />
           <div className="hidden shrink-0 gap-2 md:flex">
-            <button type="button" className={arrowBtn} onClick={() => nudge(-1)} disabled={edge.start} aria-label="Testimonio anterior">
+            <button type="button" className={arrowBtn} onClick={() => nudge(-1)} aria-label="Testimonio anterior">
               <ArrowLeft className="size-4" />
             </button>
-            <button type="button" className={arrowBtn} onClick={() => nudge(1)} disabled={edge.end} aria-label="Testimonio siguiente">
+            <button type="button" className={arrowBtn} onClick={() => nudge(1)} aria-label="Testimonio siguiente">
               <ArrowRight className="size-4" />
             </button>
           </div>
@@ -191,15 +212,16 @@ export function Voices() {
         className="k-rail mt-[clamp(2.5rem,5vw,4rem)] flex items-start cursor-grab md:items-stretch snap-x snap-mandatory gap-4 overflow-x-auto pb-4 active:cursor-grabbing"
         aria-label="Testimonios de clientes"
       >
-        {testimonials.map((t) => (
+        {Array.from({ length: LOOP_COPIES }, (_, copy) => testimonials.map((t) => ({ t, copy }))).flat().map(({ t, copy }) => (
           <li
-            key={t.name}
+            key={`${copy}-${t.name}`}
+            aria-hidden={copy === 1 ? undefined : true}
             className="relative flex w-[min(84vw,27rem)] shrink-0 snap-start flex-col justify-between gap-10 rounded-[var(--k-radius-card)] bg-[var(--k-ice)] p-[clamp(1.5rem,2.5vw,2.25rem)] select-none"
           >
             <blockquote className="text-[1.0625rem] leading-[1.7] text-[var(--k-ink)]">“{t.quote}”</blockquote>
             <div className="flex items-center gap-3">
               <span className="relative size-12 shrink-0 overflow-hidden rounded-full bg-[#f9fafc]">
-                <Image src={t.logo} alt="" fill sizes="48px" className="object-contain p-1.5" draggable={false} />
+                <Image src={t.logo} alt="" fill sizes="48px" className={bleedLogos.has(t.logo) ? "object-cover" : "object-contain p-1.5"} draggable={false} />
               </span>
               <span>
                 <span className="block font-semibold">{t.name}</span>
@@ -234,7 +256,7 @@ export function Team() {
         <div className="grid gap-8 md:grid-cols-12 md:items-end">
           <Lines as="h2" id="equipo-title" className="k-display k-h2 md:col-span-7" lines={["Quiénes somos"]} />
           <Fade className="md:col-span-4 md:col-start-9">
-            <p className="k-body">Tres co-founders. Hablás directo con las personas que construyen tu sistema.</p>
+            <p className="k-body">Tres co-fundadores. Hablás directo con las personas que construyen tu sistema.</p>
           </Fade>
         </div>
 
@@ -320,24 +342,24 @@ const methods = [
 ]
 
 export function Contact() {
-  const [data, setData] = useState({ name: "", email: "", message: "" })
+  const [data, setData] = useState({ name: "", phone: "", message: "" })
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle")
   const [error, setError] = useState<string | null>(null)
   const [touched, setTouched] = useState(false)
   const formRef = useReveal<HTMLFormElement>()
 
-  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)
+  const phoneOk = /^\+?[\d\s().-]+$/.test(data.phone.trim()) && data.phone.replace(/\D/g, "").length >= 8
   const invalid = {
     name: touched && !data.name.trim(),
-    email: touched && !emailOk,
+    phone: touched && !phoneOk,
     message: touched && !data.message.trim(),
   }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault()
     setTouched(true)
-    if (!data.name.trim() || !emailOk || !data.message.trim()) {
-      setError("Completá tu nombre, un email válido y qué necesitás.")
+    if (!data.name.trim() || !phoneOk || !data.message.trim()) {
+      setError("Completá tu nombre, un teléfono válido y qué necesitás.")
       return
     }
     setStatus("sending")
@@ -405,7 +427,7 @@ export function Contact() {
                 Gracias, {data.name.split(" ")[0]}.
               </p>
               <p className="k-body mt-4 text-[var(--k-on-dark-soft)]">
-                Recibimos tu mensaje. Te escribimos a {data.email} en menos de 24 horas.
+                Recibimos tu mensaje. Te contactamos al {data.phone} en menos de 24 horas.
               </p>
             </div>
           ) : (
@@ -426,18 +448,19 @@ export function Contact() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="c-email" className={label}>
-                    Email
+                  <label htmlFor="c-phone" className={label}>
+                    Teléfono
                   </label>
                   <input
-                    id="c-email"
-                    type="email"
+                    id="c-phone"
+                    type="tel"
+                    inputMode="tel"
                     className="k-field"
-                    autoComplete="email"
-                    placeholder="tu@empresa.com"
-                    value={data.email}
-                    aria-invalid={invalid.email || undefined}
-                    onChange={(e) => setData({ ...data, email: e.target.value })}
+                    autoComplete="tel"
+                    placeholder="+54 351 123-4567"
+                    value={data.phone}
+                    aria-invalid={invalid.phone || undefined}
+                    onChange={(e) => setData({ ...data, phone: e.target.value })}
                   />
                 </div>
               </div>

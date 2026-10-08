@@ -27,7 +27,7 @@ export function Statement() {
           <div className="md:col-span-5 md:col-start-8">
             <Fade>
               <p className="k-body max-w-[34rem] text-[var(--k-ink)]">
-                Somos tres co-founders que trabajamos directo con vos. Entendemos cómo funciona tu negocio y
+                Somos tres co-fundadores que trabajamos directo con vos. Entendemos cómo funciona tu negocio y
                 construimos el sistema exacto que necesita: con precio fijo, demos semanales y soporte el primer mes.
               </p>
             </Fade>
@@ -52,11 +52,6 @@ export function Services() {
       <div className="k-wrap">
         <div className="grid gap-8 md:grid-cols-12 md:items-end">
           <Lines as="h2" id="servicios-title" className="k-display k-h2 md:col-span-7" lines={["Qué hacemos"]} />
-          <Fade className="md:col-span-4 md:col-start-9">
-            <p className="k-body">
-              Cuatro formas de ordenar tu negocio con tecnología. Todas hechas a medida, ninguna de plantilla.
-            </p>
-          </Fade>
         </div>
 
         <ul className="mt-[clamp(3rem,6vw,5.5rem)]">

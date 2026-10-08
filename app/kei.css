@@ -238,12 +238,13 @@
 .kei-js .k-lines > .k-line {
   display: block;
   overflow: hidden;
-  padding-bottom: 0.08em;
-  margin-bottom: -0.08em;
+  /* Room for descenders (g, p, y): the mask must not clip them. */
+  padding-bottom: 0.22em;
+  margin-bottom: -0.22em;
 }
 .kei-js .k-lines > .k-line > span {
   display: inline-block;
-  transform: translateY(108%);
+  transform: translateY(125%);
   transition: transform 1000ms var(--k-ease-out);
   transition-delay: calc(var(--i, 0) * 90ms);
 }
@@ -361,7 +362,7 @@
 }
 @keyframes k-line-up {
   from {
-    transform: translateY(108%);
+    transform: translateY(125%);
   }
 }
 .kei-js .k-hero__sub,

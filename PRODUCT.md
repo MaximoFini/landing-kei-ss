@@ -16,7 +16,7 @@ KEI Software diseña y desarrolla software a medida, integraciones de IA, plataf
 
 ## Positioning
 
-Equipo chico de tres co-founders que trabaja directo con el dueño del negocio: precio fijo, demos semanales, soporte el primer mes y primera consulta sin cargo, siempre. Sistemas hechos para la operación real de cada negocio, no plantillas.
+Equipo chico de tres co-fundadores que trabaja directo con el dueño del negocio: precio fijo, demos semanales, soporte el primer mes y primera consulta sin cargo, siempre. Sistemas hechos para la operación real de cada negocio, no plantillas.
 
 ## Capabilities and Constraints
 
